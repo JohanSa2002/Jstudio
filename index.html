@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+
+<head>
+
+    <!--- basic page needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JStudio_IA | Diseño Web & Soluciones de Inteligencia Artificial</title>
+
+    <script>
+        document.documentElement.classList.remove('no-js');
+        document.documentElement.classList.add('js');
+    </script>
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="css/vendor.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- favicons
+    ================================================== -->
+    <link rel="icon" type="image/svg+xml" href="logos/gemini-icon-logo.svg">
+
+</head>
+
+
+<body id="top">
+
+
+    <!-- preloader
+    ================================================== -->
+    <div id="preloader">
+        <div id="loader"></div>
+    </div>
+
+
+    <!-- page wrap
+    ================================================== -->
+    <div id="page" class="s-pagewrap">
+
+
+        <!-- # site header 
+        ================================================== -->
+        <header class="s-header">
+
+            <div class="row s-header__inner">
+
+                <div class="s-header__block">
+                    <div class="s-header__logo">
+                        <a class="logo" href="index.html">JStudio_IA</a>
+                    </div>
+
+                    <a class="s-header__menu-toggle" href="#0"><span>Menú</span></a>
+                </div> <!-- end s-header__block -->
+
+                <nav class="s-header__nav">
+
+                    <ul class="s-header__menu-links">
+                        <li class="current"><a href="#intro" class="smoothscroll">Inicio</a></li>
+                        <li><a href="#about" class="smoothscroll">Nosotros</a></li>
+                        <li><a href="#services" class="smoothscroll">Servicios</a></li>
+                        <li><a href="#folio" class="smoothscroll">Proyectos</a></li>
+                        <li><a href="#footer" class="smoothscroll">Contacto</a></li>
+                    </ul> <!-- s-header__menu-links -->
+
+                    <ul class="s-header__social">
+                        <li>
+                            <a href="https://www.instagram.com/jstudio_ia?igsh=MXQxd2I3d3RmODA3bA%3D%3D&utm_source=qr"
+                                target="_blank"
+                                style="display: flex; align-items: center; gap: 8px; font-size: 1.8rem; font-weight: 600; text-transform: none; color: white;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                    style="fill:rgba(255, 255, 255, 1);">
+                                    <path
+                                        d="M11.999,7.377c-2.554,0-4.623,2.07-4.623,4.623c0,2.554,2.069,4.624,4.623,4.624c2.552,0,4.623-2.07,4.623-4.624 C16.622,9.447,14.551,7.377,11.999,7.377L11.999,7.377z M11.999,15.004c-1.659,0-3.004-1.345-3.004-3.003 c0-1.659,1.345-3.003,3.004-3.003s3.002,1.344,3.002,3.003C15.001,13.659,13.658,15.004,11.999,15.004L11.999,15.004z M20.533,6.111c-0.469-1.209-1.424-2.165-2.633-2.632c-0.699-0.263-1.438-0.404-2.186-0.42 c-0.963-0.042-1.268-0.054-3.71-0.054s-2.755,0-3.71,0.054C7.548,3.074,6.809,3.215,6.11,3.479C4.9,3.946,3.945,4.902,3.477,6.111 c-0.263,0.7-0.404,1.438-0.419,2.186c-0.043,0.962-0.056,1.267-0.056,3.71c0,2.442,0,2.753,0.056,3.71 c0.015,0.748,0.156,1.486,0.419,2.187c0.469,1.208,1.424,2.164,2.634,2.632c0.696,0.272,1.435,0.426,2.185,0.45 c0.963,0.042,1.268,0.055,3.71,0.055s2.755,0,3.71-0.055c0.747-0.015,1.486-0.157,2.186-0.419c1.209-0.469,2.164-1.424,2.633-2.633 c0.263-0.7,0.404-1.438,0.419-2.186c0.043-0.962,0.056-1.267,0.056-3.71s0-2.753-0.056-3.71C20.941,7.57,20.801,6.819,20.533,6.111z M19.315,15.643c-0.007,0.576-0.111,1.147-0.311,1.688c-0.305,0.787-0.926,1.409-1.712,1.711c-0.535,0.199-1.099,0.303-1.67,0.311 c-0.95,0.044-1.218,0.055-3.654,0.055c-2.438,0-2.687,0-3.655-0.055c-0.569-0.007-1.135-0.112-1.669-0.311 c-0.789-0.301-1.414-0.923-1.719-1.711c-0.196-0.534-0.302-1.099-0.311-1.669c-0.043-0.95-0.053-1.218-0.053-3.654 c0-2.437,0-2.686,0.053-3.655c0.007-0.576,0.111-1.146,0.311-1.687c0.305-0.789,0.93-1.41,1.719-1.712 c0.534-0.198,1.1-0.303,1.669-0.311c0.951-0.043,1.218-0.055,3.655-0.055c2.437,0,2.687,0,3.654,0.055 c0.571,0.007,1.135,0.112,1.67,0.311c0.786,0.303,1.407,0.925,1.712,1.712c0.196,0.534,0.302,1.099,0.311,1.669 c0.043,0.951,0.054,1.218,0.054,3.655c0,2.436,0,2.698-0.043,3.654H19.315z">
+                                    </path>
+                                </svg>
+                                <span>Instagram</span>
+                            </a>
+                        </li>
+                    </ul> <!-- s-header__social -->
+
+                </nav> <!-- end s-header__nav -->
+
+            </div> <!-- end s-header__inner -->
+
+        </header> <!-- end s-header -->
+
+
+        <!-- # site-content
+        ================================================== -->
+        <section id="content" class="s-content">
+
+
+            <!-- intro
+            ----------------------------------------------- -->
+            <section id="intro" class="s-intro target-section">
+
+                <div class="s-intro__bg"></div>
+
+                <div class="row s-intro__content">
+
+                    <div class="s-intro__content-bg"></div>
+
+                    <div class="column lg-12 s-intro__content-inner">
+
+                        <h1 class="s-intro__content-title">
+                            Creamos experiencias <br>
+                            digitales inteligentes <br>
+                            para el futuro de su negocio.
+                        </h1>
+
+                        <div class="s-intro__content-buttons">
+                            <a href="#about" class="btn btn--stroke s-intro__content-btn smoothscroll">Sobre
+                                Nosotros</a>
+                        </div>
+
+                    </div> <!-- s-intro__content-inner -->
+
+                </div> <!-- s-intro__content -->
+
+                <div class="s-intro__scroll-down">
+                    <a href="#about" class="smoothscroll">
+                        <span>Bajar</span>
+                    </a>
+                </div> <!-- s-intro__scroll-down -->
+
+            </section> <!-- end s-intro -->
+
+
+            <!-- about
+            ----------------------------------------------- -->
+            <section id="about" class="s-about target-section">
+
+                <div class="row section-header" data-num="01">
+                    <h3 class="column lg-12 section-header__pretitle pretitle text-pretitle">Quiénes Somos</h3>
+                    <div class="column lg-6 stack-on-1100 section-header__primary">
+                        <h2 class="title text-display-1">
+                            JStudio_IA es una agencia boutique de diseño web e IA.
+                            Fusionamos creatividad con tecnología avanzada para
+                            proyectar marcas al siguiente nivel.
+                        </h2>
+                    </div>
+                    <div class="column lg-6 stack-on-1100 section-header__secondary">
+                        <p class="desc">
+                            En JStudio_IA, no solo escribimos código; entrenamos soluciones.
+                            Aprovechamos el potencial de la Inteligencia Artificial para
+                            acelerar el ciclo de desarrollo, optimizar el rendimiento y
+                            crear interfaces que anticipan las necesidades del usuario.
+                        </p>
+                    </div>
+                </div> <!-- end section-header -->
+
+                <div class="row process-list list-block show-ctr block-lg-one-half block-tab-whole">
+
+                    <div class="column list-block__item">
+                        <div class="list-block__title">
+                            <h3 class="h5">Análisis Predictivo</h3>
+                        </div>
+                        <div class="list-block__text">
+                            <p>
+                                Utilizamos algoritmos de IA para definir la arquitectura ideal de su proyecto,
+                                analizando tendencias del mercado y comportamientos de usuario para
+                                garantizar un producto final con propósito y visión de futuro.
+                            </p>
+                        </div>
+                    </div> <!-- end list-block__item -->
+
+                    <div class="column list-block__item">
+                        <div class="list-block__title">
+                            <h3 class="h5">Diseño Generativo</h3>
+                        </div>
+                        <div class="list-block__text">
+                            <p>
+                                Fusionamos la creatividad humana con potentes redes neuronales para crear
+                                estéticas únicas y funcionales. Nuestra metodología permite iteraciones
+                                rápidas que elevan el estándar visual de su marca.
+                            </p>
+                        </div>
+                    </div> <!-- end list-block__item -->
+
+                    <div class="column list-block__item">
+                        <div class="list-block__title">
+                            <h3 class="h5">Desarrollo Aumentado</h3>
+                        </div>
+                        <div class="list-block__text">
+                            <p>
+                                Nuestros ingenieros trabajan junto a asistentes de IA para escribir código
+                                más limpio, eficiente y seguro. Esta sinergia nos permite reducir los
+                                tiempos de entrega sin comprometer la calidad técnica.
+                            </p>
+                        </div>
+                    </div> <!-- end list-block__item -->
+
+                    <div class="column list-block__item">
+                        <div class="list-block__title">
+                            <h3 class="h5">Optimización Continua</h3>
+                        </div>
+                        <div class="list-block__text">
+                            <p>
+                                Tras el lanzamiento, implementamos capas de IA para monitorear y optimizar
+                                la experiencia del usuario en tiempo real, asegurando que su plataforma
+                                evolucione constantemente con su audiencia.
+                            </p>
+                        </div>
+                    </div> <!-- end list-block__item -->
+
+                </div> <!-- end process-list -->
+
+            </section> <!-- end s-about -->
+
+
+            <!-- services
+            ----------------------------------------------- -->
+            <section id="services" class="s-services target-section">
+
+                <div class="row section-header" data-num="02">
+                    <h3 class="column lg-12 section-header__pretitle text-pretitle">Qué Hacemos</h3>
+                    <div class="column lg-6 stack-on-1100 section-header__primary">
+                        <h2 class="title text-display-1">
+                            Nuestros servicios están diseñados para hacer crecer su negocio y destacar.
+                        </h2>
+                    </div>
+                    <div class="column lg-6 stack-on-1100 section-header__secondary">
+                        <p class="desc">
+                            Ofrecemos una gama completa de soluciones digitales potenciadas por IA,
+                            asegurando que cada pixel y línea de código trabaje para sus objetivos.
+                        </p>
+                    </div>
+                </div> <!-- end section-header -->
+
+                <div class="row services-list list-block block-lg-one-half block-tab-whole">
+
+                    <div class="column list-block__item">
+                        <div class="list-block__title">
+                            <div class="list-block__icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    style="fill: rgba(0, 255, 255, 1);">
+                                    <path
+                                        d="m6.516 14.323-1.49 6.452a.998.998 0 0 0 1.529 1.057L12 18.202l5.445 3.63a1.001 1.001 0 0 0 1.517-1.106l-1.829-6.4 4.536-4.082a1 1 0 0 0-.59-1.74l-5.701-.454-2.467-5.461a.998.998 0 0 0-1.822 0L8.622 8.05l-5.701.453a1 1 0 0 0-.619 1.713l4.214 4.107zm2.853-4.326a.998.998 0 0 0 .832-.586L12 5.43l1.799 3.981a.998.998 0 0 0 .832.586l3.972.315-3.271 2.944c-.284.256-.397.65-.293 1.018l1.253 4.385-3.736-2.491a.995.995 0 0 0-1.109 0l-3.904 2.603 1.05-4.546a1 1 0 0 0-.276-.94l-3.038-2.962 4.09-.326z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="h5">Identidad de Marca</h3>
+                        </div>
+                        <div class="list-block__text">
+                            <p>
+                                Creamos identidades visuales memorables y coherentes que
+                                transmiten la esencia de su marca en el ecosistema digital actual.
+                            </p>
+                        </div>
+                    </div> <!-- end list-block__item -->
+
+                    <div class="column list-block__item">
+                        <div class="list-block__title">
+                            <div class="list-block__icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    style="fill: rgba(0, 255, 255, 1);">
+                                    <path
+                                        d="M21 16.5c0 .38-.21.73-.55.92l-7.5 4.17c-.17.09-.36.14-.55.14-.19 0-.38-.05-.55-.14l-7.5-4.17c-.34-.19-.55-.54-.55-.92V7.5c0-.38.21-.73.55-.92l7.5-4.17c.17-.09.36-.14.55-.14.19 0 .38.05.55.14l7.5 4.17c.34.19.55.54.55.92v9zM12 4.24l-6 3.34v6.84l6 3.34 6-3.34V7.58l-6-3.34zM12 11l-4-2.22v4.44l4 2.22 4-2.22V8.78L12 11z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="h5">Diseño de Producto</h3>
+                        </div>
+                        <div class="list-block__text">
+                            <p>
+                                Diseñamos productos digitales centrados en el usuario,
+                                priorizando la usabilidad y el impacto comercial mediante prototipos de alta fidelidad.
+                            </p>
+                        </div>
+                    </div> <!-- end list-block__item -->
+
+                    <div class="column list-block__item">
+                        <div class="list-block__title">
+                            <div class="list-block__icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    style="fill: rgba(0, 255, 255, 1);">
+                                    <path
+                                        d="m7.375 16.781 1.25-1.562L4.601 12l4.024-3.219-1.25-1.562-5 4a1 1 0 0 0 0 1.562l5 4zm9.25-9.562-1.25 1.562L19.399 12l-4.024 3.219 1.25 1.562 5-4a1 1 0 0 0 0-1.562l-5-4zm-1.649-4.003-4 18-1.951-.433 4-18 1.951.433z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="h5">Desarrollo Frontend</h3>
+                        </div>
+                        <div class="list-block__text">
+                            <p>
+                                Construimos interfaces web rápidas, responsivas y accesibles utilizando
+                                las tecnologías más modernas y optimizadas.
+                            </p>
+                        </div>
+                    </div> <!-- end list-block__item -->
+
+                    <div class="column list-block__item">
+                        <div class="list-block__title">
+                            <div class="list-block__icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    style="fill: rgba(0, 255, 255, 1);">
+                                    <path
+                                        d="M20 3H4c-1.103 0-2 .897-2 2v11c0 1.103.897 2 2 2h4l-1.8 2.4 1.6 1.2 2.7-3.6h3l2.7 3.6 1.6-1.2L16 18h4c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zM4 16V5h16l.001 11H4z">
+                                    </path>
+                                    <path d="M6 12h4v2H6z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="h5">Investigación UX</h3>
+                        </div>
+                        <div class="list-block__text">
+                            <p>
+                                Analizamos profundamente el comportamiento del usuario para fundamentar
+                                decisiones de diseño que mejoren la conversión y la satisfacción.
+                            </p>
+                        </div>
+                    </div> <!-- end list-block__item -->
+
+                    <div class="column list-block__item">
+                        <div class="list-block__title">
+                            <div class="list-block__icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    style="fill: rgba(0, 255, 255, 1);">
+                                    <path
+                                        d="M5 22h14c1.103 0 2-.897 2-2V9a1 1 0 0 0-1-1h-3V7c0-2.757-2.243-5-5-5S7 4.243 7 7v1H4a1 1 0 0 0-1 1v11c0 1.103.897 2 2 2zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v1H9V7zm-4 3h2v2h2v-2h6v2h2v-2h2l.002 10H5V10z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="h5">E-Commerce</h3>
+                        </div>
+                        <div class="list-block__text">
+                            <p>
+                                Desarrollamos tiendas online robustas y seguras, diseñadas para
+                                vender más y ofrecer una experiencia de compra impecable.
+                            </p>
+                        </div>
+                    </div> <!-- end list-block__item -->
+
+                    <div class="column list-block__item">
+                        <div class="list-block__title">
+                            <div class="list-block__icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    style="fill: rgba(0, 255, 255, 1);">
+                                    <path
+                                        d="m16.002 9.414-2.427 2.427c-.1.1-.151.23-.151.36s.051.26.151.36l.758.758c.2.2.52.2.718 0l2.427-2.427v2.608c0 .285.215.518.5.518s.5-.233.5-.518V8.5s0-.5-.5-.5h-5.002c-.285 0-.518.225-.518.5s.233.5.518.5h2.608l-2.427 2.427c-.2.2-.2.52 0 .718l.758.758c.2.2.52.2.718 0L16.002 9.414z">
+                                    </path>
+                                    <path
+                                        d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="h5">Ilustración Técnica</h3>
+                        </div>
+                        <div class="list-block__text">
+                            <p>
+                                Creamos assets visuales personalizados que simplifican conceptos
+                                complejos y elevan la narrativa visual de su proyecto.
+                            </p>
+                        </div>
+                    </div> <!-- end list-block__item -->
+
+                </div> <!-- end process-list -->
+
+            </section> <!-- end s-services -->
+
+
+            <!-- portfolio
+            ----------------------------------------------- -->
+            <section id="folio" class="s-folio target-section">
+
+                <div class="row section-header light-on-dark" data-num="03">
+                    <h3 class="column lg-12 section-header__pretitle text-pretitle">Innovation Lab</h3>
+                    <div class="column lg-6 stack-on-1100 section-header__primary">
+                        <h2 class="title text-display-1">
+                            Explora nuestras visiones y prototipos tecnológicos.
+                        </h2>
+                    </div>
+                    <div class="column lg-6 stack-on-1100 section-header__secondary">
+                        <p class="desc">
+                            En nuestro laboratorio, experimentamos con las fronteras de la IA y el diseño.
+                            Estos conceptos son una muestra de nuestra capacidad técnica y visión creativa,
+                            diseñados para inspirar el futuro de las interfaces digitales.
+                        </p>
+                    </div>
+                </div> <!-- end section-header -->
+
+                <div id="bricks" class="row bricks">
+                    <div class="column lg-12 masonry">
+                        <div class="bricks-wrapper">
+
+                            <div class="grid-sizer"></div>
+
+                            <article class="brick brick--double entry">
+                                <a href="#modal-01" class="entry__link">
+                                    <div class="entry__thumb">
+                                        <img src="images/folio/robot_man.jpg" alt="Colaboración IA">
+                                    </div>
+                                    <div class="entry__info">
+                                        <div class="entry__cat">Inteligencia Artificial</div>
+                                        <h4 class="entry__title">Sinergia Humano-Robot</h4>
+                                    </div>
+                                </a>
+                            </article> <!-- entry -->
+
+                            <article class="brick brick--double entry">
+                                <a href="#modal-02" class="entry__link">
+                                    <div class="entry__thumb">
+                                        <img src="images/folio/code_preview.jpg" alt="Desarrollo Avanzado">
+                                    </div>
+                                    <div class="entry__info">
+                                        <div class="entry__cat">Desarrollo Frontend</div>
+                                        <h4 class="entry__title">Código de Alto Rendimiento</h4>
+                                    </div>
+                                </a>
+                            </article> <!-- entry -->
+
+                            <article class="brick entry">
+                                <a href="#modal-03" class="entry__link">
+                                    <div class="entry__thumb">
+                                        <img src="images/folio/hands_laptop.jpg" alt="Diseño de Producto">
+                                    </div>
+                                    <div class="entry__info">
+                                        <div class="entry__cat">Interfaces Digitales</div>
+                                        <h4 class="entry__title">Diseño de Experiencias</h4>
+                                    </div>
+                                </a>
+                            </article> <!-- entry -->
+
+                            <article class="brick entry">
+                                <a href="#modal-04" class="entry__link">
+                                    <div class="entry__thumb">
+                                        <img src="images/folio/analysis_glasses.jpg" alt="Análisis de Datos">
+                                    </div>
+                                    <div class="entry__info">
+                                        <div class="entry__cat">Análisis Predictivo</div>
+                                        <h4 class="entry__title">Visión de Datos IA</h4>
+                                    </div>
+                                </a>
+                            </article> <!-- entry -->
+
+                            <article class="brick entry">
+                                <a href="#modal-05" class="entry__link">
+                                    <div class="entry__thumb">
+                                        <img src="images/folio/studio_working.jpg" alt="Nuestro Estudio">
+                                    </div>
+                                    <div class="entry__info">
+                                        <div class="entry__cat">Nuestro Estudio</div>
+                                        <h4 class="entry__title">Creatividad en Acción</h4>
+                                    </div>
+                                </a>
+                            </article> <!-- entry -->
+
+                            <article class="brick entry">
+                                <a href="#modal-06" class="entry__link">
+                                    <div class="entry__thumb">
+                                        <img src="images/folio/ecommerce_showcase.jpg" alt="E-Commerce Inteligente">
+                                    </div>
+                                    <div class="entry__info">
+                                        <div class="entry__cat">E-Commerce</div>
+                                        <h4 class="entry__title">Digital Store Hub</h4>
+                                    </div>
+                                </a>
+                            </article> <!-- entry -->
+
+                        </div> <!-- end bricks-wrapper -->
+                    </div> <!-- end masonry -->
+                </div> <!-- end bricks -->
+
+
+                <!-- modal templates popup
+                -------------------------------------------- -->
+                <div id="modal-01" hidden>
+                    <div class="modal-popup">
+                        <img src="images/folio/gallery/g-turban.jpg" alt="">
+
+                        <div class="modal-popup__desc">
+                            <h5>AI Dashboard Core</h5>
+                            <p>Una plataforma avanzada de visualización de datos que utiliza aprendizaje automático para
+                                predecir tendencias y optimizar flujos de trabajo empresariales.</p>
+                            <ul class="modal-popup__cat">
+                                <li>Investigación UX</li>
+                                <li>Diseño Frontend</li>
+                            </ul>
+                        </div>
+
+                        <a href="#0" class="modal-popup__details">Ver Proyecto</a>
+                    </div>
+                </div> <!-- end modal -->
+
+                <div id="modal-02" hidden>
+                    <div class="modal-popup">
+                        <img src="images/folio/gallery/g-tulips.jpg" alt="">
+
+                        <div class="modal-popup__desc">
+                            <h5>Aurum & Oak Store</h5>
+                            <p>Experiencia de compra de alta gama enfocada en la exclusividad y el minimalismo, con
+                                procesos de pago optimizados para máxima conversión.</p>
+                            <ul class="modal-popup__cat">
+                                <li>Identidad de Marca</li>
+                                <li>E-Commerce</li>
+                            </ul>
+                        </div>
+
+                        <a href="#0" class="modal-popup__details">Ver Proyecto</a>
+                    </div>
+                </div> <!-- end modal -->
+
+                <div id="modal-03" hidden>
+                    <div class="modal-popup">
+                        <img src="images/folio/gallery/g-grayscale.jpg" alt="">
+
+                        <div class="modal-popup__desc">
+                            <h5>Neural Identity System</h5>
+                            <p>Sistema de identidad visual generado dinámicamente mediante algoritmos neurales,
+                                adaptándose a diferentes medios digitales conservando la esencia de la marca.</p>
+                            <ul class="modal-popup__cat">
+                                <li>Branding</li>
+                                <li>IA Generativa</li>
+                            </ul>
+                        </div>
+
+                        <a href="#0" class="modal-popup__details">Ver Proyecto</a>
+                    </div>
+                </div> <!-- end modal -->
+
+                <!-- Más modales pueden tradurcirse aquí si es necesario -->
+
+                <!-- tech stack
+                -------------------------------------------- -->
+                <div class="s-clients row">
+                    <div class="column lg-12">
+
+                        <div class="row section-header">
+                            <div class="column lg-12">
+                                <h3 class="title text-display-1">Nuestros Servicios de Vanguardia</h3>
+                                <p class="desc" style="margin-top: 2rem;">
+                                    En JStudio_IA combinamos ingeniería de software con inteligencia artificial para
+                                    ofrecer:
+                                    <strong>páginas estáticas</strong> de alto rendimiento, <strong>landing
+                                        pages</strong> de alta conversión,
+                                    <strong>páginas corporativas</strong> elegantes y <strong>Chatbots con IA</strong>
+                                    personalizados, entre otros servicios digitales.
+                                </p>
+                            </div>
+                        </div> <!-- end section-header -->
+
+                        <div class="tech-carousel">
+                            <div class="tech-track">
+                                <div class="tech-item"><img src="logos/html-5-logo-svg-1.svg"
+                                        alt="HTML5"><span>HTML5</span></div>
+                                <div class="tech-item"><img src="logos/css-3.svg" alt="CSS3"><span>CSS3</span></div>
+                                <div class="tech-item"><img src="logos/javascript-1.svg"
+                                        alt="JavaScript"><span>JS</span></div>
+                                <div class="tech-item"><img src="logos/react-native-1.svg"
+                                        alt="React"><span>React</span></div>
+                                <div class="tech-item"><img src="logos/tailwind-css-2.svg"
+                                        alt="Tailwind"><span>Tailwind</span></div>
+                                <div class="tech-item"><img src="logos/laravel-2.svg" alt="Laravel"><span>Laravel</span>
+                                </div>
+                                <div class="tech-item"><img src="logos/gemini-icon-logo.svg" alt="Gemini"><span>Gemini
+                                        IA</span></div>
+                                <!-- Duplicated for Infinite Scroll -->
+                                <div class="tech-item"><img src="logos/html-5-logo-svg-1.svg"
+                                        alt="HTML5"><span>HTML5</span></div>
+                                <div class="tech-item"><img src="logos/css-3.svg" alt="CSS3"><span>CSS3</span></div>
+                                <div class="tech-item"><img src="logos/javascript-1.svg"
+                                        alt="JavaScript"><span>JS</span></div>
+                                <div class="tech-item"><img src="logos/react-native-1.svg"
+                                        alt="React"><span>React</span></div>
+                                <div class="tech-item"><img src="logos/tailwind-css-2.svg"
+                                        alt="Tailwind"><span>Tailwind</span></div>
+                                <div class="tech-item"><img src="logos/laravel-2.svg" alt="Laravel"><span>Laravel</span>
+                                </div>
+                                <div class="tech-item"><img src="logos/gemini-icon-logo.svg" alt="Gemini"><span>Gemini
+                                        IA</span></div>
+                            </div>
+                        </div> <!-- end tech-carousel -->
+                    </div> <!-- end column lg-12 -->
+                </div> <!-- end tech-stack -->
+
+            </section> <!-- end s-folio -->
+
+
+            <!-- Testimonials removed for startup focus -->
+
+        </section> <!-- end content -->
+
+
+        <!-- # site-footer
+        ================================================== -->
+        <footer id="footer" class="s-footer target-section">
+
+            <div class="row section-header" data-num="04">
+                <h3 class="column lg-12 section-header__pretitle text-pretitle">Póngase en Contacto</h3>
+                <div class="column lg-6 stack-on-1100 section-header__primary">
+                    <h2 class="title text-display-1">
+                        ¿Tiene una idea brillante o un proyecto épico en mente? Hablemos.
+                        Trabajemos juntos para crear algo grandioso.
+                        Escríbanos a <a href="mailto:johan.samudiotrabajo@gmail.com"
+                            title="">johan.samudiotrabajo@gmail.com</a>
+                    </h2>
+                </div>
+                <div class="column lg-6 stack-on-1100 section-header__secondary">
+
+                    <div class="contact-block">
+                        <h6>Dónde Encontrarnos</h6>
+                        <p>
+                            Chiriquí, Panamá <br>
+                            América Central
+                        </p>
+                    </div>
+
+                    <div class="contact-block">
+                        <h6>Información de Contacto</h6>
+                        <li><a href="tel:+50765247842">+507 65247842</a></li>
+                    </div>
+
+                </div>
+            </div> <!-- end section-header -->
+
+            <div class="row list-block block-lg-one-half block-tab-whole block-stack-on-1000 s-footer__btns">
+                <div class="column list-block__item">
+                    <div class="s-footer__contact-btn">
+                        <a href="mailto:johan.samudiotrabajo@gmail.com" class="btn btn--primary u-fullwidth">
+                            Hablemos
+                        </a>
+                    </div>
+                </div>
+                <div class="column list-block__item">
+                    <div class="subscribe-form s-footer__subscribe">
+                        <h6>Suscribirse</h6>
+                        <form id="mc-form" class="mc-form">
+                            <input type="email" name="EMAIL" id="mce-EMAIL" class="u-fullwidth text-center"
+                                placeholder="Su Correo Electrónico" required>
+                            <input type="submit" name="subscribe" value="Suscribirse"
+                                class="btn btn--primary u-fullwidth">
+                            <div class="mc-status"></div>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end s-footer__btns -->
+
+            <div class="row s-footer__bottom">
+
+                <div class="column lg-6 tab-12 s-footer__bottom-left">
+                    <ul class="s-footer__social">
+                        <li>
+                            <a href="https://www.instagram.com/jstudio_ia?igsh=MXQxd2I3d3RmODA3bA%3D%3D&utm_source=qr"
+                                target="_blank"
+                                style="display: flex; align-items: center; gap: 10px; font-size: 2rem; font-weight: 700; color: black; text-transform: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"
+                                    style="fill:rgba(0, 0, 0, 1);">
+                                    <path
+                                        d="M11.999,7.377c-2.554,0-4.623,2.07-4.623,4.623c0,2.554,2.069,4.624,4.623,4.624c2.552,0,4.623-2.07,4.623-4.624 C16.622,9.447,14.551,7.377,11.999,7.377L11.999,7.377z M11.999,15.004c-1.659,0-3.004-1.345-3.004-3.003 c0-1.659,1.345-3.003,3.004-3.003s3.002,1.344,3.002,3.003C15.001,13.659,13.658,15.004,11.999,15.004L11.999,15.004z M20.533,6.111c-0.469-1.209-1.424-2.165-2.633-2.632c-0.699-0.263-1.438-0.404-2.186-0.42 c-0.963-0.042-1.268-0.054-3.71-0.054s-2.755,0-3.71,0.054C7.548,3.074,6.809,3.215,6.11,3.479C4.9,3.946,3.945,4.902,3.477,6.111 c-0.263,0.7-0.404,1.438-0.419,2.186c-0.043,0.962-0.056,1.267-0.056,3.71c0,2.442,0,2.753,0.056,3.71 c0.015,0.748,0.156,1.486,0.419,2.187c0.469,1.208,1.424,2.164,2.634,2.632c0.696,0.272,1.435,0.426,2.185,0.45 c0.963,0.042,1.268,0.055,3.71,0.055s2.755,0,3.71-0.055c0.747-0.015,1.486-0.157,2.186-0.419c1.209-0.469,2.164-1.424,2.633-2.633 c0.263-0.7,0.404-1.438,0.419-2.186c0.043-0.962,0.056-1.267,0.056-3.71s0-2.753-0.056-3.71C20.941,7.57,20.801,6.819,20.533,6.111z M19.315,15.643c-0.007,0.576-0.111,1.147-0.311,1.688c-0.305,0.787-0.926,1.409-1.712,1.711c-0.535,0.199-1.099,0.303-1.67,0.311 c-0.95,0.044-1.218,0.055-3.654,0.055c-2.438,0-2.687,0-3.655-0.055c-0.569-0.007-1.135-0.112-1.669-0.311 c-0.789-0.301-1.414-0.923-1.719-1.711c-0.196-0.534-0.302-1.099-0.311-1.669c-0.043-0.95-0.053-1.218-0.053-3.654 c0-2.437,0-2.686,0.053-3.655c0.007-0.576,0.111-1.146,0.311-1.687c0.305-0.789,0.93-1.41,1.719-1.712 c0.534-0.198,1.1-0.303,1.669-0.311c0.951-0.043,1.218-0.055,3.655-0.055c2.437,0,2.687,0,3.654,0.055 c0.571,0.007,1.135,0.112,1.67,0.311c0.786,0.303,1.407,0.925,1.712,1.712c0.196,0.534,0.302,1.099,0.311,1.669 c0.043,0.951,0.054,1.218,0.054,3.655c0,2.436,0,2.698-0.043,3.654H19.315z">
+                                    </path>
+                                </svg>
+                                <span>Instagram</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="column lg-6 tab-12 s-footer__bottom-right">
+                    <div class="ss-copyright">
+                        <span>© Copyright JStudio_IA 2026</span>
+                        <span>Diseño y Tecnología por <a href="index.html">JStudio_IA</a></span>
+                    </div>
+                </div>
+
+            </div> <!-- end s-footer__bottom -->
+
+            <div class="ss-go-top">
+                <a class="smoothscroll" title="Back to Top" href="#top">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                        <path d="M6 4h12v2H6zm5 10v6h2v-6h5l-6-7-6 7z"></path>
+                    </svg>
+                </a>
+            </div> <!-- end ss-go-top -->
+
+        </footer> <!-- end s-footer -->
+
+
+    </div> <!-- end s-pagewrap -->
+
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
