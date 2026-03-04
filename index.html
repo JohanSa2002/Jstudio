@@ -4,31 +4,32 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>JStudio_IA | Premium AI Agency</title>
-    <!-- SEO Meta Tags -->
+    <title>Jstudio_AI | Desarrollo de Software con Inteligencia Artificial</title>
     <meta name="description"
-        content="JStudio_IA - Fusionando Inteligencia con Diseño de Vanguardia. Landing pages premium y aplicaciones web inteligentes.">
+        content="Sustituye servidores físicos por inteligencia en la nube. Despliega software con IA diseñado para maximizar la productividad de tu equipo." />
 
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
-        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
 
-    <script id="tailwind-config">
+    <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#0d7ff2",
-                        "background-dark": "#080c11",
-                        "obsidian": "#05070a",
-                        "accent-cyan": "#00f2ff",
+                        carbon: "#0c0c0c",
+                        "accent-cyan": "#00B4D8",
+                        "white-text": "#f3f4f6",
                     },
                     fontFamily: {
-                        "display": ["Space Grotesk", "sans-serif"]
+                        body: ["Inter", "sans-serif"],
+                        mono: ["JetBrains Mono", "monospace"]
                     },
                 },
             },
@@ -36,414 +37,505 @@
     </script>
     <style>
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: #080c11;
-            color: white;
-            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #0c0c0c;
+            color: #d1d5db;
             scroll-behavior: smooth;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .glass-card:hover {
-            border-color: rgba(13, 127, 242, 0.4);
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateY(-4px);
-        }
-
-        .glow-button {
-            box-shadow: 0 0 20px rgba(13, 127, 242, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .glow-button:hover {
-            box-shadow: 0 0 30px rgba(13, 127, 242, 0.6);
-        }
-
-        .neural-bg {
-            background: radial-gradient(circle at 50% 50%, rgba(13, 127, 242, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(0, 242, 255, 0.05) 0%, transparent 30%);
-        }
-
-        .hologram-effect {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hologram-effect::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(13, 127, 242, 0.05), transparent);
-            transform: rotate(45deg);
+        .noise {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
             pointer-events: none;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .btn-hover {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.4);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+
+        .glass:hover {
+            border-color: rgba(0, 180, 216, 0.3);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .text-glow {
-            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+            text-shadow: 0 0 10px rgba(0, 180, 216, 0.5);
         }
     </style>
 </head>
 
-<body class="bg-background-dark text-white selection:bg-primary/30">
+<body class="bg-carbon text-gray-300 antialiased selection:bg-accent-cyan/30 overflow-x-hidden">
+    <div class="noise"></div>
 
-    <!-- Top Navigation -->
-    <nav class="fixed top-0 w-full z-50 border-b border-white/5 bg-background-dark/80 backdrop-blur-xl">
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-40 border-b border-white/5 bg-carbon/80 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="p-2 bg-primary/10 rounded-lg border border-primary/20">
-                    <span class="material-symbols-outlined text-primary text-2xl">deployed_code</span>
-                </div>
-                <span class="text-xl font-bold tracking-tight">JStudio<span
-                        class="text-primary text-glow">_IA</span></span>
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-accent-cyan">memory</span>
+                <span class="text-xl font-bold text-white-text tracking-tight">Jstudio<span
+                        class="text-accent-cyan text-glow">_AI</span></span>
             </div>
-            <div class="hidden md:flex items-center gap-10">
-                <a class="text-sm font-medium text-gray-400 hover:text-white transition-colors"
-                    href="#proceso">Proceso</a>
-                <a class="text-sm font-medium text-gray-400 hover:text-white transition-colors"
-                    href="#servicios">Servicios</a>
-                <a class="text-sm font-medium text-gray-400 hover:text-white transition-colors"
-                    href="#lab">Laboratorio</a>
-                <a class="text-sm font-medium text-gray-400 hover:text-white transition-colors"
-                    href="#contacto">Contacto</a>
-            </div>
-            <div class="flex items-center gap-4">
-                <a href="https://www.instagram.com/jstudio_ia?igsh=MXQxd2I3d3RmODA3bA%3D%3D&utm_source=qr"
-                    target="_blank" class="text-gray-400 hover:text-primary transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path
-                            d="M11.999,7.377c-2.554,0-4.623,2.07-4.623,4.623c0,2.554,2.069,4.624,4.623,4.624c2.552,0,4.623-2.07,4.623-4.624 C16.622,9.447,14.551,7.377,11.999,7.377L11.999,7.377z M11.999,15.004c-1.659,0-3.004-1.345-3.004-3.003 c0-1.659,1.345-3.003,3.004-3.003s3.002,1.344,3.002,3.003C15.001,13.659,13.658,15.004,11.999,15.004L11.999,15.004z M20.533,6.111c-0.469-1.209-1.424-2.165-2.633-2.632c-0.699-0.263-1.438-0.404-2.186-0.42 c-0.963-0.042-1.268-0.054-3.71-0.054s-2.755,0-3.71,0.054C7.548,3.074,6.809,3.215,6.11,3.479C4.9,3.946,3.945,4.902,3.477,6.111 c-0.263,0.7-0.404,1.438-0.419,2.186c-0.043,0.962-0.056,1.267-0.056,3.71c0,2.442,0,2.753,0.056,3.71 c0.015,0.748,0.156,1.486,0.419,2.187c0.469,1.208,1.424,2.164,2.634,2.632c0.696,0.272,1.435,0.426,2.185,0.45 c0.963,0.042,1.268,0.055,3.71,0.055s2.755,0,3.71-0.055c0.747-0.015,1.486-0.157,2.186-0.419c1.209-0.469,2.164-1.424,2.633-2.633 c0.263-0.7,0.404-1.438,0.419-2.186c0.043-0.962,0.056-1.267,0.056-3.71s0-2.753-0.056-3.71C20.941,7.57,20.801,6.819,20.533,6.111z M19.315,15.643c-0.007,0.576-0.111,1.147-0.311,1.688c-0.305,0.787-0.926,1.409-1.712,1.711c-0.535,0.199-1.099,0.303-1.67,0.311 c-0.95,0.044-1.218,0.055-3.654,0.055c-2.438,0-2.687,0-3.655-0.055c-0.569-0.007-1.135-0.112-1.669-0.311 c-0.789-0.301-1.414-0.923-1.719-1.711c-0.196-0.534-0.302-1.099-0.311-1.669c-0.043-0.95-0.053-1.218-0.053-3.654 c0-2.437,0-2.686,0.053-3.655c0.007-0.576,0.111-1.146,0.311-1.687c0.305-0.789,0.93-1.41,1.719-1.712 c0.534-0.198,1.1-0.303,1.669-0.311c0.951-0.043,1.218-0.055,3.655-0.055c2.437,0,2.687,0,3.654,0.055 c0.571,0.007,1.135,0.112,1.67,0.311c0.786,0.303,1.407,0.925,1.712,1.712c0.196,0.534,0.302,1.099,0.311,1.669 c0.043,0.951,0.054,1.218,0.054,3.655c0,2.436,0,2.698-0.043,3.654H19.315z">
-                        </path>
-                    </svg>
-                </a>
-                <a href="mailto:johan.samudiotrabajo@gmail.com"
-                    class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg text-sm font-bold glow-button">
-                    Hablemos
-                </a>
-            </div>
+            <a href="#contacto"
+                class="btn-hover bg-accent-cyan text-carbon px-6 py-2 rounded-lg text-sm font-bold">Hablemos</a>
         </div>
     </nav>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="relative min-h-screen flex items-center justify-center pt-20 pb-32 neural-bg" id="intro">
-            <div class="absolute inset-0 z-0 opacity-30">
-                <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px]"></div>
-                <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-cyan/10 rounded-full blur-[120px]"></div>
-            </div>
-            <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
-                <div
-                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-8">
-                    <span class="flex h-2 w-2 rounded-full bg-accent-cyan animate-pulse"></span>
-                    <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400">Innovación Digital en
-                        Panamá</span>
-                </div>
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 tracking-tighter leading-[0.9]">
-                    Fusionando Inteligencia con <br />
-                    <span
-                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-cyan text-glow">Diseño
-                        de Vanguardia</span>
-                </h1>
-                <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
-                    Creamos experiencias digitales de alto impacto que proyectan su marca al futuro mediante algoritmos
-                    de diseño generativo y desarrollo inteligente.
-                </p>
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
-                    <a href="mailto:johan.samudiotrabajo@gmail.com"
-                        class="w-full sm:w-auto px-10 py-4 bg-primary text-white rounded-lg font-bold text-lg glow-button flex items-center justify-center gap-2">
-                        Iniciar Proyecto
-                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                    </a>
-                    <a href="#lab"
-                        class="w-full sm:w-auto px-10 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg font-bold text-lg backdrop-blur-md transition-all">
-                        Ver Portfolio
-                    </a>
-                </div>
-            </div>
-            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce opacity-60 z-20 pointer-events-none">
-                <span class="material-symbols-outlined">expand_more</span>
-            </div>
-        </section>
+    <!-- 1. Hero Section -->
+    <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-carbon bg-opacity-80 z-10"></div>
+            <!-- Macro circuits image -->
+            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=2000"
+                alt="Placa de circuito macro, diseño tecnológico" class="w-full h-full object-cover opacity-30" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-carbon z-20"></div>
+        </div>
 
-        <!-- The Intelligence Process -->
-        <section class="py-32 px-6 bg-obsidian" id="proceso">
-            <div class="max-w-7xl mx-auto">
-                <div class="mb-20">
-                    <h2 class="text-sm font-bold text-primary tracking-[0.3em] uppercase mb-4">Metodología</h2>
-                    <h3 class="text-4xl md:text-5xl font-bold tracking-tight">El Proceso de Inteligencia</h3>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="glass-card p-8 rounded-xl flex flex-col gap-6">
-                        <div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                            <span class="material-symbols-outlined">analytics</span>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-bold mb-3">Análisis Predictivo</h4>
-                            <p class="text-gray-400 text-sm leading-relaxed">Estrategias basadas en datos para anticipar
-                                necesidades del mercado y comportamiento del usuario.</p>
-                        </div>
-                        <div class="mt-auto pt-4 border-t border-white/5">
-                            <span class="text-xs font-mono text-primary/60">STEP_01</span>
-                        </div>
-                    </div>
-                    <div class="glass-card p-8 rounded-xl flex flex-col gap-6">
-                        <div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                            <span class="material-symbols-outlined">brush</span>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-bold mb-3">Diseño Generativo</h4>
-                            <p class="text-gray-400 text-sm leading-relaxed">Interfaces únicas creadas mediante
-                                algoritmos avanzados que optimizan la conversión y el UX.</p>
-                        </div>
-                        <div class="mt-auto pt-4 border-t border-white/5">
-                            <span class="text-xs font-mono text-primary/60">STEP_02</span>
-                        </div>
-                    </div>
-                    <div class="glass-card p-8 rounded-xl flex flex-col gap-6">
-                        <div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                            <span class="material-symbols-outlined">terminal</span>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-bold mb-3">Desarrollo Aumentado</h4>
-                            <p class="text-gray-400 text-sm leading-relaxed">Codificación de alta precisión asistida por
-                                IA para productos escalables y libres de errores.</p>
-                        </div>
-                        <div class="mt-auto pt-4 border-t border-white/5">
-                            <span class="text-xs font-mono text-primary/60">STEP_03</span>
-                        </div>
-                    </div>
-                    <div class="glass-card p-8 rounded-xl flex flex-col gap-6">
-                        <div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                            <span class="material-symbols-outlined">query_stats</span>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-bold mb-3">Optimización Continua</h4>
-                            <p class="text-gray-400 text-sm leading-relaxed">Evolución constante de su plataforma
-                                digital mediante aprendizaje automático post-lanzamiento.</p>
-                        </div>
-                        <div class="mt-auto pt-4 border-t border-white/5">
-                            <span class="text-xs font-mono text-primary/60">STEP_04</span>
-                        </div>
-                    </div>
-                </div>
+        <div class="max-w-5xl mx-auto px-6 relative z-30 pt-16">
+            <div
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/5 mb-8">
+                <span class="material-symbols-outlined text-accent-cyan text-sm">verified</span>
+                <span class="text-[11px] uppercase tracking-widest font-mono text-accent-cyan font-bold">Arquitectura
+                    Serverless: Reducción del 100% en mantenimiento</span>
             </div>
-        </section>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-white-text leading-[1.1] mb-8 tracking-tight">
+                Sustituye servidores físicos por <br class="hidden lg:block"> <span
+                    class="text-accent-cyan text-glow">inteligencia en la nube.</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-10 max-w-3xl leading-relaxed font-light">
+                Despliega software con IA diseñado para maximizar la productividad de tu equipo sin invertir un solo
+                euro más en hardware costoso.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-5 items-center">
+                <a href="#contacto"
+                    class="w-full sm:w-auto btn-hover bg-accent-cyan text-carbon px-8 py-4 rounded-lg font-bold text-center flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,180,216,0.3)]">
+                    Reservar consultoría de desarrollo
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+                <a href="#metodologia"
+                    class="w-full sm:w-auto btn-hover glass text-white-text px-8 py-4 rounded-lg font-bold text-center border-white/10 hover:bg-white/5">
+                    Ver metodología
+                </a>
+            </div>
+        </div>
+    </section>
 
-        <!-- Elite Services -->
-        <section class="py-32 px-6 relative overflow-hidden" id="servicios">
-            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-full bg-primary/5 blur-[120px] rounded-full">
+    <!-- 2. Problema -> Solución (Análisis de Eficiencia) -->
+    <section class="py-24 px-6 relative z-20 bg-carbon border-b border-white/5 reveal">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="font-mono text-xs tracking-[0.2em] text-accent-cyan uppercase mb-2 block">Diagnóstico
+                    Operativo</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white-text">Análisis de Eficiencia</h2>
             </div>
-            <div class="max-w-7xl mx-auto relative z-10">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
-                    <div>
-                        <h2 class="text-sm font-bold text-primary tracking-[0.3em] uppercase mb-4">Soluciones</h2>
-                        <h3 class="text-4xl md:text-5xl font-bold tracking-tight">Servicios de Élite</h3>
-                    </div>
-                    <p class="max-w-md text-gray-400">Desarrollamos herramientas digitales que no solo funcionan, sino
-                        que lideran su industria.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Card 1 -->
-                    <div class="hologram-effect glass-card group p-1 w-full rounded-2xl">
-                        <div class="bg-background-dark/40 p-8 rounded-2xl h-full flex flex-col">
-                            <div
-                                class="size-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent-cyan/20 border border-primary/30 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined text-3xl text-accent-cyan">web</span>
-                            </div>
-                            <h4 class="text-2xl font-bold mb-4">Landing Pages Premium</h4>
-                            <p class="text-gray-400 mb-8 flex-grow">Conversión optimizada mediante IA y estética
-                                minimalista de alto impacto visual.</p>
-                            <ul class="space-y-3 mb-10">
-                                <li class="flex items-center gap-3 text-sm text-gray-300">
-                                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
-                                    Carga Ultra-rápida
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-300">
-                                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
-                                    AI-Powered UX
-                                </li>
-                            </ul>
-                            <a href="mailto:johan.samudiotrabajo@gmail.com"
-                                class="w-full py-4 text-center border border-white/10 rounded-xl hover:bg-white/5 transition-colors font-bold text-sm tracking-widest uppercase">Consultar</a>
-                        </div>
-                    </div>
-                    <!-- Card 2 -->
-                    <div class="hologram-effect glass-card group p-1 w-full rounded-2xl border-primary/20">
-                        <div
-                            class="bg-background-dark/40 p-8 rounded-2xl h-full flex flex-col relative overflow-hidden">
-                            <div class="absolute -right-10 -top-10 size-40 bg-primary/10 blur-3xl"></div>
-                            <div
-                                class="size-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent-cyan/20 border border-primary/30 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined text-3xl text-accent-cyan">rocket_launch</span>
-                            </div>
-                            <h4 class="text-2xl font-bold mb-4">Custom Web Apps</h4>
-                            <p class="text-gray-400 mb-8 flex-grow">Sistemas complejos escalables con integraciones
-                                nativas de inteligencia artificial.</p>
-                            <ul class="space-y-3 mb-10">
-                                <li class="flex items-center gap-3 text-sm text-gray-300">
-                                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
-                                    Arquitectura Escalable
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-300">
-                                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
-                                    Dashboards Inteligentes
-                                </li>
-                            </ul>
-                            <a href="mailto:johan.samudiotrabajo@gmail.com"
-                                class="w-full py-4 text-center bg-primary rounded-xl hover:bg-primary/90 transition-colors font-bold text-sm tracking-widest uppercase glow-button">Proyecto
-                                Top</a>
-                        </div>
-                    </div>
-                    <!-- Card 3 -->
-                    <div class="hologram-effect glass-card group p-1 w-full rounded-2xl">
-                        <div class="bg-background-dark/40 p-8 rounded-2xl h-full flex flex-col">
-                            <div
-                                class="size-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent-cyan/20 border border-primary/30 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined text-3xl text-accent-cyan">auto_awesome</span>
-                            </div>
-                            <h4 class="text-2xl font-bold mb-4">AI Content Factory</h4>
-                            <p class="text-gray-400 mb-8 flex-grow">Automatización de flujos de contenido dinámico y
-                                personalización en tiempo real.</p>
-                            <ul class="space-y-3 mb-10">
-                                <li class="flex items-center gap-3 text-sm text-gray-300">
-                                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
-                                    Modelos de Lenguaje
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-300">
-                                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
-                                    Generación 24/7
-                                </li>
-                            </ul>
-                            <a href="mailto:johan.samudiotrabajo@gmail.com"
-                                class="w-full py-4 text-center border border-white/10 rounded-xl hover:bg-white/5 transition-colors font-bold text-sm tracking-widest uppercase">Consultar</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <!-- Innovation Lab (Portfolio) -->
-        <section class="py-32 px-6 bg-obsidian" id="lab">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
-                    <div>
-                        <h2 class="text-sm font-bold text-primary tracking-[0.3em] uppercase mb-4">Portafolio</h2>
-                        <h3 class="text-4xl md:text-5xl font-bold tracking-tight">Innovation Lab</h3>
-                    </div>
-                    <a class="group flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-gray-400 hover:text-primary transition-colors"
-                        href="#">
-                        Ver Todos los Casos
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Problema -->
+                <div class="glass p-10 lg:p-12 rounded-2xl flex flex-col justify-center border-red-500/20">
+                    <div class="flex items-center gap-3 mb-8 text-red-500/80">
                         <span
-                            class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_right_alt</span>
-                    </a>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <!-- Project 1 -->
-                    <div class="group cursor-pointer">
-                        <div
-                            class="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-white/5 border border-white/10">
-                            <div
-                                class="absolute inset-0 bg-gradient-to-t from-background-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10 flex flex-col justify-end p-8">
-                                <div class="flex gap-2 mb-4">
-                                    <span
-                                        class="px-3 py-1 bg-primary text-[10px] font-bold uppercase rounded">Identity</span>
-                                    <span class="px-3 py-1 bg-white/10 text-[10px] font-bold uppercase rounded">AI
-                                        Generative</span>
-                                </div>
-                                <h5 class="text-2xl font-bold">Neural Identity 2.0</h5>
-                            </div>
-                            <img alt="Advanced Software Development"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80"
-                                src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000" />
-                        </div>
-                        <div class="flex justify-between items-center px-2">
-                            <span class="text-xs font-mono text-gray-500">PROJECT_01</span>
-                            <span class="text-lg font-medium group-hover:text-primary transition-colors">Neural Identity
-                                System</span>
-                        </div>
+                            class="material-symbols-outlined border border-red-500/30 p-2 rounded-lg bg-red-500/10">warning</span>
+                        <h3 class="text-xl font-bold tracking-widest text-white-text">EL PROBLEMA</h3>
                     </div>
-                    <!-- Project 2 -->
-                    <div class="group cursor-pointer">
-                        <div
-                            class="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-white/5 border border-white/10">
-                            <div
-                                class="absolute inset-0 bg-gradient-to-t from-background-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10 flex flex-col justify-end p-8">
-                                <div class="flex gap-2 mb-4">
-                                    <span
-                                        class="px-3 py-1 bg-primary text-[10px] font-bold uppercase rounded">Dashboard</span>
-                                    <span
-                                        class="px-3 py-1 bg-white/10 text-[10px] font-bold uppercase rounded">Fintech</span>
-                                </div>
-                                <h5 class="text-2xl font-bold">AI Analytics Hub</h5>
-                            </div>
-                            <img alt="Strategic Business Deal"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80"
-                                src="https://images.unsplash.com/photo-1512758017271-d7b84c2113f1?auto=format&fit=crop&q=80&w=1000" />
-                        </div>
-                        <div class="flex justify-between items-center px-2">
-                            <span class="text-xs font-mono text-gray-500">PROJECT_02</span>
-                            <span class="text-lg font-medium group-hover:text-primary transition-colors">Core
-                                Intelligence Interface</span>
-                        </div>
-                    </div>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4">
+                            <span class="material-symbols-outlined text-red-500/50 mt-1 flex-shrink-0">close</span>
+                            <p class="text-gray-400 leading-relaxed">Gastos recurrentes en renovación de equipos
+                                físicos.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="material-symbols-outlined text-red-500/50 mt-1 flex-shrink-0">close</span>
+                            <p class="text-gray-400 leading-relaxed">Cuellos de botella en procesos manuales que la IA
+                                podría automatizar.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="material-symbols-outlined text-red-500/50 mt-1 flex-shrink-0">close</span>
+                            <p class="text-gray-400 leading-relaxed">Escalabilidad limitada por la capacidad de tu
+                                oficina o servidor local.</p>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-        </section>
 
-        <!-- CTA Section -->
-        <section class="py-32 px-6" id="contacto">
-            <div class="max-w-7xl mx-auto">
+                <!-- Solución -->
                 <div
-                    class="glass-card rounded-[2rem] p-12 md:p-24 relative overflow-hidden flex flex-col items-center text-center">
+                    class="glass p-10 lg:p-12 rounded-2xl flex flex-col justify-center border-accent-cyan/30 relative overflow-hidden">
                     <div
-                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent">
+                        class="absolute -right-20 -bottom-20 w-64 h-64 bg-accent-cyan/10 blur-[80px] rounded-full pointer-events-none">
                     </div>
-                    <div class="absolute -bottom-24 -right-24 size-96 bg-primary/10 rounded-full blur-[100px]"></div>
-                    <h2 class="text-4xl md:text-6xl font-bold tracking-tight mb-8">¿Listo para proyectar su <br /> marca
-                        al futuro?</h2>
-                    <p class="text-xl text-gray-400 max-w-xl mb-12">Estamos basados en Chiriquí, Panamá, operando para
-                        el mundo entero con los estándares más altos de diseño y tecnología.</p>
-                    <div class="flex flex-col items-center gap-6">
-                        <a href="mailto:johan.samudiotrabajo@gmail.com"
-                            class="px-8 py-4 bg-primary text-white rounded-xl font-bold text-xl glow-button">
-                            Iniciar Proyecto
-                        </a>
-                        <span class="text-gray-400 font-mono tracking-tighter">
-                            johan.samudiotrabajo@gmail.com
-                        </span>
+                    <div class="flex items-center gap-3 mb-8 text-accent-cyan relative z-10">
+                        <span
+                            class="material-symbols-outlined border border-accent-cyan/30 p-2 rounded-lg bg-accent-cyan/10">check_circle</span>
+                        <h3 class="text-xl font-bold tracking-widest text-glow">LA SOLUCIÓN</h3>
+                    </div>
+                    <ul class="space-y-6 relative z-10">
+                        <li class="flex items-start gap-4">
+                            <span
+                                class="material-symbols-outlined text-accent-cyan mt-1 flex-shrink-0">cloud_done</span>
+                            <p class="text-gray-300 leading-relaxed"><strong class="text-white-text">Infraestructura
+                                    100% en la nube:</strong> paga solo por lo que usas.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="material-symbols-outlined text-accent-cyan mt-1 flex-shrink-0">smart_toy</span>
+                            <p class="text-gray-300 leading-relaxed"><strong class="text-white-text">Agentes de
+                                    IA</strong> que ejecutan tareas repetitivas en segundo plano.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="material-symbols-outlined text-accent-cyan mt-1 flex-shrink-0">moving</span>
+                            <p class="text-gray-300 leading-relaxed"><strong class="text-white-text">Sistemas
+                                    elásticos</strong> que crecen al ritmo de tu facturación.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Cómo funciona (Timeline 01-03) -->
+    <section id="metodologia" class="py-32 px-6 bg-carbon border-b border-white/5 reveal">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-sm font-mono text-accent-cyan tracking-[0.2em] uppercase mb-4 text-center">Roadmap</h2>
+            <h3 class="text-3xl md:text-5xl font-bold text-white-text mb-20 text-center tracking-tight">Cómo funciona
+            </h3>
+
+            <div class="relative max-w-5xl mx-auto">
+                <!-- Conector horizontal visible en desktop -->
+                <div
+                    class="hidden md:block absolute top-[28px] left-[15%] w-[70%] h-[2px] bg-gradient-to-r from-transparent via-accent-cyan/50 to-transparent z-0">
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-12 md:gap-6 justify-between">
+                    <!-- Paso 1 -->
+                    <div class="relative z-10 flex flex-col items-center text-center flex-1">
+                        <div
+                            class="w-14 h-14 rounded-full bg-carbon border border-accent-cyan flex flex-col items-center justify-center text-accent-cyan font-mono font-bold text-lg mb-8 shadow-[0_0_15px_rgba(0,180,216,0.3)] shadow-accent-cyan/30">
+                            01
+                        </div>
+                        <h4 class="text-xl font-bold text-white-text mb-4">Auditoría de Flujo</h4>
+                        <p class="text-gray-400 font-light leading-relaxed">
+                            Analizamos dónde se pierde tiempo y dinero en tu infraestructura actual para trazar la
+                            mejora.
+                        </p>
+                    </div>
+
+                    <!-- Paso 2 -->
+                    <div class="relative z-10 flex flex-col items-center text-center flex-1">
+                        <div
+                            class="w-14 h-14 rounded-full bg-carbon border border-accent-cyan flex flex-col items-center justify-center text-accent-cyan font-mono font-bold text-lg mb-8 shadow-[0_0_15px_rgba(0,180,216,0.3)] shadow-accent-cyan/30">
+                            02
+                        </div>
+                        <h4 class="text-xl font-bold text-white-text mb-4">Integración Cloud-AI</h4>
+                        <p class="text-gray-400 font-light leading-relaxed">
+                            Desarrollamos y desplegamos tu solución tecnológica personalizada, 100% nativa de la nube.
+                        </p>
+                    </div>
+
+                    <!-- Paso 3 -->
+                    <div class="relative z-10 flex flex-col items-center text-center flex-1">
+                        <div
+                            class="w-14 h-14 rounded-full bg-carbon border border-accent-cyan flex flex-col items-center justify-center text-accent-cyan font-mono font-bold text-lg mb-8 shadow-[0_0_15px_rgba(0,180,216,0.3)] shadow-accent-cyan/30">
+                            03
+                        </div>
+                        <h4 class="text-xl font-bold text-white-text mb-4">Optimización Continua</h4>
+                        <p class="text-gray-400 font-light leading-relaxed">
+                            Monitorizamos el rendimiento mediante métricas para asegurar una mejora constante en la
+                            productividad.
+                        </p>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
-    <!-- Footer -->
-    <footer class="py-12 border-t border-white/5 bg-background-dark px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-            <div class="flex items-center gap-3 opacity-50">
-                <span class="material-symbols-outlined text-primary">deployed_code</span>
-                <span class="text-lg font-bold tracking-tight">JStudio<span class="text-primary">_IA</span></span>
+    <!-- 4. Evidencia (Resultados de Impacto) -->
+    <section class="py-32 px-6 bg-carbon border-b border-white/5 reveal relative overflow-hidden">
+        <div
+            class="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-accent-cyan/5 blur-[100px] rounded-full pointer-events-none">
+        </div>
+
+        <div class="max-w-4xl mx-auto relative z-10">
+            <h2 class="text-sm font-mono text-accent-cyan tracking-[0.2em] uppercase mb-4 text-center">Evidencia</h2>
+            <h3 class="text-3xl md:text-5xl font-bold text-white-text mb-16 text-center tracking-tight">Resultados de
+                Impacto</h3>
+
+            <div class="space-y-6">
+                <!-- Caso A -->
+                <div
+                    class="glass p-8 md:p-10 rounded-2xl flex flex-col md:flex-row gap-8 items-center md:items-start group hover:scale-[1.01] transition-transform">
+                    <div
+                        class="w-16 h-16 shrink-0 bg-accent-cyan/10 border border-accent-cyan/20 rounded-2xl flex items-center justify-center text-accent-cyan">
+                        <span class="material-symbols-outlined text-3xl">domain</span>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span
+                                class="text-xs font-mono text-white-text/50 uppercase tracking-[0.2em] border border-white/10 px-3 py-1 rounded-full">Caso
+                                A</span>
+                        </div>
+                        <p class="text-xl text-gray-300 font-light leading-relaxed">
+                            "Empresa de logística eliminó la necesidad de servidores físicos, <strong
+                                class="text-accent-cyan font-semibold">ahorrando 12.000€ anuales</strong> en
+                            mantenimiento local."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Caso B -->
+                <div
+                    class="glass p-8 md:p-10 rounded-2xl flex flex-col md:flex-row gap-8 items-center md:items-start group hover:scale-[1.01] transition-transform">
+                    <div
+                        class="w-16 h-16 shrink-0 bg-accent-cyan/10 border border-accent-cyan/20 rounded-2xl flex items-center justify-center text-accent-cyan">
+                        <span class="material-symbols-outlined text-3xl">bolt</span>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span
+                                class="text-xs font-mono text-white-text/50 uppercase tracking-[0.2em] border border-white/10 px-3 py-1 rounded-full">Caso
+                                B</span>
+                        </div>
+                        <p class="text-xl text-gray-300 font-light leading-relaxed">
+                            "Automatización de reportes mediante IA redujo la carga administrativa pesada en <strong
+                                class="text-accent-cyan font-semibold">15 horas semanales por empleado</strong>."
+                        </p>
+                    </div>
+                </div>
             </div>
-            <div class="flex gap-8 text-sm text-gray-500">
-                <a class="hover:text-white transition-colors" href="https://www.instagram.com/jstudio_ia"
-                    target="_blank">Instagram</a>
-                <a class="hover:text-white transition-colors" href="#">LinkedIn</a>
-                <a class="hover:text-white transition-colors" href="#">GitHub</a>
+        </div>
+    </section>
+
+    <!-- 5. Servicios de Desarrollo -->
+    <section class="py-32 px-6 bg-carbon border-b border-white/5 reveal relative overflow-hidden">
+        <div class="max-w-7xl mx-auto relative z-10">
+            <h2 class="text-sm font-mono text-accent-cyan tracking-[0.2em] uppercase mb-4 text-center">Ecosistema</h2>
+            <h3 class="text-3xl md:text-5xl font-bold text-white-text mb-20 text-center tracking-tight">Servicios de
+                Desarrollo</h3>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Bloque 1 -->
+                <div
+                    class="glass p-10 rounded-3xl hover:-translate-y-2 transition-transform duration-300 flex flex-col h-full border-t border-white/10">
+                    <div class="mb-8 p-4 bg-accent-cyan/5 w-fit rounded-2xl border border-accent-cyan/10">
+                        <span class="material-symbols-outlined text-accent-cyan text-4xl">lightbulb</span>
+                    </div>
+                    <h4 class="text-2xl font-bold text-white-text mb-4">Consultoría Estratégica</h4>
+                    <p class="text-gray-400 font-light leading-relaxed mb-6 flex-grow">
+                        Definición de hoja de ruta para la migración a la nube e implementación de Inteligencia
+                        Artificial para acelerar tus flujos.
+                    </p>
+                    <div
+                        class="font-mono text-xs text-accent-cyan/70 tracking-widest mt-auto border-t border-white/5 pt-4">
+                        MODELADO / ANÁLISIS</div>
+                </div>
+
+                <!-- Bloque 2 -->
+                <div
+                    class="glass p-10 rounded-3xl hover:-translate-y-2 transition-transform duration-300 flex flex-col h-full border-t border-accent-cyan/30 shadow-[0_-5px_30px_rgba(0,180,216,0.05)] relative overflow-hidden">
+                    <div
+                        class="absolute right-0 top-0 w-32 h-32 bg-accent-cyan/10 rounded-bl-full blur-[20px] pointer-events-none">
+                    </div>
+                    <div
+                        class="mb-8 p-4 bg-accent-cyan/10 w-fit rounded-2xl border border-accent-cyan/20 relative z-10">
+                        <span class="material-symbols-outlined text-accent-cyan text-4xl">code_blocks</span>
+                    </div>
+                    <h4 class="text-2xl font-bold text-white-text mb-4 relative z-10">Desarrollo a Medida</h4>
+                    <p class="text-gray-400 font-light leading-relaxed mb-6 flex-grow relative z-10">
+                        Creación de herramientas y software específico que resuelven fricciones operativas y aceleran
+                        los procesos diarios de tu equipo.
+                    </p>
+                    <div
+                        class="font-mono text-xs text-accent-cyan/70 tracking-widest mt-auto border-t border-white/5 pt-4 relative z-10">
+                        INGENIERÍA / CLOUD</div>
+                </div>
+
+                <!-- Bloque 3 -->
+                <div
+                    class="glass p-10 rounded-3xl hover:-translate-y-2 transition-transform duration-300 flex flex-col h-full border-t border-white/10">
+                    <div class="mb-8 p-4 bg-accent-cyan/5 w-fit rounded-2xl border border-accent-cyan/10">
+                        <span class="material-symbols-outlined text-accent-cyan text-4xl">settings_suggest</span>
+                    </div>
+                    <h4 class="text-2xl font-bold text-white-text mb-4">Mantenimiento y Escalado</h4>
+                    <p class="text-gray-400 font-light leading-relaxed mb-6 flex-grow">
+                        Soporte técnico especializado para que tu software nunca se quede atrás y escale automáticamente
+                        según la demanda de los usuarios.
+                    </p>
+                    <div
+                        class="font-mono text-xs text-accent-cyan/70 tracking-widest mt-auto border-t border-white/5 pt-4">
+                        SOPORTE / OPS</div>
+                </div>
             </div>
-            <p class="text-xs text-gray-600 font-mono uppercase tracking-widest">© 2026 JStudio_IA. Cyber-Premium
-                Standard.</p>
+        </div>
+    </section>
+
+    <!-- 6. Preguntas Rápidas (FAQ) -->
+    <section class="py-32 px-6 bg-carbon border-b border-white/5 reveal">
+        <div class="max-w-3xl mx-auto text-center mb-16">
+            <h2 class="text-sm font-mono text-accent-cyan tracking-[0.2em] uppercase mb-4">Respuestas</h2>
+            <h3 class="text-3xl md:text-5xl font-bold text-white-text tracking-tight">Preguntas Rápidas</h3>
+        </div>
+
+        <div class="max-w-3xl mx-auto space-y-4">
+            <!-- FAQ 1 -->
+            <details
+                class="glass rounded-2xl group overflow-hidden border border-white/5 [&_summary::-webkit-details-marker]:hidden">
+                <summary
+                    class="flex justify-between items-center font-bold px-8 py-6 cursor-pointer text-white-text list-none text-lg">
+                    ¿Es seguro tener mis datos en la nube?
+                    <span
+                        class="material-symbols-outlined text-accent-cyan group-open:rotate-180 transition-transform duration-300">expand_more</span>
+                </summary>
+                <div class="px-8 pb-6 text-gray-400 font-light leading-relaxed border-t border-white/5 pt-4 mt-2">
+                    Implementamos protocolos de cifrado de grado bancario y cumplimos con normativas internacionales de
+                    protección de datos para resguardar toda tu información.
+                </div>
+            </details>
+
+            <!-- FAQ 2 -->
+            <details
+                class="glass rounded-2xl group overflow-hidden border border-white/5 [&_summary::-webkit-details-marker]:hidden">
+                <summary
+                    class="flex justify-between items-center font-bold px-8 py-6 cursor-pointer text-white-text list-none text-lg">
+                    ¿Cuánto tiempo tarda la implementación?
+                    <span
+                        class="material-symbols-outlined text-accent-cyan group-open:rotate-180 transition-transform duration-300">expand_more</span>
+                </summary>
+                <div class="px-8 pb-6 text-gray-400 font-light leading-relaxed border-t border-white/5 pt-4 mt-2">
+                    Dependiendo del proyecto, las primeras integraciones suelen estar listas en un ciclo de desarrollo
+                    ágil de entre 4 a 6 semanas.
+                </div>
+            </details>
+
+            <!-- FAQ 3 -->
+            <details
+                class="glass rounded-2xl group overflow-hidden border border-white/5 [&_summary::-webkit-details-marker]:hidden">
+                <summary
+                    class="flex justify-between items-center font-bold px-8 py-6 cursor-pointer text-white-text list-none text-lg">
+                    ¿Realmente puedo dejar de comprar hardware?
+                    <span
+                        class="material-symbols-outlined text-accent-cyan group-open:rotate-180 transition-transform duration-300">expand_more</span>
+                </summary>
+                <div class="px-8 pb-6 text-gray-400 font-light leading-relaxed border-t border-white/5 pt-4 mt-2">
+                    Sí, nuestras soluciones trasladan por completo la carga de procesamiento a centros de datos remotos
+                    de alto rendimiento accesibles desde cualquier lugar.
+                </div>
+            </details>
+
+            <!-- FAQ 4 -->
+            <details
+                class="glass rounded-2xl group overflow-hidden border border-white/5 [&_summary::-webkit-details-marker]:hidden">
+                <summary
+                    class="flex justify-between items-center font-bold px-8 py-6 cursor-pointer text-white-text list-none text-lg">
+                    ¿La IA reemplazará a mi equipo?
+                    <span
+                        class="material-symbols-outlined text-accent-cyan group-open:rotate-180 transition-transform duration-300">expand_more</span>
+                </summary>
+                <div class="px-8 pb-6 text-gray-400 font-light leading-relaxed border-t border-white/5 pt-4 mt-2">
+                    No, la IA de Jstudio_AI está diseñada para potenciar a tus empleados, eliminando las tareas
+                    repetitivas y manuales que les impiden enfocarse en tareas creativas y estratégicas.
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- 7. Cierre / Footer -->
+    <section class="py-32 px-6 bg-carbon relative overflow-hidden" id="contacto">
+        <!-- Glow background -->
+        <div class="absolute inset-0 z-0 flex items-center justify-center">
+            <div class="w-[600px] h-[600px] bg-accent-cyan/10 rounded-full blur-[120px] pointer-events-none"></div>
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h2 class="text-4xl md:text-6xl font-bold text-white-text tracking-tight mb-12">
+                ¿Listo para escalar la <br /> inteligencia de tu empresa?
+            </h2>
+
+            <a href="mailto:johan.samudiotrabajo@gmail.com"
+                class="inline-flex items-center justify-center gap-3 btn-hover bg-accent-cyan text-carbon px-12 py-5 rounded-xl font-bold text-lg mb-8 shadow-[0_0_20px_rgba(0,180,216,0.4)]">
+                Reservar consultoría de desarrollo
+                <span class="material-symbols-outlined text-xl">arrow_outward</span>
+            </a>
+
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6 mt-4 opacity-80">
+                <div
+                    class="flex items-center gap-2 text-gray-400 font-mono text-sm border border-white/10 px-4 py-2 rounded-lg bg-white/5">
+                    <span class="material-symbols-outlined text-accent-cyan text-sm">schedule</span>
+                    Respuesta en menos de 24 horas.
+                </div>
+                <div
+                    class="flex items-center gap-2 text-gray-400 font-mono text-sm border border-white/10 px-4 py-2 rounded-lg bg-white/5">
+                    <span class="material-symbols-outlined text-accent-cyan text-sm">handshake</span>
+                    Sin compromiso de permanencia inicial.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 bg-carbon text-center border-t border-white/5 relative z-10 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-accent-cyan">memory</span>
+                <span class="text-lg font-bold text-white-text tracking-tight">Jstudio<span
+                        class="text-accent-cyan text-glow">_AI</span></span>
+            </div>
+            <p class="font-mono text-xs text-gray-500 uppercase tracking-widest">
+                Jstudio_AI 2026 | Desarrollo de Software con Inteligencia Artificial.
+            </p>
         </div>
     </footer>
 
+    <!-- Scripts -->
+    <script>
+        // Scroll reveal animation
+        document.addEventListener("DOMContentLoaded", () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: "0px",
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Stop observing once revealed
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
 </body>
 
 </html>
