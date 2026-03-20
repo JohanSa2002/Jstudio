@@ -1,541 +1,877 @@
 <!DOCTYPE html>
-<html class="dark" lang="es">
+<html lang="es" class="scroll-smooth">
 
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Jstudio_AI | Desarrollo de Software con Inteligencia Artificial</title>
-    <meta name="description"
-        content="Sustituye servidores físicos por inteligencia en la nube. Despliega software con IA diseñado para maximizar la productividad de tu equipo." />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jstudio_AI | Desarrollo de Software con Inteligencia Artificial</title>
+  <meta name="description" content="Sustituye servidores físicos por inteligencia en la nube. Despliega software con IA diseñado para maximizar la productividad de tu equipo." />
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        carbon: "#0c0c0c",
-                        "accent-cyan": "#00B4D8",
-                        "white-text": "#f3f4f6",
-                    },
-                    fontFamily: {
-                        body: ["Inter", "sans-serif"],
-                        mono: ["JetBrains Mono", "monospace"]
-                    },
-                },
-            },
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0c0c0c;
-            color: #d1d5db;
-            scroll-behavior: smooth;
-        }
+  <!-- Fonts: Syne (display) + DM Sans (body) + DM Mono (code) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink:    '#08080F',
+            surface:'#0D0D16',
+            jade:   '#1DB954',
+            mauve:  '#9B8FFF',
+            snow:   '#EEF2FF',
+          },
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            body:    ['DM Sans', 'sans-serif'],
+            mono:    ['DM Mono', 'monospace'],
+          }
         }
+      }
+    }
+  </script>
 
-        .noise {
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            pointer-events: none;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; }
 
-        .btn-hover {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+    html { font-size: 16px; }
 
-        .btn-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.4);
-        }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: #08080F;
+      color: #8892A4;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            transition: border-color 0.3s ease, background 0.3s ease;
-        }
+    ::selection { background: rgba(29, 185, 84, 0.25); color: #EEF2FF; }
 
-        .glass:hover {
-            border-color: rgba(0, 180, 216, 0.3);
-            background: rgba(255, 255, 255, 0.03);
-        }
+    /* ── Noise overlay ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.022;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
 
-        .reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease-out;
-        }
+    /* ── Scroll progress bar ── */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, #1DB954, #9B8FFF);
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
 
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* ── Dot grid ── */
+    .dot-grid {
+      background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
 
-        .text-glow {
-            text-shadow: 0 0 10px rgba(0, 180, 216, 0.5);
-        }
-    </style>
+    /* ── Floating orbs ── */
+    @keyframes drift-a {
+      0%,100% { transform: translate(0,0) scale(1); }
+      40%      { transform: translate(50px,-35px) scale(1.06); }
+      70%      { transform: translate(-30px,25px) scale(0.94); }
+    }
+    @keyframes drift-b {
+      0%,100% { transform: translate(0,0) scale(1); }
+      35%     { transform: translate(-45px,30px) scale(0.96); }
+      65%     { transform: translate(35px,-45px) scale(1.04); }
+    }
+    .orb-a { animation: drift-a 22s ease-in-out infinite; }
+    .orb-b { animation: drift-b 28s ease-in-out infinite; }
+
+    /* ── Pulse dot ── */
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:0.45; transform:scale(0.75); }
+    }
+    .pulse { animation: pulse 2.2s ease-in-out infinite; }
+
+    /* ── Ticker ── */
+    @keyframes ticker {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-track { animation: ticker 28s linear infinite; }
+    .ticker-track:hover { animation-play-state: paused; }
+
+    /* ── Gradient border card ── */
+    .gb {
+      position: relative;
+      background: #0D0D16;
+      border-radius: 18px;
+    }
+    .gb::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(29,185,84,0.45), rgba(155,143,255,0.25), transparent 60%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* ── Plain card ── */
+    .card {
+      background: #0D0D16;
+      border: 1px solid rgba(255,255,255,0.055);
+      border-radius: 18px;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+    .card:hover { border-color: rgba(29,185,84,0.22); }
+
+    /* ── Section label ── */
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(29,185,84,0.75);
+    }
+
+    /* ── Reveal animations ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: 0.10s; }
+    .d2 { transition-delay: 0.20s; }
+    .d3 { transition-delay: 0.30s; }
+
+    /* ── Buttons ── */
+    .btn-p {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px;
+      background: #1DB954;
+      color: #08080F;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600; font-size: 15px;
+      border-radius: 12px;
+      border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      text-decoration: none; line-height: 1;
+    }
+    .btn-p:hover {
+      background: #17A348;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(29,185,84,0.30);
+    }
+
+    .btn-s {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px;
+      background: transparent;
+      color: #EEF2FF;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500; font-size: 15px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.10);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      text-decoration: none; line-height: 1;
+    }
+    .btn-s:hover { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.04); }
+
+    /* ── Divider ── */
+    hr.div { border: none; border-top: 1px solid rgba(255,255,255,0.055); }
+
+    /* ── FAQ ── */
+    details summary { list-style: none; }
+    details summary::-webkit-details-marker { display: none; }
+    .faq-plus { transition: transform 0.3s ease; }
+    details[open] .faq-plus { transform: rotate(45deg); }
+
+    /* ── Step number ── */
+    .step-n {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(52px, 9vw, 88px);
+      line-height: 1;
+      color: rgba(29,185,84,0.12);
+      letter-spacing: -0.03em;
+      transition: color 0.3s;
+    }
+    .step:hover .step-n { color: rgba(29,185,84,0.28); }
+
+    /* ── Nav scroll ── */
+    .nav-solid {
+      background: rgba(8,8,15,0.97) !important;
+      border-bottom-color: rgba(255,255,255,0.09) !important;
+    }
+
+    /* ── Responsive helpers ── */
+    @media (max-width: 768px) {
+      .hero-h1 { font-size: clamp(38px, 10vw, 72px) !important; }
+    }
+  </style>
 </head>
 
-<body class="bg-carbon text-gray-300 antialiased selection:bg-accent-cyan/30 overflow-x-hidden">
-    <div class="noise"></div>
+<body class="bg-ink text-gray-500 antialiased">
 
-    <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-40 border-b border-white/5 bg-carbon/80 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-accent-cyan">memory</span>
-                <span class="text-xl font-bold text-white-text tracking-tight">Jstudio<span
-                        class="text-accent-cyan text-glow">_AI</span></span>
-            </div>
-            <a href="#contacto"
-                class="btn-hover bg-accent-cyan text-carbon px-6 py-2 rounded-lg text-sm font-bold">Hablemos</a>
+  <!-- Progress bar -->
+  <div id="progress-bar"></div>
+
+  <!-- ════════════════════════════ NAVBAR ════════════════════════════ -->
+  <nav id="nav" class="fixed top-0 left-0 right-0 z-50 border-b border-white/5 transition-all duration-300"
+       style="background: rgba(8,8,15,0.65); backdrop-filter: blur(18px);">
+    <div class="max-w-7xl mx-auto px-6 h-[68px] flex items-center justify-between">
+
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-8 h-8 rounded-lg bg-jade/10 border border-jade/25 flex items-center justify-center transition-colors group-hover:border-jade/50">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+            <path d="M2 7.5L5.5 11L13 4" stroke="#1DB954" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
-    </nav>
+        <span class="font-display font-bold text-[17px] text-snow tracking-tight">
+          Jstudio<span class="text-jade">_AI</span>
+        </span>
+      </a>
 
-    <!-- 1. Hero Section -->
-    <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
-        <!-- Background Image -->
-        <div class="absolute inset-0 z-0">
-            <div class="absolute inset-0 bg-carbon bg-opacity-80 z-10"></div>
-            <!-- Macro circuits image -->
-            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=2000"
-                alt="Placa de circuito macro, diseño tecnológico" class="w-full h-full object-cover opacity-30" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-carbon z-20"></div>
+      <!-- CTA -->
+      <a href="#contacto" class="btn-p text-[13.5px] py-[9px] px-5">
+        Hablemos
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <path d="M2 6.5h9M7.5 2.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════ HERO ════════════════════════════ -->
+  <section class="relative min-h-screen flex items-center overflow-hidden pt-[68px]">
+
+    <!-- Background effects -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="dot-grid absolute inset-0 opacity-50"></div>
+      <div class="orb-a absolute top-[15%] right-[10%] w-[700px] h-[700px] rounded-full blur-[130px]"
+           style="background: rgba(29,185,84,0.055);"></div>
+      <div class="orb-b absolute bottom-[20%] left-[5%] w-[560px] h-[560px] rounded-full blur-[110px]"
+           style="background: rgba(155,143,255,0.055);"></div>
+      <div class="absolute bottom-0 left-0 right-0 h-56 bg-gradient-to-t from-ink to-transparent"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 relative z-10 py-24 w-full">
+
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-jade/20 mb-10 reveal"
+           style="background: rgba(29,185,84,0.05);">
+        <span class="pulse w-2 h-2 rounded-full bg-jade shrink-0 block"></span>
+        <span class="font-mono text-[10.5px] tracking-[0.22em] text-jade font-medium uppercase">
+          Arquitectura Serverless · IA Aplicada
+        </span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="hero-h1 font-display font-extrabold text-snow leading-[0.92] tracking-[-0.035em] mb-8 reveal d1"
+          style="font-size: clamp(46px, 8.5vw, 90px);">
+        Sustituye tu hardware<br>
+        por <span class="text-jade" style="text-shadow: 0 0 70px rgba(29,185,84,0.4);">inteligencia</span><br>
+        <span style="color: rgba(238,242,255,0.35);">en la nube.</span>
+      </h1>
+
+      <!-- Sub -->
+      <p class="text-lg md:text-xl leading-relaxed mb-12 max-w-2xl reveal d2" style="color:#6B7A8F; font-weight:300;">
+        Despliega software con IA diseñado para maximizar la productividad de tu equipo
+        sin invertir un solo euro más en hardware costoso.
+      </p>
+
+      <!-- CTAs -->
+      <div class="flex flex-col sm:flex-row items-start gap-4 mb-20 reveal d3">
+        <a href="#contacto" class="btn-p">
+          Reservar consultoría
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+            <path d="M2 7.5h11M8.5 3l4.5 4.5L8.5 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="#metodologia" class="btn-s">
+          Ver metodología
+        </a>
+      </div>
+
+      <!-- Stats row -->
+      <div class="flex flex-wrap gap-8 md:gap-14 reveal d3">
+        <div class="border-t-2 border-jade/40 pt-4 min-w-[120px]">
+          <div class="font-display font-extrabold text-snow tracking-tight count-el"
+               style="font-size:clamp(22px,3vw,30px);" data-target="12000" data-suffix="$">$0</div>
+          <div class="font-mono text-[11px] mt-1" style="color:#45505F;">ahorrado/año</div>
+        </div>
+        <div class="border-t-2 border-white/10 pt-4 min-w-[80px]">
+          <div class="font-display font-extrabold text-snow tracking-tight count-el"
+               style="font-size:clamp(22px,3vw,30px);" data-target="15" data-suffix="h">0h</div>
+          <div class="font-mono text-[11px] mt-1" style="color:#45505F;">libres/semana</div>
+        </div>
+        <div class="border-t-2 border-white/10 pt-4 min-w-[70px]">
+          <div class="font-display font-extrabold text-snow tracking-tight count-el"
+               style="font-size:clamp(22px,3vw,30px);" data-target="100" data-suffix="%">0%</div>
+          <div class="font-mono text-[11px] mt-1" style="color:#45505F;">serverless</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════ TICKER ════════════════ -->
+  <div class="overflow-hidden border-y border-white/5 py-4" style="background: rgba(13,13,22,0.8);">
+    <div class="ticker-track flex gap-12 whitespace-nowrap w-max">
+      <!-- duplicated for seamless loop -->
+      <template id="ticker-items">
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase" style="color:#374151;">[ Cloud-Native ]</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase text-jade/50">·</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase" style="color:#374151;">[ Serverless ]</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase text-jade/50">·</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase" style="color:#374151;">[ AI Agents ]</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase text-jade/50">·</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase" style="color:#374151;">[ Automatización ]</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase text-jade/50">·</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase" style="color:#374151;">[ Infraestructura Elástica ]</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase text-jade/50">·</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase" style="color:#374151;">[ Machine Learning ]</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase text-jade/50">·</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase" style="color:#374151;">[ DevOps ]</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase text-jade/50">·</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase" style="color:#374151;">[ LLM Integration ]</span>
+        <span class="font-mono text-[11px] tracking-[0.2em] uppercase text-jade/50">·</span>
+      </template>
+    </div>
+  </div>
+
+  <hr class="div" />
+
+  <!-- ════════════════════════ PROBLEMA → SOLUCIÓN ════════════════════════ -->
+  <section class="py-28 px-6">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="mb-16 reveal">
+        <div class="tag mb-3">Diagnóstico Operativo</div>
+        <h2 class="font-display font-bold text-snow tracking-tight"
+            style="font-size:clamp(30px,4.5vw,46px);">Análisis de Eficiencia</h2>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-5">
+
+        <!-- Problema -->
+        <div class="card p-10 reveal">
+          <div class="flex items-center gap-3 mb-9">
+            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                 style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.18);">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                <path d="M1.5 1.5l10 10M11.5 1.5l-10 10" stroke="#EF4444" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="font-mono text-[10.5px] tracking-[0.22em] uppercase" style="color:rgba(239,68,68,0.65);">El Problema</span>
+          </div>
+          <ul class="space-y-6">
+            <li class="flex items-start gap-4">
+              <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                   style="background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.18);">
+                <svg width="7" height="7" viewBox="0 0 7 7" fill="none">
+                  <path d="M1 1l5 5M6 1L1 6" stroke="#EF4444" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <p style="color:#6B7A8F; line-height:1.7;">Gastos recurrentes en renovación de equipos físicos que escalan sin control.</p>
+            </li>
+            <li class="flex items-start gap-4">
+              <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                   style="background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.18);">
+                <svg width="7" height="7" viewBox="0 0 7 7" fill="none">
+                  <path d="M1 1l5 5M6 1L1 6" stroke="#EF4444" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <p style="color:#6B7A8F; line-height:1.7;">Cuellos de botella en procesos manuales que la IA podría automatizar.</p>
+            </li>
+            <li class="flex items-start gap-4">
+              <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                   style="background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.18);">
+                <svg width="7" height="7" viewBox="0 0 7 7" fill="none">
+                  <path d="M1 1l5 5M6 1L1 6" stroke="#EF4444" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <p style="color:#6B7A8F; line-height:1.7;">Escalabilidad limitada por la capacidad de tu oficina o servidor local.</p>
+            </li>
+          </ul>
         </div>
 
-        <div class="max-w-5xl mx-auto px-6 relative z-30 pt-16">
-            <div
-                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/5 mb-8">
-                <span class="material-symbols-outlined text-accent-cyan text-sm">verified</span>
-                <span class="text-[11px] uppercase tracking-widest font-mono text-accent-cyan font-bold">Arquitectura
-                    Serverless: Reducción del 100% en mantenimiento</span>
+        <!-- Solución -->
+        <div class="gb p-10 reveal d1 relative overflow-hidden">
+          <div class="absolute -right-20 -top-20 w-64 h-64 rounded-full pointer-events-none"
+               style="background:radial-gradient(circle,rgba(29,185,84,0.09) 0%,transparent 70%);"></div>
+          <div class="flex items-center gap-3 mb-9 relative z-10">
+            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                 style="background:rgba(29,185,84,0.08); border:1px solid rgba(29,185,84,0.22);">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                <path d="M1.5 6.5L5 10L11.5 3" stroke="#1DB954" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-white-text leading-[1.1] mb-8 tracking-tight">
-                Sustituye servidores físicos por <br class="hidden lg:block"> <span
-                    class="text-accent-cyan text-glow">inteligencia en la nube.</span>
-            </h1>
-            <p class="text-xl md:text-2xl text-gray-400 mb-10 max-w-3xl leading-relaxed font-light">
-                Despliega software con IA diseñado para maximizar la productividad de tu equipo sin invertir un solo
-                euro más en hardware costoso.
+            <span class="font-mono text-[10.5px] tracking-[0.22em] uppercase" style="color:rgba(29,185,84,0.75);">La Solución</span>
+          </div>
+          <ul class="space-y-6 relative z-10">
+            <li class="flex items-start gap-4">
+              <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                   style="background:rgba(29,185,84,0.08); border:1px solid rgba(29,185,84,0.22);">
+                <svg width="7" height="7" viewBox="0 0 7 7" fill="none">
+                  <path d="M1 3.5l2 2 3-3" stroke="#1DB954" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <p style="color:#8892A4; line-height:1.7;">
+                <strong class="text-snow font-medium">Infraestructura 100% en la nube:</strong> paga solo por lo que usas.
+              </p>
+            </li>
+            <li class="flex items-start gap-4">
+              <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                   style="background:rgba(29,185,84,0.08); border:1px solid rgba(29,185,84,0.22);">
+                <svg width="7" height="7" viewBox="0 0 7 7" fill="none">
+                  <path d="M1 3.5l2 2 3-3" stroke="#1DB954" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <p style="color:#8892A4; line-height:1.7;">
+                <strong class="text-snow font-medium">Agentes de IA</strong> que ejecutan tareas repetitivas en segundo plano.
+              </p>
+            </li>
+            <li class="flex items-start gap-4">
+              <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                   style="background:rgba(29,185,84,0.08); border:1px solid rgba(29,185,84,0.22);">
+                <svg width="7" height="7" viewBox="0 0 7 7" fill="none">
+                  <path d="M1 3.5l2 2 3-3" stroke="#1DB954" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <p style="color:#8892A4; line-height:1.7;">
+                <strong class="text-snow font-medium">Sistemas elásticos</strong> que crecen al ritmo de tu facturación.
+              </p>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="div" />
+
+  <!-- ════════════════════════ METODOLOGÍA ════════════════════════ -->
+  <section id="metodologia" class="py-28 px-6">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="mb-16 reveal">
+        <div class="tag mb-3">Roadmap</div>
+        <h2 class="font-display font-bold text-snow tracking-tight"
+            style="font-size:clamp(30px,4.5vw,46px);">Cómo funciona</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-10 md:gap-14">
+
+        <!-- Step 01 -->
+        <div class="step reveal">
+          <div class="step-n mb-3">01</div>
+          <div class="h-px mb-7 relative" style="background:rgba(255,255,255,0.06);">
+            <div class="absolute left-0 top-0 h-full w-1/2" style="background:rgba(29,185,84,0.45);"></div>
+          </div>
+          <h3 class="font-display font-bold text-snow text-xl mb-4">Auditoría de Flujo</h3>
+          <p style="color:#6B7A8F; line-height:1.75; font-weight:300;">
+            Analizamos dónde se pierde tiempo y dinero en tu infraestructura actual para trazar la mejora.
+          </p>
+        </div>
+
+        <!-- Step 02 -->
+        <div class="step reveal d1">
+          <div class="step-n mb-3">02</div>
+          <div class="h-px mb-7 relative" style="background:rgba(255,255,255,0.06);">
+            <div class="absolute left-0 top-0 h-full w-3/4" style="background:rgba(29,185,84,0.45);"></div>
+          </div>
+          <h3 class="font-display font-bold text-snow text-xl mb-4">Integración Cloud-AI</h3>
+          <p style="color:#6B7A8F; line-height:1.75; font-weight:300;">
+            Desarrollamos y desplegamos tu solución tecnológica personalizada, 100% nativa de la nube.
+          </p>
+        </div>
+
+        <!-- Step 03 -->
+        <div class="step reveal d2">
+          <div class="step-n mb-3">03</div>
+          <div class="h-px mb-7" style="background:rgba(29,185,84,0.35);"></div>
+          <h3 class="font-display font-bold text-snow text-xl mb-4">Optimización Continua</h3>
+          <p style="color:#6B7A8F; line-height:1.75; font-weight:300;">
+            Monitorizamos el rendimiento mediante métricas para asegurar una mejora constante en la productividad.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="div" />
+
+  <!-- ════════════════════════ EVIDENCIA ════════════════════════ -->
+  <section class="py-28 px-6 relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[400px] rounded-full blur-[140px]"
+           style="background:rgba(29,185,84,0.04);"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+
+      <div class="mb-16 reveal">
+        <div class="tag mb-3">Evidencia</div>
+        <h2 class="font-display font-bold text-snow tracking-tight"
+            style="font-size:clamp(30px,4.5vw,46px);">Resultados de Impacto</h2>
+      </div>
+
+      <div class="space-y-4">
+
+        <!-- Caso A -->
+        <div class="card p-8 md:p-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-10 reveal">
+          <div class="shrink-0 md:w-48">
+            <div class="font-mono text-[10px] tracking-[0.22em] uppercase mb-2" style="color:#374151;">Caso A</div>
+            <div class="font-display font-extrabold text-snow tracking-tight leading-none"
+                 style="font-size:clamp(28px,4vw,46px);">$12,000</div>
+            <div class="font-mono text-[10.5px] mt-1.5 text-jade/60">ahorro anual</div>
+          </div>
+          <div class="h-px md:h-12 w-full md:w-px shrink-0" style="background:rgba(255,255,255,0.06);"></div>
+          <div class="flex-1">
+            <p class="text-lg leading-[1.75]" style="color:#8892A4; font-weight:300;">
+              Empresa de logística eliminó la necesidad de servidores físicos,
+              <strong class="text-snow font-medium">ahorrando $12,000 anuales</strong> en mantenimiento local.
             </p>
-            <div class="flex flex-col sm:flex-row gap-5 items-center">
-                <a href="#contacto"
-                    class="w-full sm:w-auto btn-hover bg-accent-cyan text-carbon px-8 py-4 rounded-lg font-bold text-center flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,180,216,0.3)]">
-                    Reservar consultoría de desarrollo
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </a>
-                <a href="#metodologia"
-                    class="w-full sm:w-auto btn-hover glass text-white-text px-8 py-4 rounded-lg font-bold text-center border-white/10 hover:bg-white/5">
-                    Ver metodología
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- 2. Problema -> Solución (Análisis de Eficiencia) -->
-    <section class="py-24 px-6 relative z-20 bg-carbon border-b border-white/5 reveal">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <span class="font-mono text-xs tracking-[0.2em] text-accent-cyan uppercase mb-2 block">Diagnóstico
-                    Operativo</span>
-                <h2 class="text-3xl md:text-4xl font-bold text-white-text">Análisis de Eficiencia</h2>
-            </div>
-
-            <div class="grid lg:grid-cols-2 gap-8">
-                <!-- Problema -->
-                <div class="glass p-10 lg:p-12 rounded-2xl flex flex-col justify-center border-red-500/20">
-                    <div class="flex items-center gap-3 mb-8 text-red-500/80">
-                        <span
-                            class="material-symbols-outlined border border-red-500/30 p-2 rounded-lg bg-red-500/10">warning</span>
-                        <h3 class="text-xl font-bold tracking-widest text-white-text">EL PROBLEMA</h3>
-                    </div>
-                    <ul class="space-y-6">
-                        <li class="flex items-start gap-4">
-                            <span class="material-symbols-outlined text-red-500/50 mt-1 flex-shrink-0">close</span>
-                            <p class="text-gray-400 leading-relaxed">Gastos recurrentes en renovación de equipos
-                                físicos.</p>
-                        </li>
-                        <li class="flex items-start gap-4">
-                            <span class="material-symbols-outlined text-red-500/50 mt-1 flex-shrink-0">close</span>
-                            <p class="text-gray-400 leading-relaxed">Cuellos de botella en procesos manuales que la IA
-                                podría automatizar.</p>
-                        </li>
-                        <li class="flex items-start gap-4">
-                            <span class="material-symbols-outlined text-red-500/50 mt-1 flex-shrink-0">close</span>
-                            <p class="text-gray-400 leading-relaxed">Escalabilidad limitada por la capacidad de tu
-                                oficina o servidor local.</p>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Solución -->
-                <div
-                    class="glass p-10 lg:p-12 rounded-2xl flex flex-col justify-center border-accent-cyan/30 relative overflow-hidden">
-                    <div
-                        class="absolute -right-20 -bottom-20 w-64 h-64 bg-accent-cyan/10 blur-[80px] rounded-full pointer-events-none">
-                    </div>
-                    <div class="flex items-center gap-3 mb-8 text-accent-cyan relative z-10">
-                        <span
-                            class="material-symbols-outlined border border-accent-cyan/30 p-2 rounded-lg bg-accent-cyan/10">check_circle</span>
-                        <h3 class="text-xl font-bold tracking-widest text-glow">LA SOLUCIÓN</h3>
-                    </div>
-                    <ul class="space-y-6 relative z-10">
-                        <li class="flex items-start gap-4">
-                            <span
-                                class="material-symbols-outlined text-accent-cyan mt-1 flex-shrink-0">cloud_done</span>
-                            <p class="text-gray-300 leading-relaxed"><strong class="text-white-text">Infraestructura
-                                    100% en la nube:</strong> paga solo por lo que usas.</p>
-                        </li>
-                        <li class="flex items-start gap-4">
-                            <span class="material-symbols-outlined text-accent-cyan mt-1 flex-shrink-0">smart_toy</span>
-                            <p class="text-gray-300 leading-relaxed"><strong class="text-white-text">Agentes de
-                                    IA</strong> que ejecutan tareas repetitivas en segundo plano.</p>
-                        </li>
-                        <li class="flex items-start gap-4">
-                            <span class="material-symbols-outlined text-accent-cyan mt-1 flex-shrink-0">moving</span>
-                            <p class="text-gray-300 leading-relaxed"><strong class="text-white-text">Sistemas
-                                    elásticos</strong> que crecen al ritmo de tu facturación.</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 3. Cómo funciona (Timeline 01-03) -->
-    <section id="metodologia" class="py-32 px-6 bg-carbon border-b border-white/5 reveal">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="text-sm font-mono text-accent-cyan tracking-[0.2em] uppercase mb-4 text-center">Roadmap</h2>
-            <h3 class="text-3xl md:text-5xl font-bold text-white-text mb-20 text-center tracking-tight">Cómo funciona
-            </h3>
-
-            <div class="relative max-w-5xl mx-auto">
-                <!-- Conector horizontal visible en desktop -->
-                <div
-                    class="hidden md:block absolute top-[28px] left-[15%] w-[70%] h-[2px] bg-gradient-to-r from-transparent via-accent-cyan/50 to-transparent z-0">
-                </div>
-
-                <div class="flex flex-col md:flex-row gap-12 md:gap-6 justify-between">
-                    <!-- Paso 1 -->
-                    <div class="relative z-10 flex flex-col items-center text-center flex-1">
-                        <div
-                            class="w-14 h-14 rounded-full bg-carbon border border-accent-cyan flex flex-col items-center justify-center text-accent-cyan font-mono font-bold text-lg mb-8 shadow-[0_0_15px_rgba(0,180,216,0.3)] shadow-accent-cyan/30">
-                            01
-                        </div>
-                        <h4 class="text-xl font-bold text-white-text mb-4">Auditoría de Flujo</h4>
-                        <p class="text-gray-400 font-light leading-relaxed">
-                            Analizamos dónde se pierde tiempo y dinero en tu infraestructura actual para trazar la
-                            mejora.
-                        </p>
-                    </div>
-
-                    <!-- Paso 2 -->
-                    <div class="relative z-10 flex flex-col items-center text-center flex-1">
-                        <div
-                            class="w-14 h-14 rounded-full bg-carbon border border-accent-cyan flex flex-col items-center justify-center text-accent-cyan font-mono font-bold text-lg mb-8 shadow-[0_0_15px_rgba(0,180,216,0.3)] shadow-accent-cyan/30">
-                            02
-                        </div>
-                        <h4 class="text-xl font-bold text-white-text mb-4">Integración Cloud-AI</h4>
-                        <p class="text-gray-400 font-light leading-relaxed">
-                            Desarrollamos y desplegamos tu solución tecnológica personalizada, 100% nativa de la nube.
-                        </p>
-                    </div>
-
-                    <!-- Paso 3 -->
-                    <div class="relative z-10 flex flex-col items-center text-center flex-1">
-                        <div
-                            class="w-14 h-14 rounded-full bg-carbon border border-accent-cyan flex flex-col items-center justify-center text-accent-cyan font-mono font-bold text-lg mb-8 shadow-[0_0_15px_rgba(0,180,216,0.3)] shadow-accent-cyan/30">
-                            03
-                        </div>
-                        <h4 class="text-xl font-bold text-white-text mb-4">Optimización Continua</h4>
-                        <p class="text-gray-400 font-light leading-relaxed">
-                            Monitorizamos el rendimiento mediante métricas para asegurar una mejora constante en la
-                            productividad.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 4. Evidencia (Resultados de Impacto) -->
-    <section class="py-32 px-6 bg-carbon border-b border-white/5 reveal relative overflow-hidden">
-        <div
-            class="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-accent-cyan/5 blur-[100px] rounded-full pointer-events-none">
+          </div>
         </div>
 
-        <div class="max-w-4xl mx-auto relative z-10">
-            <h2 class="text-sm font-mono text-accent-cyan tracking-[0.2em] uppercase mb-4 text-center">Evidencia</h2>
-            <h3 class="text-3xl md:text-5xl font-bold text-white-text mb-16 text-center tracking-tight">Resultados de
-                Impacto</h3>
-
-            <div class="space-y-6">
-                <!-- Caso A -->
-                <div
-                    class="glass p-8 md:p-10 rounded-2xl flex flex-col md:flex-row gap-8 items-center md:items-start group hover:scale-[1.01] transition-transform">
-                    <div
-                        class="w-16 h-16 shrink-0 bg-accent-cyan/10 border border-accent-cyan/20 rounded-2xl flex items-center justify-center text-accent-cyan">
-                        <span class="material-symbols-outlined text-3xl">domain</span>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span
-                                class="text-xs font-mono text-white-text/50 uppercase tracking-[0.2em] border border-white/10 px-3 py-1 rounded-full">Caso
-                                A</span>
-                        </div>
-                        <p class="text-xl text-gray-300 font-light leading-relaxed">
-                            "Empresa de logística eliminó la necesidad de servidores físicos, <strong
-                                class="text-accent-cyan font-semibold">ahorrando 12.000€ anuales</strong> en
-                            mantenimiento local."
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Caso B -->
-                <div
-                    class="glass p-8 md:p-10 rounded-2xl flex flex-col md:flex-row gap-8 items-center md:items-start group hover:scale-[1.01] transition-transform">
-                    <div
-                        class="w-16 h-16 shrink-0 bg-accent-cyan/10 border border-accent-cyan/20 rounded-2xl flex items-center justify-center text-accent-cyan">
-                        <span class="material-symbols-outlined text-3xl">bolt</span>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span
-                                class="text-xs font-mono text-white-text/50 uppercase tracking-[0.2em] border border-white/10 px-3 py-1 rounded-full">Caso
-                                B</span>
-                        </div>
-                        <p class="text-xl text-gray-300 font-light leading-relaxed">
-                            "Automatización de reportes mediante IA redujo la carga administrativa pesada en <strong
-                                class="text-accent-cyan font-semibold">15 horas semanales por empleado</strong>."
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 5. Servicios de Desarrollo -->
-    <section class="py-32 px-6 bg-carbon border-b border-white/5 reveal relative overflow-hidden">
-        <div class="max-w-7xl mx-auto relative z-10">
-            <h2 class="text-sm font-mono text-accent-cyan tracking-[0.2em] uppercase mb-4 text-center">Ecosistema</h2>
-            <h3 class="text-3xl md:text-5xl font-bold text-white-text mb-20 text-center tracking-tight">Servicios de
-                Desarrollo</h3>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Bloque 1 -->
-                <div
-                    class="glass p-10 rounded-3xl hover:-translate-y-2 transition-transform duration-300 flex flex-col h-full border-t border-white/10">
-                    <div class="mb-8 p-4 bg-accent-cyan/5 w-fit rounded-2xl border border-accent-cyan/10">
-                        <span class="material-symbols-outlined text-accent-cyan text-4xl">lightbulb</span>
-                    </div>
-                    <h4 class="text-2xl font-bold text-white-text mb-4">Consultoría Estratégica</h4>
-                    <p class="text-gray-400 font-light leading-relaxed mb-6 flex-grow">
-                        Definición de hoja de ruta para la migración a la nube e implementación de Inteligencia
-                        Artificial para acelerar tus flujos.
-                    </p>
-                    <div
-                        class="font-mono text-xs text-accent-cyan/70 tracking-widest mt-auto border-t border-white/5 pt-4">
-                        MODELADO / ANÁLISIS</div>
-                </div>
-
-                <!-- Bloque 2 -->
-                <div
-                    class="glass p-10 rounded-3xl hover:-translate-y-2 transition-transform duration-300 flex flex-col h-full border-t border-accent-cyan/30 shadow-[0_-5px_30px_rgba(0,180,216,0.05)] relative overflow-hidden">
-                    <div
-                        class="absolute right-0 top-0 w-32 h-32 bg-accent-cyan/10 rounded-bl-full blur-[20px] pointer-events-none">
-                    </div>
-                    <div
-                        class="mb-8 p-4 bg-accent-cyan/10 w-fit rounded-2xl border border-accent-cyan/20 relative z-10">
-                        <span class="material-symbols-outlined text-accent-cyan text-4xl">code_blocks</span>
-                    </div>
-                    <h4 class="text-2xl font-bold text-white-text mb-4 relative z-10">Desarrollo a Medida</h4>
-                    <p class="text-gray-400 font-light leading-relaxed mb-6 flex-grow relative z-10">
-                        Creación de herramientas y software específico que resuelven fricciones operativas y aceleran
-                        los procesos diarios de tu equipo.
-                    </p>
-                    <div
-                        class="font-mono text-xs text-accent-cyan/70 tracking-widest mt-auto border-t border-white/5 pt-4 relative z-10">
-                        INGENIERÍA / CLOUD</div>
-                </div>
-
-                <!-- Bloque 3 -->
-                <div
-                    class="glass p-10 rounded-3xl hover:-translate-y-2 transition-transform duration-300 flex flex-col h-full border-t border-white/10">
-                    <div class="mb-8 p-4 bg-accent-cyan/5 w-fit rounded-2xl border border-accent-cyan/10">
-                        <span class="material-symbols-outlined text-accent-cyan text-4xl">settings_suggest</span>
-                    </div>
-                    <h4 class="text-2xl font-bold text-white-text mb-4">Mantenimiento y Escalado</h4>
-                    <p class="text-gray-400 font-light leading-relaxed mb-6 flex-grow">
-                        Soporte técnico especializado para que tu software nunca se quede atrás y escale automáticamente
-                        según la demanda de los usuarios.
-                    </p>
-                    <div
-                        class="font-mono text-xs text-accent-cyan/70 tracking-widest mt-auto border-t border-white/5 pt-4">
-                        SOPORTE / OPS</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 6. Preguntas Rápidas (FAQ) -->
-    <section class="py-32 px-6 bg-carbon border-b border-white/5 reveal">
-        <div class="max-w-3xl mx-auto text-center mb-16">
-            <h2 class="text-sm font-mono text-accent-cyan tracking-[0.2em] uppercase mb-4">Respuestas</h2>
-            <h3 class="text-3xl md:text-5xl font-bold text-white-text tracking-tight">Preguntas Rápidas</h3>
-        </div>
-
-        <div class="max-w-3xl mx-auto space-y-4">
-            <!-- FAQ 1 -->
-            <details
-                class="glass rounded-2xl group overflow-hidden border border-white/5 [&_summary::-webkit-details-marker]:hidden">
-                <summary
-                    class="flex justify-between items-center font-bold px-8 py-6 cursor-pointer text-white-text list-none text-lg">
-                    ¿Es seguro tener mis datos en la nube?
-                    <span
-                        class="material-symbols-outlined text-accent-cyan group-open:rotate-180 transition-transform duration-300">expand_more</span>
-                </summary>
-                <div class="px-8 pb-6 text-gray-400 font-light leading-relaxed border-t border-white/5 pt-4 mt-2">
-                    Implementamos protocolos de cifrado de grado bancario y cumplimos con normativas internacionales de
-                    protección de datos para resguardar toda tu información.
-                </div>
-            </details>
-
-            <!-- FAQ 2 -->
-            <details
-                class="glass rounded-2xl group overflow-hidden border border-white/5 [&_summary::-webkit-details-marker]:hidden">
-                <summary
-                    class="flex justify-between items-center font-bold px-8 py-6 cursor-pointer text-white-text list-none text-lg">
-                    ¿Cuánto tiempo tarda la implementación?
-                    <span
-                        class="material-symbols-outlined text-accent-cyan group-open:rotate-180 transition-transform duration-300">expand_more</span>
-                </summary>
-                <div class="px-8 pb-6 text-gray-400 font-light leading-relaxed border-t border-white/5 pt-4 mt-2">
-                    Dependiendo del proyecto, las primeras integraciones suelen estar listas en un ciclo de desarrollo
-                    ágil de entre 4 a 6 semanas.
-                </div>
-            </details>
-
-            <!-- FAQ 3 -->
-            <details
-                class="glass rounded-2xl group overflow-hidden border border-white/5 [&_summary::-webkit-details-marker]:hidden">
-                <summary
-                    class="flex justify-between items-center font-bold px-8 py-6 cursor-pointer text-white-text list-none text-lg">
-                    ¿Realmente puedo dejar de comprar hardware?
-                    <span
-                        class="material-symbols-outlined text-accent-cyan group-open:rotate-180 transition-transform duration-300">expand_more</span>
-                </summary>
-                <div class="px-8 pb-6 text-gray-400 font-light leading-relaxed border-t border-white/5 pt-4 mt-2">
-                    Sí, nuestras soluciones trasladan por completo la carga de procesamiento a centros de datos remotos
-                    de alto rendimiento accesibles desde cualquier lugar.
-                </div>
-            </details>
-
-            <!-- FAQ 4 -->
-            <details
-                class="glass rounded-2xl group overflow-hidden border border-white/5 [&_summary::-webkit-details-marker]:hidden">
-                <summary
-                    class="flex justify-between items-center font-bold px-8 py-6 cursor-pointer text-white-text list-none text-lg">
-                    ¿La IA reemplazará a mi equipo?
-                    <span
-                        class="material-symbols-outlined text-accent-cyan group-open:rotate-180 transition-transform duration-300">expand_more</span>
-                </summary>
-                <div class="px-8 pb-6 text-gray-400 font-light leading-relaxed border-t border-white/5 pt-4 mt-2">
-                    No, la IA de Jstudio_AI está diseñada para potenciar a tus empleados, eliminando las tareas
-                    repetitivas y manuales que les impiden enfocarse en tareas creativas y estratégicas.
-                </div>
-            </details>
-        </div>
-    </section>
-
-    <!-- 7. Cierre / Footer -->
-    <section class="py-32 px-6 bg-carbon relative overflow-hidden" id="contacto">
-        <!-- Glow background -->
-        <div class="absolute inset-0 z-0 flex items-center justify-center">
-            <div class="w-[600px] h-[600px] bg-accent-cyan/10 rounded-full blur-[120px] pointer-events-none"></div>
-        </div>
-
-        <div class="max-w-4xl mx-auto text-center relative z-10">
-            <h2 class="text-4xl md:text-6xl font-bold text-white-text tracking-tight mb-12">
-                ¿Listo para escalar la <br /> inteligencia de tu empresa?
-            </h2>
-
-            <a href="mailto:johan.samudiotrabajo@gmail.com"
-                class="inline-flex items-center justify-center gap-3 btn-hover bg-accent-cyan text-carbon px-12 py-5 rounded-xl font-bold text-lg mb-8 shadow-[0_0_20px_rgba(0,180,216,0.4)]">
-                Reservar consultoría de desarrollo
-                <span class="material-symbols-outlined text-xl">arrow_outward</span>
-            </a>
-
-            <div class="flex flex-col md:flex-row items-center justify-center gap-6 mt-4 opacity-80">
-                <div
-                    class="flex items-center gap-2 text-gray-400 font-mono text-sm border border-white/10 px-4 py-2 rounded-lg bg-white/5">
-                    <span class="material-symbols-outlined text-accent-cyan text-sm">schedule</span>
-                    Respuesta en menos de 24 horas.
-                </div>
-                <div
-                    class="flex items-center gap-2 text-gray-400 font-mono text-sm border border-white/10 px-4 py-2 rounded-lg bg-white/5">
-                    <span class="material-symbols-outlined text-accent-cyan text-sm">handshake</span>
-                    Sin compromiso de permanencia inicial.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-10 bg-carbon text-center border-t border-white/5 relative z-10 px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-accent-cyan">memory</span>
-                <span class="text-lg font-bold text-white-text tracking-tight">Jstudio<span
-                        class="text-accent-cyan text-glow">_AI</span></span>
-            </div>
-            <p class="font-mono text-xs text-gray-500 uppercase tracking-widest">
-                Jstudio_AI 2026 | Desarrollo de Software con Inteligencia Artificial.
+        <!-- Caso B -->
+        <div class="card p-8 md:p-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-10 reveal d1">
+          <div class="shrink-0 md:w-48">
+            <div class="font-mono text-[10px] tracking-[0.22em] uppercase mb-2" style="color:#374151;">Caso B</div>
+            <div class="font-display font-extrabold text-snow tracking-tight leading-none"
+                 style="font-size:clamp(28px,4vw,46px);">15h</div>
+            <div class="font-mono text-[10.5px] mt-1.5 text-jade/60">libres/semana</div>
+          </div>
+          <div class="h-px md:h-12 w-full md:w-px shrink-0" style="background:rgba(255,255,255,0.06);"></div>
+          <div class="flex-1">
+            <p class="text-lg leading-[1.75]" style="color:#8892A4; font-weight:300;">
+              Automatización de reportes mediante IA redujo la carga administrativa pesada en
+              <strong class="text-snow font-medium">15 horas semanales por empleado</strong>.
             </p>
+          </div>
         </div>
-    </footer>
 
-    <!-- Scripts -->
-    <script>
-        // Scroll reveal animation
-        document.addEventListener("DOMContentLoaded", () => {
-            const observerOptions = {
-                root: null,
-                rootMargin: "0px",
-                threshold: 0.15
-            };
+      </div>
+    </div>
+  </section>
 
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                        // Stop observing once revealed
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
+  <hr class="div" />
 
-            document.querySelectorAll('.reveal').forEach(el => {
-                observer.observe(el);
-            });
-        });
-    </script>
+  <!-- ════════════════════════ SERVICIOS ════════════════════════ -->
+  <section class="py-28 px-6">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="mb-16 reveal">
+        <div class="tag mb-3">Ecosistema</div>
+        <h2 class="font-display font-bold text-snow tracking-tight"
+            style="font-size:clamp(30px,4.5vw,46px);">Servicios de Desarrollo</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <!-- Consultoría -->
+        <div class="card p-8 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300 reveal">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-8 shrink-0"
+               style="background:rgba(155,143,255,0.08); border:1px solid rgba(155,143,255,0.20);">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M9 2L11 7H16.5L12.2 10L13.9 15.5L9 12L4.1 15.5L5.8 10L1.5 7H7L9 2Z"
+                    stroke="#9B8FFF" stroke-width="1.4" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-snow text-[19px] mb-4">Consultoría Estratégica</h3>
+          <p class="flex-grow mb-8 leading-[1.75]" style="color:#6B7A8F; font-weight:300;">
+            Definición de hoja de ruta para la migración a la nube e implementación de IA para acelerar tus flujos operativos.
+          </p>
+          <div class="font-mono text-[10.5px] tracking-[0.2em] uppercase border-t pt-4"
+               style="color:#374151; border-color:rgba(255,255,255,0.05);">Modelado · Análisis</div>
+        </div>
+
+        <!-- Desarrollo (Featured) -->
+        <div class="gb p-8 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300 reveal d1 relative overflow-hidden">
+          <div class="absolute -right-16 -bottom-16 w-48 h-48 rounded-full pointer-events-none"
+               style="background:radial-gradient(circle,rgba(29,185,84,0.1) 0%,transparent 70%);"></div>
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-3 shrink-0 relative z-10"
+               style="background:rgba(29,185,84,0.09); border:1px solid rgba(29,185,84,0.28);">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M3 5.5h12M3 9h7.5" stroke="#1DB954" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M13 11.5l2.5 2-2.5 2" stroke="#1DB954" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="font-mono text-[9.5px] tracking-[0.25em] uppercase mb-3 relative z-10"
+               style="color:rgba(29,185,84,0.55);">Más popular</div>
+          <h3 class="font-display font-bold text-snow text-[19px] mb-4 relative z-10">Desarrollo a Medida</h3>
+          <p class="flex-grow mb-8 leading-[1.75] relative z-10" style="color:#8892A4; font-weight:300;">
+            Creación de herramientas y software específico que resuelven fricciones operativas y aceleran los procesos diarios de tu equipo.
+          </p>
+          <div class="font-mono text-[10.5px] tracking-[0.2em] uppercase border-t pt-4 relative z-10"
+               style="color:rgba(29,185,84,0.45); border-color:rgba(29,185,84,0.10);">Ingeniería · Cloud</div>
+        </div>
+
+        <!-- Mantenimiento -->
+        <div class="card p-8 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300 reveal d2">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-8 shrink-0"
+               style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <circle cx="9" cy="9" r="6.5" stroke="#8892A4" stroke-width="1.4"/>
+              <path d="M9 5.5v4l2.5 2.5" stroke="#8892A4" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-snow text-[19px] mb-4">Mantenimiento y Escalado</h3>
+          <p class="flex-grow mb-8 leading-[1.75]" style="color:#6B7A8F; font-weight:300;">
+            Soporte técnico especializado para que tu software nunca se quede atrás y escale automáticamente según la demanda.
+          </p>
+          <div class="font-mono text-[10.5px] tracking-[0.2em] uppercase border-t pt-4"
+               style="color:#374151; border-color:rgba(255,255,255,0.05);">Soporte · Ops</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="div" />
+
+  <!-- ════════════════════════ FAQ ════════════════════════ -->
+  <section class="py-28 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="mb-16 reveal">
+        <div class="tag mb-3">Respuestas</div>
+        <h2 class="font-display font-bold text-snow tracking-tight"
+            style="font-size:clamp(30px,4.5vw,46px);">Preguntas Rápidas</h2>
+      </div>
+
+      <div class="reveal">
+
+        <details class="group border-t" style="border-color:rgba(255,255,255,0.055);">
+          <summary class="flex justify-between items-center py-6 cursor-pointer list-none gap-6">
+            <span class="font-display font-semibold text-snow text-lg group-open:text-jade transition-colors">
+              ¿Es seguro tener mis datos en la nube?
+            </span>
+            <span class="faq-plus w-7 h-7 rounded-full border flex items-center justify-center shrink-0 transition-colors"
+                  style="border-color:rgba(255,255,255,0.10);">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <path d="M5.5 1.5v8M1.5 5.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <p class="pb-7 leading-[1.8]" style="color:#6B7A8F; font-weight:300;">
+            Implementamos protocolos de cifrado de grado bancario y cumplimos con normativas internacionales de protección de datos para resguardar toda tu información.
+          </p>
+        </details>
+
+        <details class="group border-t" style="border-color:rgba(255,255,255,0.055);">
+          <summary class="flex justify-between items-center py-6 cursor-pointer list-none gap-6">
+            <span class="font-display font-semibold text-snow text-lg group-open:text-jade transition-colors">
+              ¿Cuánto tiempo tarda la implementación?
+            </span>
+            <span class="faq-plus w-7 h-7 rounded-full border flex items-center justify-center shrink-0 transition-colors"
+                  style="border-color:rgba(255,255,255,0.10);">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <path d="M5.5 1.5v8M1.5 5.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <p class="pb-7 leading-[1.8]" style="color:#6B7A8F; font-weight:300;">
+            Dependiendo del proyecto, las primeras integraciones suelen estar listas en un ciclo de desarrollo ágil de entre 4 a 6 semanas.
+          </p>
+        </details>
+
+        <details class="group border-t" style="border-color:rgba(255,255,255,0.055);">
+          <summary class="flex justify-between items-center py-6 cursor-pointer list-none gap-6">
+            <span class="font-display font-semibold text-snow text-lg group-open:text-jade transition-colors">
+              ¿Realmente puedo dejar de comprar hardware?
+            </span>
+            <span class="faq-plus w-7 h-7 rounded-full border flex items-center justify-center shrink-0 transition-colors"
+                  style="border-color:rgba(255,255,255,0.10);">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <path d="M5.5 1.5v8M1.5 5.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <p class="pb-7 leading-[1.8]" style="color:#6B7A8F; font-weight:300;">
+            Sí, nuestras soluciones trasladan por completo la carga de procesamiento a centros de datos remotos de alto rendimiento accesibles desde cualquier lugar.
+          </p>
+        </details>
+
+        <details class="group border-t border-b" style="border-color:rgba(255,255,255,0.055);">
+          <summary class="flex justify-between items-center py-6 cursor-pointer list-none gap-6">
+            <span class="font-display font-semibold text-snow text-lg group-open:text-jade transition-colors">
+              ¿La IA reemplazará a mi equipo?
+            </span>
+            <span class="faq-plus w-7 h-7 rounded-full border flex items-center justify-center shrink-0 transition-colors"
+                  style="border-color:rgba(255,255,255,0.10);">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <path d="M5.5 1.5v8M1.5 5.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <p class="pb-7 leading-[1.8]" style="color:#6B7A8F; font-weight:300;">
+            No, la IA de Jstudio_AI está diseñada para potenciar a tus empleados, eliminando las tareas repetitivas que les impiden enfocarse en lo creativo y estratégico.
+          </p>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="div" />
+
+  <!-- ════════════════════════ CONTACTO ════════════════════════ -->
+  <section id="contacto" class="py-36 px-6 relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="dot-grid absolute inset-0 opacity-25"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] rounded-full blur-[150px]"
+           style="background:radial-gradient(ellipse,rgba(29,185,84,0.09) 0%,rgba(155,143,255,0.05) 50%,transparent 70%);"></div>
+    </div>
+
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+
+      <div class="tag mb-6 reveal">¿Listo para escalar?</div>
+
+      <h2 class="font-display font-extrabold text-snow tracking-tight leading-[0.92] mb-8 reveal d1"
+          style="font-size:clamp(38px,7.5vw,78px);">
+        Escala la inteligencia<br>de tu empresa.
+      </h2>
+
+      <p class="text-lg max-w-lg mx-auto mb-14 reveal d2" style="color:#6B7A8F; font-weight:300; line-height:1.75;">
+        Una consultoría estratégica sin compromiso para analizar cómo Jstudio_AI puede transformar tu negocio.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 reveal d3">
+        <a href="mailto:johan.samudiotrabajo@gmail.com" class="btn-p text-base py-[14px] px-9">
+          Reservar consultoría de desarrollo
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+            <path d="M2 7.5h11M8.5 3l4.5 4.5L8.5 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 reveal d3">
+        <div class="flex items-center gap-2 font-mono text-[11px] px-4 py-2.5 rounded-xl"
+             style="color:#45505F; border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.02);">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <circle cx="6.5" cy="6.5" r="5" stroke="#1DB954" stroke-width="1.2"/>
+            <path d="M6.5 4v2.5l1.5 1.5" stroke="#1DB954" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Respuesta en menos de 24h
+        </div>
+        <div class="flex items-center gap-2 font-mono text-[11px] px-4 py-2.5 rounded-xl"
+             style="color:#45505F; border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.02);">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M2 6.5l2.5 2.5 6-6" stroke="#1DB954" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Sin compromiso inicial
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════ FOOTER ════════════════════════ -->
+  <footer class="py-8 px-6 border-t" style="border-color:rgba(255,255,255,0.055);">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <a href="#" class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg flex items-center justify-center"
+             style="background:rgba(29,185,84,0.08); border:1px solid rgba(29,185,84,0.22);">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M1.5 6L4.5 9L10.5 3" stroke="#1DB954" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="font-display font-bold text-snow">Jstudio<span class="text-jade">_AI</span></span>
+      </a>
+      <p class="font-mono text-[11px] tracking-widest uppercase" style="color:#374151;">
+        © 2026 Jstudio_AI · Desarrollo de Software con Inteligencia Artificial
+      </p>
+    </div>
+  </footer>
+
+  <!-- ════════════════════════ SCRIPTS ════════════════════════ -->
+  <script>
+    // ── Populate ticker ──
+    (function () {
+      const track = document.querySelector('.ticker-track');
+      const tpl = document.getElementById('ticker-items');
+      const frag1 = tpl.content.cloneNode(true);
+      const frag2 = tpl.content.cloneNode(true);
+      track.appendChild(frag1);
+      track.appendChild(frag2);
+    })();
+
+    // ── Scroll reveal ──
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('show');
+          revealObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // ── Navbar solid on scroll ──
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('nav-solid', window.scrollY > 60);
+    }, { passive: true });
+
+    // ── Reading progress bar ──
+    const bar = document.getElementById('progress-bar');
+    window.addEventListener('scroll', () => {
+      const total = document.body.scrollHeight - window.innerHeight;
+      bar.style.width = (window.scrollY / total * 100) + '%';
+    }, { passive: true });
+
+    // ── Counter animation ──
+    function formatVal(val, suffix) {
+      if (suffix === '$') return '$' + val.toLocaleString('en-US');
+      return val + suffix;
+    }
+    function runCounter(el) {
+      const target = parseInt(el.dataset.target, 10);
+      const suffix = el.dataset.suffix || '';
+      const dur = 1600;
+      const fps = 50;
+      let frame = 0;
+      const timer = setInterval(() => {
+        frame++;
+        const ease = 1 - Math.pow(1 - frame / fps, 3);
+        const val = Math.round(target * ease);
+        el.textContent = formatVal(val, suffix);
+        if (frame >= fps) {
+          el.textContent = formatVal(target, suffix);
+          clearInterval(timer);
+        }
+      }, dur / fps);
+    }
+
+    const counterObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          runCounter(e.target);
+          counterObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    document.querySelectorAll('.count-el').forEach(el => counterObs.observe(el));
+  </script>
+
 </body>
-
 </html>
