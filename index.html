@@ -1,1982 +1,406 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JStudio_IA — Software con Inteligencia</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
-  <style>
-    :root {
-      --bg: #F4F7FB;
-      --bg-2: #E6F0FA;
-      --bg-3: #E0E7FF;
-      --ink: #0A0E1A;
-      --ink-2: #2A3348;
-      --muted: #5F6B85;
-      --line: rgba(10, 14, 26, 0.09);
-      --glass: rgba(255, 255, 255, 0.55);
-      --glass-stroke: rgba(255, 255, 255, 0.9);
-      --violet: #4F46E5;
-      --pink: #06B6D4;
-      --ink-contrast: #0A0E1A;
-      --accent-soft: rgba(79, 70, 229, 0.12);
-      --shadow-soft: 0 20px 60px -20px rgba(79, 70, 229, 0.3);
-      --shadow-glass: 0 30px 80px -30px rgba(10, 14, 26, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-      --grad-primary: linear-gradient(135deg, #00E5FF 0%, #6366F1 55%, #A855F7 110%);
-      --grad-mesh: radial-gradient(60% 45% at 15% 15%, rgba(0, 229, 255, 0.28) 0%, transparent 60%),
-        radial-gradient(50% 50% at 85% 10%, rgba(99, 102, 241, 0.30) 0%, transparent 60%),
-        radial-gradient(60% 50% at 70% 85%, rgba(168, 85, 247, 0.22) 0%, transparent 65%),
-        radial-gradient(40% 40% at 20% 90%, rgba(59, 130, 246, 0.22) 0%, transparent 60%);
-    }
-
-    [data-theme="dark"] {
-      --bg: #050812;
-      --bg-2: #0A0E1A;
-      --bg-3: #0D1428;
-      --ink: #F8FAFC;
-      --ink-2: #CBD5E1;
-      --muted: #7C8AA6;
-      --line: rgba(255, 255, 255, 0.10);
-      --glass: rgba(18, 26, 50, 0.45);
-      --glass-stroke: rgba(148, 163, 255, 0.18);
-      --ink-contrast: #F8FAFC;
-      --accent-soft: rgba(0, 229, 255, 0.16);
-      --shadow-soft: 0 20px 60px -20px rgba(0, 229, 255, 0.5);
-      --shadow-glass: 0 30px 80px -30px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(148, 163, 255, 0.12);
-      --grad-mesh: radial-gradient(60% 45% at 15% 15%, rgba(0, 229, 255, 0.40) 0%, transparent 60%),
-        radial-gradient(50% 50% at 85% 10%, rgba(99, 102, 241, 0.50) 0%, transparent 60%),
-        radial-gradient(60% 50% at 70% 85%, rgba(168, 85, 247, 0.32) 0%, transparent 65%),
-        radial-gradient(40% 40% at 20% 90%, rgba(59, 130, 246, 0.30) 0%, transparent 60%);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Space Grotesk', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      overflow-x: hidden;
-      transition: background 0.6s ease, color 0.4s ease;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* Background mesh */
-    .bg-mesh {
-      position: fixed;
-      inset: 0;
-      background: var(--grad-mesh);
-      z-index: -2;
-      pointer-events: none;
-      transition: opacity 0.6s ease;
-    }
-
-    .bg-grain {
-      position: fixed;
-      inset: 0;
-      opacity: 0.4;
-      z-index: -1;
-      pointer-events: none;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-      mix-blend-mode: multiply;
-    }
-
-    [data-theme="dark"] .bg-grain {
-      mix-blend-mode: screen;
-      opacity: 0.25;
-    }
-
-    /* Floating orbs */
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.6;
-      z-index: -1;
-      pointer-events: none;
-      animation: float 20s ease-in-out infinite;
-    }
-
-    .orb-1 {
-      width: 520px;
-      height: 520px;
-      top: -120px;
-      left: -120px;
-      background: #6366F1;
-      animation-delay: 0s;
-    }
-
-    .orb-2 {
-      width: 440px;
-      height: 440px;
-      top: 40%;
-      right: -100px;
-      background: #00E5FF;
-      animation-delay: -7s;
-    }
-
-    .orb-3 {
-      width: 380px;
-      height: 380px;
-      bottom: -100px;
-      left: 30%;
-      background: #A855F7;
-      opacity: 0.45;
-      animation-delay: -14s;
-    }
-
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translate(0, 0) scale(1);
-      }
-
-      33% {
-        transform: translate(60px, -40px) scale(1.08);
-      }
-
-      66% {
-        transform: translate(-40px, 50px) scale(0.95);
-      }
-    }
-
-    /* Container */
-    .wrap {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 32px;
-    }
-
-    /* Nav */
-    nav.top {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 10px 10px 22px;
-      background: var(--glass);
-      backdrop-filter: blur(24px) saturate(140%);
-      -webkit-backdrop-filter: blur(24px) saturate(140%);
-      border: 1px solid var(--glass-stroke);
-      border-radius: 999px;
-      box-shadow: var(--shadow-glass);
-      transition: transform 0.3s ease, background 0.4s ease;
-    }
-
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'Space Grotesk';
-      font-weight: 700;
-      font-size: 17px;
-      letter-spacing: -0.01em;
-      margin-right: 20px;
-      color: var(--ink);
-    }
-
-    .logo-mark {
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
-      background: var(--grad-primary);
-      display: grid;
-      place-items: center;
-      color: white;
-      font-weight: 700;
-      font-size: 14px;
-      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .logo-mark::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.4) 50%, transparent 60%);
-      animation: shine 3s ease-in-out infinite;
-    }
-
-    @keyframes shine {
-
-      0%,
-      100% {
-        transform: translateX(-100%);
-      }
-
-      50% {
-        transform: translateX(100%);
-      }
-    }
-
-    .logo-name {
-      display: flex;
-      align-items: baseline;
-    }
-
-    .logo-name .underscore {
-      color: var(--violet);
-      font-weight: 400;
-    }
-
-    .logo-name .ia {
-      background: var(--grad-primary);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-style: italic;
-      font-family: 'Instrument Serif', serif;
-      font-weight: 400;
-      margin-left: 1px;
-    }
-
-    nav.top ul {
-      display: flex;
-      gap: 4px;
-      list-style: none;
-    }
-
-    nav.top ul a {
-      display: inline-block;
-      padding: 8px 14px;
-      color: var(--ink-2);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      border-radius: 999px;
-      transition: all 0.2s ease;
-    }
-
-    nav.top ul a:hover {
-      background: var(--accent-soft);
-      color: var(--ink);
-    }
-
-    .nav-cta {
-      padding: 10px 18px;
-      background: var(--ink);
-      color: var(--bg);
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: transform 0.2s ease;
-      margin-left: 8px;
-    }
-
-    .nav-cta:hover {
-      transform: scale(1.04);
-    }
-
-    .theme-toggle {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 1px solid var(--line);
-      background: transparent;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      color: var(--ink);
-      transition: all 0.3s ease;
-      margin-left: 6px;
-    }
-
-    .theme-toggle:hover {
-      background: var(--accent-soft);
-      transform: rotate(20deg);
-    }
-
-    /* HERO */
-    .hero {
-      min-height: 100vh;
-      padding: 140px 0 80px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 14px 8px 8px;
-      background: var(--glass);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-stroke);
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink-2);
-      margin-bottom: 32px;
-      box-shadow: var(--shadow-glass);
-      width: fit-content;
-    }
-
-    .hero-badge .dot {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--grad-primary);
-      display: grid;
-      place-items: center;
-      color: white;
-      font-size: 11px;
-    }
-
-    .hero-badge .pulse {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #10B981;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-      }
-
-      50% {
-        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.05);
-      }
-    }
-
-    h1.hero-title {
-      font-family: 'Space Grotesk';
-      font-weight: 700;
-      font-size: clamp(48px, 8vw, 112px);
-      line-height: 0.95;
-      letter-spacing: -0.04em;
-      margin-bottom: 28px;
-      color: var(--ink);
-      max-width: 1100px;
-    }
-
-    h1.hero-title .serif {
-      font-family: 'Instrument Serif', serif;
-      font-weight: 400;
-      font-style: italic;
-      background: var(--grad-primary);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: -0.02em;
-    }
-
-    h1.hero-title .strike {
-      position: relative;
-      color: var(--muted);
-      text-decoration: line-through;
-      text-decoration-color: var(--pink);
-      text-decoration-thickness: 4px;
-    }
-
-    .hero-sub {
-      font-size: 20px;
-      color: var(--ink-2);
-      max-width: 620px;
-      margin-bottom: 40px;
-      line-height: 1.55;
-    }
-
-    .hero-ctas {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 26px;
-      background: var(--ink);
-      color: var(--bg);
-      border-radius: 999px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 15px;
-      transition: all 0.25s ease;
-      border: none;
-      cursor: pointer;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 25px 50px -15px rgba(124, 58, 237, 0.45);
-    }
-
-    .btn-primary .arrow {
-      transition: transform 0.25s ease;
-    }
-
-    .btn-primary:hover .arrow {
-      transform: translateX(4px);
-    }
-
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 26px;
-      background: var(--glass);
-      backdrop-filter: blur(20px);
-      color: var(--ink);
-      border: 1px solid var(--glass-stroke);
-      border-radius: 999px;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 15px;
-      transition: all 0.25s ease;
-    }
-
-    .btn-ghost:hover {
-      background: var(--accent-soft);
-    }
-
-    /* Hero card cluster */
-    .hero-cluster {
-      margin-top: 100px;
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr;
-      gap: 20px;
-      perspective: 1200px;
-    }
-
-    .glass-card {
-      background: var(--glass);
-      backdrop-filter: blur(24px) saturate(140%);
-      -webkit-backdrop-filter: blur(24px) saturate(140%);
-      border: 1px solid var(--glass-stroke);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: var(--shadow-glass);
-      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    .glass-card:hover {
-      transform: translateY(-6px);
-    }
-
-    .card-code {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      line-height: 1.8;
-      min-height: 220px;
-    }
-
-    .card-code .c1 {
-      color: #A78BFA;
-    }
-
-    .card-code .c2 {
-      color: #EC4899;
-    }
-
-    .card-code .c3 {
-      color: var(--ink-2);
-    }
-
-    .card-code .c4 {
-      color: #10B981;
-    }
-
-    [data-theme="dark"] .card-code .c3 {
-      color: #9CA3AF;
-    }
-
-    .card-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    .stat-big {
-      font-family: 'Instrument Serif', serif;
-      font-size: 72px;
-      line-height: 1;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-    }
-
-    .stat-big sup {
-      font-size: 32px;
-      color: var(--violet);
-      vertical-align: super;
-    }
-
-    .stat-label {
-      font-size: 14px;
-      color: var(--ink-2);
-      margin-top: 8px;
-    }
-
-    .card-ai {
-      background: linear-gradient(135deg, #00E5FF 0%, #6366F1 55%, #A855F7 100%);
-      color: white;
-      border: none;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card-ai::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.25), transparent 50%);
-    }
-
-    .card-ai .ai-vis {
-      position: relative;
-      display: flex;
-      gap: 4px;
-      align-items: flex-end;
-      height: 60px;
-      margin-bottom: 18px;
-    }
-
-    .card-ai .bar {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 4px 4px 0 0;
-      animation: barDance 2.4s ease-in-out infinite;
-    }
-
-    @keyframes barDance {
-
-      0%,
-      100% {
-        height: 20%;
-      }
-
-      50% {
-        height: 90%;
-      }
-    }
-
-    .card-ai .bar:nth-child(1) {
-      animation-delay: 0s;
-    }
-
-    .card-ai .bar:nth-child(2) {
-      animation-delay: 0.15s;
-    }
-
-    .card-ai .bar:nth-child(3) {
-      animation-delay: 0.3s;
-    }
-
-    .card-ai .bar:nth-child(4) {
-      animation-delay: 0.45s;
-    }
-
-    .card-ai .bar:nth-child(5) {
-      animation-delay: 0.6s;
-    }
-
-    .card-ai .bar:nth-child(6) {
-      animation-delay: 0.75s;
-    }
-
-    .card-ai .bar:nth-child(7) {
-      animation-delay: 0.9s;
-    }
-
-    .card-ai .bar:nth-child(8) {
-      animation-delay: 1.05s;
-    }
-
-    /* Sections */
-    section {
-      padding: 120px 0;
-      position: relative;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--violet);
-      margin-bottom: 20px;
-      font-weight: 500;
-    }
-
-    .eyebrow::before {
-      content: '';
-      width: 28px;
-      height: 1px;
-      background: var(--violet);
-    }
-
-    h2.section-title {
-      font-family: 'Space Grotesk';
-      font-weight: 700;
-      font-size: clamp(36px, 5vw, 64px);
-      line-height: 1;
-      letter-spacing: -0.03em;
-      margin-bottom: 24px;
-      color: var(--ink);
-      max-width: 900px;
-    }
-
-    h2.section-title .serif {
-      font-family: 'Instrument Serif', serif;
-      font-weight: 400;
-      font-style: italic;
-      color: var(--violet);
-    }
-
-    .section-lead {
-      font-size: 19px;
-      color: var(--ink-2);
-      max-width: 680px;
-      margin-bottom: 60px;
-    }
-
-    /* Services */
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 20px;
-    }
-
-    .service-card {
-      grid-column: span 2;
-      background: var(--glass);
-      backdrop-filter: blur(24px) saturate(140%);
-      -webkit-backdrop-filter: blur(24px) saturate(140%);
-      border: 1px solid var(--glass-stroke);
-      border-radius: 28px;
-      padding: 36px 32px;
-      box-shadow: var(--shadow-glass);
-      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-      min-height: 340px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .service-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 40px 80px -30px rgba(124, 58, 237, 0.35);
-    }
-
-    .service-card.featured {
-      grid-column: span 3;
-    }
-
-    .service-card.wide {
-      grid-column: span 3;
-    }
-
-    .service-num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 0.2em;
-    }
-
-    .service-title {
-      font-size: 28px;
-      font-weight: 600;
-      margin: 16px 0 12px;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
-
-    .service-title .serif {
-      font-family: 'Instrument Serif', serif;
-      font-weight: 400;
-      font-style: italic;
-      color: var(--violet);
-    }
-
-    .service-desc {
-      color: var(--ink-2);
-      font-size: 15px;
-      line-height: 1.55;
-      flex: 1;
-    }
-
-    .service-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 24px;
-    }
-
-    .tag {
-      padding: 6px 12px;
-      background: var(--accent-soft);
-      color: var(--violet);
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 500;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .service-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      background: var(--accent-soft);
-      display: grid;
-      place-items: center;
-      color: var(--violet);
-      margin-bottom: 20px;
-      transition: transform 0.4s ease;
-    }
-
-    .service-card:hover .service-icon {
-      transform: rotate(-8deg) scale(1.08);
-    }
-
-    .service-card.gradient {
-      background: var(--grad-primary);
-      color: white;
-      border: none;
-    }
-
-    .service-card.gradient .service-num,
-    .service-card.gradient .service-desc {
-      color: rgba(255, 255, 255, 0.85);
-    }
-
-    .service-card.gradient .service-title .serif {
-      color: #FEF3C7;
-    }
-
-    .service-card.gradient .tag {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-    }
-
-    .service-card.gradient .service-icon {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-    }
-
-    /* Projects */
-    .projects-list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      border-top: 1px solid var(--line);
-    }
-
-    .project-row {
-      display: grid;
-      grid-template-columns: 60px 1fr 160px 200px 40px;
-      gap: 24px;
-      align-items: center;
-      padding: 36px 16px;
-      border-bottom: 1px solid var(--line);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .project-row:hover {
-      padding-left: 28px;
-      background: linear-gradient(90deg, var(--accent-soft), transparent);
-    }
-
-    .project-row::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: var(--grad-primary);
-      transform: scaleY(0);
-      transition: transform 0.3s ease;
-      transform-origin: center;
-    }
-
-    .project-row:hover::before {
-      transform: scaleY(1);
-    }
-
-    .project-num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .project-name {
-      font-size: 28px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-    }
-
-    .project-name .serif {
-      font-family: 'Instrument Serif', serif;
-      font-weight: 400;
-      font-style: italic;
-    }
-
-    .project-meta {
-      font-size: 14px;
-      color: var(--ink-2);
-    }
-
-    .project-type {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--violet);
-    }
-
-    .project-arrow {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--accent-soft);
-      display: grid;
-      place-items: center;
-      color: var(--violet);
-      transition: all 0.3s ease;
-    }
-
-    .project-row:hover .project-arrow {
-      background: var(--violet);
-      color: white;
-      transform: rotate(-45deg);
-    }
-
-    /* Stack section */
-    .stack-wrap {
-      background: var(--glass);
-      backdrop-filter: blur(24px) saturate(140%);
-      -webkit-backdrop-filter: blur(24px) saturate(140%);
-      border: 1px solid var(--glass-stroke);
-      border-radius: 32px;
-      padding: 56px 48px;
-      box-shadow: var(--shadow-glass);
-    }
-
-    .stack-categories {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 40px;
-      margin-top: 40px;
-    }
-
-    .stack-cat h4 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--line);
-      font-weight: 500;
-    }
-
-    .stack-items {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      list-style: none;
-    }
-
-    .stack-items li {
-      font-size: 17px;
-      font-weight: 500;
-      color: var(--ink);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: transform 0.2s ease, color 0.2s ease;
-    }
-
-    .stack-items li:hover {
-      transform: translateX(4px);
-      color: var(--violet);
-    }
-
-    .stack-items li::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--grad-primary);
-    }
-
-    .stack-marquee {
-      margin-top: 56px;
-      padding-top: 32px;
-      border-top: 1px solid var(--line);
-      overflow: hidden;
-      mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
-    }
-
-    .marquee-track {
-      display: flex;
-      gap: 56px;
-      animation: marquee 30s linear infinite;
-      white-space: nowrap;
-    }
-
-    @keyframes marquee {
-      to {
-        transform: translateX(-50%);
-      }
-    }
-
-    .marquee-item {
-      font-family: 'Instrument Serif', serif;
-      font-size: 40px;
-      font-style: italic;
-      color: var(--ink-2);
-      opacity: 0.6;
-      transition: opacity 0.2s ease;
-    }
-
-    .marquee-item:hover {
-      opacity: 1;
-      color: var(--violet);
-    }
-
-    .marquee-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--violet);
-      align-self: center;
-      flex-shrink: 0;
-    }
-
-    /* Contact */
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-    }
-
-    .contact-card {
-      background: var(--glass);
-      backdrop-filter: blur(24px) saturate(140%);
-      -webkit-backdrop-filter: blur(24px) saturate(140%);
-      border: 1px solid var(--glass-stroke);
-      border-radius: 32px;
-      padding: 44px;
-      box-shadow: var(--shadow-glass);
-    }
-
-    .contact-card.primary {
-      background: linear-gradient(135deg, #050812 0%, #0F1B3D 60%, #1A1154 100%);
-      color: #F8FAFC;
-      border: none;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .contact-card.primary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 100% 0%, rgba(0, 229, 255, 0.35), transparent 50%),
-        radial-gradient(circle at 0% 100%, rgba(168, 85, 247, 0.4), transparent 50%);
-    }
-
-    .contact-card.primary>* {
-      position: relative;
-      z-index: 1;
-    }
-
-    .dev-profile {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: var(--grad-primary);
-      display: grid;
-      place-items: center;
-      color: white;
-      font-weight: 700;
-      font-size: 22px;
-      font-family: 'Instrument Serif', serif;
-      font-style: italic;
-      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
-      flex-shrink: 0;
-    }
-
-    .dev-name {
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-
-    .dev-role {
-      font-size: 13px;
-      color: rgba(245, 243, 255, 0.6);
-      font-family: 'JetBrains Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-top: 4px;
-    }
-
-    .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 18px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      margin-bottom: 10px;
-      text-decoration: none;
-      color: inherit;
-      transition: all 0.25s ease;
-    }
-
-    .contact-item:hover {
-      background: rgba(255, 255, 255, 0.12);
-      transform: translateX(4px);
-    }
-
-    .contact-item .ci-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: var(--grad-primary);
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-      color: white;
-    }
-
-    .contact-item .ci-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: rgba(245, 243, 255, 0.6);
-    }
-
-    .contact-item .ci-value {
-      font-size: 15px;
-      font-weight: 500;
-      margin-top: 2px;
-      word-break: break-all;
-    }
-
-    /* Form */
-    .form-title {
-      font-size: 32px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-      line-height: 1.1;
-    }
-
-    .form-title .serif {
-      font-family: 'Instrument Serif', serif;
-      font-weight: 400;
-      font-style: italic;
-      color: var(--violet);
-    }
-
-    .form-sub {
-      color: var(--ink-2);
-      margin-bottom: 28px;
-      font-size: 15px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .field {
-      position: relative;
-    }
-
-    .field input,
-    .field textarea,
-    .field select {
-      width: 100%;
-      padding: 18px 18px 8px;
-      background: rgba(255, 255, 255, 0.4);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 15px;
-      color: var(--ink);
-      transition: all 0.25s ease;
-      outline: none;
-    }
-
-    [data-theme="dark"] .field input,
-    [data-theme="dark"] .field textarea,
-    [data-theme="dark"] .field select {
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .field label {
-      position: absolute;
-      top: 14px;
-      left: 18px;
-      font-size: 12px;
-      color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      pointer-events: none;
-      transition: all 0.2s ease;
-    }
-
-    .field input:focus,
-    .field textarea:focus,
-    .field select:focus {
-      border-color: var(--violet);
-      background: rgba(255, 255, 255, 0.7);
-      box-shadow: 0 0 0 4px var(--accent-soft);
-    }
-
-    .field textarea {
-      min-height: 110px;
-      resize: vertical;
-      padding-top: 26px;
-    }
-
-    .field.full {
-      grid-column: span 2;
-    }
-
-    .chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .chip {
-      padding: 8px 14px;
-      background: transparent;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink-2);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: inherit;
-    }
-
-    .chip:hover {
-      border-color: var(--violet);
-      color: var(--violet);
-    }
-
-    .chip.active {
-      background: var(--ink);
-      color: var(--bg);
-      border-color: var(--ink);
-    }
-
-    .form-submit {
-      width: 100%;
-      padding: 18px;
-      background: var(--grad-primary);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      font-family: 'Space Grotesk';
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: var(--shadow-soft);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .form-submit:hover {
-      transform: translateY(-2px);
-    }
-
-    /* Footer */
-    footer {
-      padding: 80px 0 40px;
-      border-top: 1px solid var(--line);
-      margin-top: 40px;
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 48px;
-      margin-bottom: 60px;
-    }
-
-    .footer-col h5 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-      margin-bottom: 20px;
-      font-weight: 500;
-    }
-
-    .footer-col ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .footer-col a {
-      color: var(--ink-2);
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s ease;
-    }
-
-    .footer-col a:hover {
-      color: var(--violet);
-    }
-
-    .footer-tag {
-      font-family: 'Instrument Serif', serif;
-      font-style: italic;
-      font-size: 22px;
-      color: var(--ink-2);
-      margin-top: 16px;
-      max-width: 320px;
-      line-height: 1.4;
-    }
-
-    .footer-giant {
-      font-family: 'Space Grotesk';
-      font-weight: 700;
-      font-size: clamp(80px, 18vw, 260px);
-      line-height: 1;
-      letter-spacing: -0.05em;
-      background: var(--grad-primary);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      opacity: 0.9;
-      padding: 40px 0 0;
-      text-align: center;
-      user-select: none;
-    }
-
-    .footer-meta {
-      display: flex;
-      justify-content: space-between;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding-top: 32px;
-      border-top: 1px solid var(--line);
-      margin-top: 32px;
-    }
-
-    /* Reveal animation */
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    .reveal.in {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Tweaks panel */
-    .tweaks-panel {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 200;
-      background: var(--glass);
-      backdrop-filter: blur(24px) saturate(140%);
-      -webkit-backdrop-filter: blur(24px) saturate(140%);
-      border: 1px solid var(--glass-stroke);
-      border-radius: 20px;
-      padding: 18px 22px;
-      box-shadow: var(--shadow-glass);
-      display: none;
-      min-width: 260px;
-    }
-
-    .tweaks-panel.show {
-      display: block;
-      animation: slideUp 0.3s ease;
-    }
-
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .tweaks-panel h3 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--muted);
-      margin-bottom: 14px;
-      font-weight: 500;
-    }
-
-    .tweak-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .tweak-row label {
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .switch {
-      width: 48px;
-      height: 26px;
-      background: var(--line);
-      border-radius: 999px;
-      position: relative;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      border: none;
-      padding: 0;
-    }
-
-    .switch::after {
-      content: '';
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: white;
-      transition: transform 0.3s ease;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    [data-theme="dark"] .switch {
-      background: var(--grad-primary);
-    }
-
-    [data-theme="dark"] .switch::after {
-      transform: translateX(22px);
-    }
-
-    /* Responsive */
-    @media (max-width: 980px) {
-      nav.top ul {
-        display: none;
-      }
-
-      .hero-cluster {
-        grid-template-columns: 1fr;
-      }
-
-      .services-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .service-card,
-      .service-card.featured,
-      .service-card.wide {
-        grid-column: span 1;
-      }
-
-      .project-row {
-        grid-template-columns: 40px 1fr 40px;
-        gap: 12px;
-        padding: 24px 12px;
-      }
-
-      .project-row .project-meta,
-      .project-row .project-type {
-        display: none;
-      }
-
-      .project-name {
-        font-size: 20px;
-      }
-
-      .stack-categories {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 28px;
-      }
-
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .field.full {
-        grid-column: span 1;
-      }
-
-      .footer-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 32px;
-      }
-
-      .wrap {
-        padding: 0 20px;
-      }
-
-      section {
-        padding: 80px 0;
-      }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JStudio_IA — Software con Inteligencia Artificial · Panamá</title>
+<meta name="description" content="Estudio de ingeniería de software con inteligencia artificial integrada. Desarrollo a medida, automatización e IA aplicada para empresas y startups en Panamá.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@1,6..72,300;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  ::selection { background: #4F46E5; color: #fff; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @keyframes pdot { 0%,100% { box-shadow: 0 0 0 0 rgba(14,159,110,0.55); } 50% { box-shadow: 0 0 0 6px rgba(14,159,110,0); } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
 </head>
+<body>
 
-<body data-theme="light">
+<div id="root" style="--paper:#F4F5F7;--surface:#FFFFFF;--ink:#14161D;--ink-2:#3A3F4C;--muted:#767C8A;--line:rgba(20,22,29,0.10);--line-2:rgba(20,22,29,0.17);--accent:#4F46E5;--accent-2:#3730A3;--dark:#101218;background:var(--paper);color:var(--ink);font-family:'Schibsted Grotesk',system-ui,sans-serif;line-height:1.5;min-height:100vh;overflow-x:hidden;">
 
-  <div class="bg-mesh"></div>
-  <div class="bg-grain"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-
-  <!-- Navigation -->
-  <nav class="top">
-    <div class="nav-logo">
-      <div class="logo-mark">J</div>
-      <span class="logo-name">JStudio<span class="underscore">_</span><span class="ia">IA</span></span>
+  <!-- NAV -->
+  <nav data-nav="1" style="position:sticky;top:0;z-index:50;background:rgba(244,245,247,0.82);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);border-bottom:1px solid var(--line);transition:box-shadow .3s ease,background .3s ease;">
+    <div style="max-width:1200px;margin:0 auto;padding:0 40px;height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+      <a href="#top" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);">
+        <img src="assets/logo-mark.png" alt="JStudio_IA" style="width:30px;height:30px;object-fit:contain;display:block;" onerror="this.style.display='none'" />
+        <span style="font-weight:700;font-size:17px;letter-spacing:-0.01em;">JStudio<span style="color:var(--accent);font-weight:600;">_</span>IA</span>
+      </a>
+      <ul style="display:flex;gap:6px;list-style:none;margin:0;padding:0;">
+        <li><a href="#servicios" class="nav-link" style="display:inline-block;padding:8px 14px;color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500;border-radius:8px;transition:background .2s,color .2s;">Servicios</a></li>
+        <li><a href="#proyectos" class="nav-link" style="display:inline-block;padding:8px 14px;color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500;border-radius:8px;transition:background .2s,color .2s;">Proyectos</a></li>
+        <li><a href="#stack" class="nav-link" style="display:inline-block;padding:8px 14px;color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500;border-radius:8px;transition:background .2s,color .2s;">Stack</a></li>
+        <li><a href="#contacto" class="nav-link" style="display:inline-block;padding:8px 14px;color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500;border-radius:8px;transition:background .2s,color .2s;">Contacto</a></li>
+      </ul>
+      <a href="#contacto" class="btn-pill" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:var(--ink);color:#fff;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;transition:transform .2s ease,opacity .2s ease;">Agenda una llamada</a>
     </div>
-    <ul>
-      <li><a href="#servicios">Servicios</a></li>
-      <li><a href="#proyectos">Proyectos</a></li>
-      <li><a href="#stack">Stack</a></li>
-      <li><a href="#contacto">Contacto</a></li>
-    </ul>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
-      <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-        stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="4" />
-        <path
-          d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-      </svg>
-    </button>
-    <a href="#contacto" class="nav-cta">Agenda llamada</a>
   </nav>
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-badge reveal">
-        <div class="dot">✶</div>
-        Disponible para nuevos proyectos
-        <span class="pulse"></span>
+  <section id="top" data-screen-label="Hero" style="position:relative;">
+    <div style="max-width:1200px;margin:0 auto;padding:84px 40px 0;">
+      <div data-reveal="1" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.24em;text-transform:uppercase;color:var(--muted);">Estudio de software · Panamá · Est. 2025</span>
+        <span style="display:inline-flex;align-items:center;gap:9px;padding:7px 14px;background:var(--surface);border:1px solid var(--line);border-radius:999px;font-size:13px;font-weight:500;color:var(--ink-2);">
+          <span style="width:7px;height:7px;border-radius:50%;background:#0E9F6E;animation:pdot 2.4s ease-in-out infinite;"></span>
+          Disponible para nuevos proyectos
+        </span>
       </div>
 
-      <h1 class="hero-title reveal">
-        Construimos software que <span class="serif">piensa</span>,<br>
-        no que sólo <span class="strike">funciona</span>.
+      <h1 style="font-size:clamp(44px,7vw,96px);line-height:0.99;letter-spacing:-0.035em;font-weight:700;margin:38px 0 0;max-width:15ch;color:var(--ink);" data-reveal="1" data-reveal-delay="60">
+        Construimos software que <span style="font-family:'Newsreader',serif;font-weight:400;font-style:italic;letter-spacing:-0.01em;color:var(--accent);">piensa</span>, no que solo funciona.
       </h1>
 
-      <p class="hero-sub reveal">
-        JStudio_IA es un estudio de desarrollo que integra inteligencia artificial en cada línea
-        de código. Automatizamos procesos, creamos productos digitales y resolvemos problemas
-        reales con tecnología de vanguardia.
-      </p>
+      <div style="display:grid;grid-template-columns:1.15fr 0.85fr;gap:48px;align-items:end;margin-top:48px;">
+        <div data-reveal="1" data-reveal-delay="120">
+          <p style="font-size:clamp(17px,1.5vw,20px);line-height:1.6;color:var(--ink-2);max-width:46ch;margin:0;">
+            Somos un estudio de ingeniería que integra inteligencia artificial en cada capa del producto. Diseñamos, construimos y automatizamos sistemas que generan resultados medibles para empresas, startups y PYMEs.
+          </p>
+          <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:34px;">
+            <a href="#contacto" class="btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;background:var(--ink);color:#fff;border-radius:999px;text-decoration:none;font-weight:600;font-size:15px;transition:transform .2s ease,box-shadow .25s ease;box-shadow:0 12px 30px -14px rgba(20,22,29,0.5);">
+              Iniciar un proyecto
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a href="#proyectos" class="btn-outline" style="display:inline-flex;align-items:center;gap:10px;padding:15px 24px;background:transparent;color:var(--ink);border:1px solid var(--line-2);border-radius:999px;text-decoration:none;font-weight:500;font-size:15px;transition:background .2s ease,border-color .2s ease;">
+              Ver proyectos
+            </a>
+          </div>
+        </div>
 
-      <div class="hero-ctas reveal">
-        <a href="#contacto" class="btn-primary">
-          Empezar un proyecto
-          <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
-        </a>
-        <a href="#proyectos" class="btn-ghost">
-          Ver trabajos
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10" />
-            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" />
-          </svg>
-        </a>
+        <div data-reveal="1" data-reveal-delay="180">
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:0 24px 50px -32px rgba(20,22,29,0.35);">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:18px;">
+              <span style="width:9px;height:9px;border-radius:50%;background:var(--line-2);"></span>
+              <span style="width:9px;height:9px;border-radius:50%;background:var(--line-2);"></span>
+              <span style="width:9px;height:9px;border-radius:50%;background:var(--line-2);"></span>
+              <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.12em;color:var(--muted);">jstudio.config.ts</span>
+            </div>
+            <pre style="margin:0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.85;color:var(--ink);white-space:pre-wrap;"><span style="color:var(--muted);">const</span> studio = {
+  <span style="color:var(--ink-2);">enfoque</span>: <span style="color:var(--accent);">"IA aplicada"</span>,
+  <span style="color:var(--ink-2);">stack</span>: [<span style="color:var(--accent);">"React"</span>, <span style="color:var(--accent);">"Node"</span>, <span style="color:var(--accent);">"Python"</span>],
+  <span style="color:var(--ink-2);">velocidad</span>: <span style="color:var(--accent);">"10x"</span>,
+  <span style="color:var(--ink-2);">entrega</span>: () <span style="color:var(--muted);">=&gt;</span> <span style="color:var(--accent);">"a producción"</span>,
+}</pre>
+          </div>
+        </div>
       </div>
 
-      <!-- Hero cluster of cards -->
-      <div class="hero-cluster reveal">
-        <div class="glass-card">
-          <div class="card-label">// code.craft</div>
-          <pre class="card-code"><span class="c3">const</span> <span class="c1">jstudio</span> <span class="c3">=</span> {
-  <span class="c2">mission</span>: <span class="c4">"Crear con IA"</span>,
-  <span class="c2">stack</span>: [<span class="c4">"React"</span>, <span class="c4">"Node"</span>, <span class="c4">"ML"</span>],
-  <span class="c2">speed</span>: <span class="c3">10</span><span class="c1">x</span>,
-  <span class="c2">ship</span>: () =&gt; <span class="c4">"🚀"</span>,
-};</pre>
+      <!-- STAT BAND -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:72px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+        <div data-reveal="1" style="padding:30px 28px 30px 0;border-right:1px solid var(--line);">
+          <div style="font-family:'Newsreader',serif;font-style:italic;font-weight:300;font-size:clamp(40px,4.6vw,58px);line-height:1;color:var(--ink);">24<span style="color:var(--accent);">+</span></div>
+          <div style="font-size:14px;color:var(--muted);margin-top:10px;">Proyectos entregados</div>
         </div>
-        <div class="glass-card">
-          <div class="card-label">// deliveries</div>
-          <div class="stat-big">24<sup>+</sup></div>
-          <div class="stat-label">Proyectos entregados combinando desarrollo a medida e integración de IA.</div>
+        <div data-reveal="1" data-reveal-delay="80" style="padding:30px 28px;border-right:1px solid var(--line);">
+          <div style="font-family:'Newsreader',serif;font-style:italic;font-weight:300;font-size:clamp(40px,4.6vw,58px);line-height:1;color:var(--ink);">5</div>
+          <div style="font-size:14px;color:var(--muted);margin-top:10px;">Áreas de especialización</div>
         </div>
-        <div class="glass-card card-ai">
-          <div class="card-label" style="color:rgba(255,255,255,0.8)">// ai.engine</div>
-          <div class="ai-vis">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-          </div>
-          <div style="font-size:15px;font-weight:500">Modelos en tiempo real</div>
-          <div style="font-size:13px;opacity:0.85;margin-top:6px">Integración de LLMs, chatbots y automatizaciones en tu
-            producto.</div>
+        <div data-reveal="1" data-reveal-delay="160" style="padding:30px 28px;border-right:1px solid var(--line);">
+          <div style="font-family:'Newsreader',serif;font-style:italic;font-weight:300;font-size:clamp(40px,4.6vw,58px);line-height:1;color:var(--ink);">&lt;24<span style="font-size:0.5em;color:var(--muted);"> h</span></div>
+          <div style="font-size:14px;color:var(--muted);margin-top:10px;">Tiempo de respuesta</div>
+        </div>
+        <div data-reveal="1" data-reveal-delay="240" style="padding:30px 0 30px 28px;">
+          <div style="font-family:'Newsreader',serif;font-style:italic;font-weight:300;font-size:clamp(40px,4.6vw,58px);line-height:1;color:var(--ink);">100<span style="color:var(--accent);">%</span></div>
+          <div style="font-size:14px;color:var(--muted);margin-top:10px;">Código a medida</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- SERVICIOS -->
-  <section id="servicios">
-    <div class="wrap">
-      <div class="reveal">
-        <div class="eyebrow">Servicios</div>
-        <h2 class="section-title">Soluciones <span class="serif">hechas a mano,</span> potenciadas por IA.</h2>
-        <p class="section-lead">Cinco áreas donde JStudio_IA ayuda a empresas, startups y PYMEs a crecer con tecnología
-          inteligente.</p>
+  <section id="servicios" data-screen-label="Servicios" style="max-width:1200px;margin:0 auto;padding:120px 40px 0;">
+    <div data-reveal="1" style="max-width:720px;">
+      <div style="display:inline-flex;align-items:center;gap:13px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);font-weight:500;"><span style="color:var(--accent);">01</span><span style="width:26px;height:1px;background:var(--line-2);"></span>Servicios</div>
+      <h2 style="font-size:clamp(30px,4.4vw,56px);line-height:1.04;letter-spacing:-0.028em;font-weight:600;margin:20px 0 0;color:var(--ink);">Cinco disciplinas, una sola obsesión: resolver el problema correcto.</h2>
+      <p style="font-size:18px;line-height:1.6;color:var(--ink-2);margin:22px 0 0;max-width:60ch;">Acompañamos a empresas, startups y PYMEs a crecer con tecnología bien construida y bien pensada.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:56px;">
+      <!-- 01 featured -->
+      <div data-reveal="1" class="service-card" style="grid-column:span 3;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:34px;min-height:300px;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .35s;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+          <div style="width:46px;height:46px;border-radius:12px;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.2em;color:var(--muted);">01</span>
+        </div>
+        <h3 style="font-size:25px;font-weight:600;letter-spacing:-0.02em;line-height:1.15;margin:24px 0 12px;color:var(--ink);">Desarrollo de software a medida</h3>
+        <p style="color:var(--ink-2);font-size:15px;line-height:1.6;margin:0;flex:1;">Aplicaciones web, sistemas internos, APIs y productos digitales construidos desde cero, con arquitectura limpia, escalable y preparada para crecer.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">React</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">Node.js</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">Python</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">PostgreSQL</span>
+        </div>
       </div>
 
-      <div class="services-grid">
-        <div class="service-card featured gradient reveal">
-          <div class="service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="16 18 22 12 16 6" />
-              <polyline points="8 6 2 12 8 18" />
-            </svg></div>
-          <h3 class="service-title">Desarrollo de <span class="serif">software</span> a medida</h3>
-          <p class="service-desc">Aplicaciones web, sistemas internos, APIs y productos digitales construidos desde cero
-            con arquitectura limpia, escalable y preparada para crecer.</p>
-          <div class="service-tags">
-            <span class="tag">React</span>
-            <span class="tag">Node.js</span>
-            <span class="tag">Python</span>
-            <span class="tag">PostgreSQL</span>
+      <!-- 02 dark -->
+      <div data-reveal="1" data-reveal-delay="80" class="service-card-dark" style="grid-column:span 3;background:var(--ink);border:1px solid var(--ink);border-radius:18px;padding:34px;min-height:300px;display:flex;flex-direction:column;color:#fff;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+          <div style="width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);display:grid;place-items:center;color:#fff;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/></svg>
           </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.2em;color:rgba(255,255,255,0.5);">02</span>
         </div>
-
-        <div class="service-card wide reveal">
-          <div class="service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3" />
-              <path
-                d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24" />
-            </svg></div>
-          <h3 class="service-title">Integración de <span class="serif">IA</span> en negocios</h3>
-          <p class="service-desc">Incrustamos modelos de lenguaje, visión por computadora y sistemas predictivos
-            directamente en tus flujos de trabajo.</p>
-          <div class="service-tags">
-            <span class="tag">OpenAI</span>
-            <span class="tag">LangChain</span>
-            <span class="tag">Embeddings</span>
-          </div>
+        <h3 style="font-size:25px;font-weight:600;letter-spacing:-0.02em;line-height:1.15;margin:24px 0 12px;">Integración de IA en el negocio</h3>
+        <p style="color:rgba(255,255,255,0.72);font-size:15px;line-height:1.6;margin:0;flex:1;">Incorporamos modelos de lenguaje, visión por computadora y sistemas predictivos directamente en tus flujos de trabajo — no como un añadido, sino como parte del producto.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid rgba(255,255,255,0.16);border-radius:7px;color:rgba(255,255,255,0.85);">OpenAI</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid rgba(255,255,255,0.16);border-radius:7px;color:rgba(255,255,255,0.85);">LangChain</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid rgba(255,255,255,0.16);border-radius:7px;color:rgba(255,255,255,0.85);">Embeddings</span>
         </div>
+      </div>
 
-        <div class="service-card reveal">
-          <div class="service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2" />
-              <line x1="8" y1="21" x2="16" y2="21" />
-              <line x1="12" y1="17" x2="12" y2="21" />
-            </svg></div>
-          <h3 class="service-title">Sitios web & <span class="serif">e-commerce</span></h3>
-          <p class="service-desc">Landing pages, catálogos, tiendas online y plataformas de contenido con rendimiento,
-            SEO y diseño cuidado hasta el último pixel.</p>
-          <div class="service-tags">
-            <span class="tag">Next.js</span>
-            <span class="tag">Stripe</span>
-            <span class="tag">CMS</span>
+      <!-- 03 -->
+      <div data-reveal="1" class="service-card" style="grid-column:span 2;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px;min-height:280px;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .35s;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+          <div style="width:46px;height:46px;border-radius:12px;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
           </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.2em;color:var(--muted);">03</span>
         </div>
-
-        <div class="service-card reveal">
-          <div class="service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2l3 6 6 .9-4.5 4.3 1 6.3L12 16.8 6.5 19.5l1-6.3L3 8.9 9 8z" />
-            </svg></div>
-          <h3 class="service-title">Automatización de <span class="serif">procesos</span></h3>
-          <p class="service-desc">Elimina tareas repetitivas. Conectamos tus herramientas, procesamos documentos y
-            automatizamos decisiones con reglas e IA.</p>
-          <div class="service-tags">
-            <span class="tag">n8n</span>
-            <span class="tag">Zapier</span>
-            <span class="tag">RPA</span>
-          </div>
+        <h3 style="font-size:21px;font-weight:600;letter-spacing:-0.02em;line-height:1.18;margin:22px 0 11px;color:var(--ink);">Sitios web & e-commerce</h3>
+        <p style="color:var(--ink-2);font-size:14.5px;line-height:1.6;margin:0;flex:1;">Landing pages, catálogos y tiendas online con rendimiento, SEO y un diseño cuidado hasta el último detalle.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">Next.js</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">Stripe</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">CMS</span>
         </div>
+      </div>
 
-        <div class="service-card reveal">
-          <div class="service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-            </svg></div>
-          <h3 class="service-title">Chatbots & <span class="serif">IA</span> conversacional</h3>
-          <p class="service-desc">Asistentes virtuales con memoria y contexto, entrenados con tus datos, para soporte,
-            ventas y atención 24/7 en WhatsApp, web y más.</p>
-          <div class="service-tags">
-            <span class="tag">GPT</span>
-            <span class="tag">WhatsApp API</span>
-            <span class="tag">RAG</span>
+      <!-- 04 -->
+      <div data-reveal="1" data-reveal-delay="80" class="service-card" style="grid-column:span 2;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px;min-height:280px;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .35s;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+          <div style="width:46px;height:46px;border-radius:12px;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6.3L12 16.8 6.5 19.5l1-6.3L3 8.9 9 8z"/></svg>
           </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.2em;color:var(--muted);">04</span>
+        </div>
+        <h3 style="font-size:21px;font-weight:600;letter-spacing:-0.02em;line-height:1.18;margin:22px 0 11px;color:var(--ink);">Automatización de procesos</h3>
+        <p style="color:var(--ink-2);font-size:14.5px;line-height:1.6;margin:0;flex:1;">Eliminamos el trabajo repetitivo: conectamos tus herramientas, procesamos documentos y automatizamos decisiones con reglas e IA.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">n8n</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">Zapier</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">RPA</span>
+        </div>
+      </div>
+
+      <!-- 05 -->
+      <div data-reveal="1" data-reveal-delay="160" class="service-card" style="grid-column:span 2;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px;min-height:280px;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .35s;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+          <div style="width:46px;height:46px;border-radius:12px;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.2em;color:var(--muted);">05</span>
+        </div>
+        <h3 style="font-size:21px;font-weight:600;letter-spacing:-0.02em;line-height:1.18;margin:22px 0 11px;color:var(--ink);">Chatbots & IA conversacional</h3>
+        <p style="color:var(--ink-2);font-size:14.5px;line-height:1.6;margin:0;flex:1;">Asistentes con memoria y contexto, entrenados con tus datos, para soporte, ventas y atención 24/7 en WhatsApp, web y más.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">GPT</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">WhatsApp API</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;color:var(--ink-2);">RAG</span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- PROYECTOS -->
-  <section id="proyectos">
-    <div class="wrap">
-      <div class="reveal">
-        <div class="eyebrow">Proyectos</div>
-        <h2 class="section-title">Casos <span class="serif">recientes</span> que hicieron clic.</h2>
-        <p class="section-lead">Una selección de trabajos donde combinamos desarrollo, diseño e inteligencia artificial
-          para resolver problemas concretos.</p>
-      </div>
+  <section id="proyectos" data-screen-label="Proyectos" style="max-width:1200px;margin:0 auto;padding:120px 40px 0;">
+    <div data-reveal="1" style="max-width:720px;">
+      <div style="display:inline-flex;align-items:center;gap:13px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);font-weight:500;"><span style="color:var(--accent);">02</span><span style="width:26px;height:1px;background:var(--line-2);"></span>Proyectos</div>
+      <h2 style="font-size:clamp(30px,4.4vw,56px);line-height:1.04;letter-spacing:-0.028em;font-weight:600;margin:20px 0 0;color:var(--ink);">Trabajo reciente que hizo clic.</h2>
+      <p style="font-size:18px;line-height:1.6;color:var(--ink-2);margin:22px 0 0;max-width:60ch;">Una selección de proyectos donde combinamos desarrollo, diseño e IA para resolver problemas concretos.</p>
+    </div>
 
-      <div class="projects-list">
-        <a href="https://fotografia-ruddy.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-row reveal">
-          <div class="project-num">01</div>
-          <div class="project-name">Estudio <span class="serif">Fotográfico</span> Ruddy</div>
-          <div class="project-meta">2025 · Estudio fotográfico</div>
-          <div class="project-type">Landing · Web</div>
-          <div class="project-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7" />
-              <polyline points="7 7 17 7 17 17" />
-            </svg></div>
-        </a>
+    <div data-reveal="1" style="margin-top:48px;border-top:1px solid var(--line);">
+      <a href="https://fotografia-ruddy.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-row" style="display:grid;grid-template-columns:56px 1fr 180px 150px 44px;gap:24px;align-items:center;padding:30px 14px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:background .25s ease,padding-left .25s ease;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);">01</span>
+        <span style="font-size:clamp(20px,2.4vw,28px);font-weight:600;letter-spacing:-0.02em;color:var(--ink);">Estudio Fotográfico Ruddy</span>
+        <span style="font-size:14px;color:var(--ink-2);">2025 · Estudio fotográfico</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--accent);">Landing · Web</span>
+        <span class="arrow-circle" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--ink);transition:background .25s,color .25s,border-color .25s;justify-self:end;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+      </a>
 
-        <a href="https://constructora-gules.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-row reveal">
-          <div class="project-num">02</div>
-          <div class="project-name">Landing <span class="serif">Constructora</span></div>
-          <div class="project-meta">2025 · Empresa constructora</div>
-          <div class="project-type">Landing · Web</div>
-          <div class="project-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7" />
-              <polyline points="7 7 17 7 17 17" />
-            </svg></div>
-        </a>
+      <a href="https://constructora-gules.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-row" style="display:grid;grid-template-columns:56px 1fr 180px 150px 44px;gap:24px;align-items:center;padding:30px 14px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:background .25s ease,padding-left .25s ease;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);">02</span>
+        <span style="font-size:clamp(20px,2.4vw,28px);font-weight:600;letter-spacing:-0.02em;color:var(--ink);">Landing Constructora</span>
+        <span style="font-size:14px;color:var(--ink-2);">2025 · Empresa constructora</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--accent);">Landing · Web</span>
+        <span class="arrow-circle" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--ink);transition:background .25s,color .25s,border-color .25s;justify-self:end;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+      </a>
 
-        <a href="https://beautysalondesign.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-row reveal">
-          <div class="project-num">03</div>
-          <div class="project-name">Salón de <span class="serif">Belleza</span></div>
-          <div class="project-meta">2025 · Salón de belleza</div>
-          <div class="project-type">Landing · Web</div>
-          <div class="project-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7" />
-              <polyline points="7 7 17 7 17 17" />
-            </svg></div>
-        </a>
+      <a href="https://beautysalondesign.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-row" style="display:grid;grid-template-columns:56px 1fr 180px 150px 44px;gap:24px;align-items:center;padding:30px 14px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:background .25s ease,padding-left .25s ease;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);">03</span>
+        <span style="font-size:clamp(20px,2.4vw,28px);font-weight:600;letter-spacing:-0.02em;color:var(--ink);">Salón de Belleza</span>
+        <span style="font-size:14px;color:var(--ink-2);">2025 · Salón de belleza</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--accent);">Landing · Web</span>
+        <span class="arrow-circle" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--ink);transition:background .25s,color .25s,border-color .25s;justify-self:end;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+      </a>
 
-        <a href="https://tiendaropadesign.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-row reveal">
-          <div class="project-num">04</div>
-          <div class="project-name">Tienda de <span class="serif">Ropa</span></div>
-          <div class="project-meta">2025 · Moda y retail</div>
-          <div class="project-type">E-commerce · Web</div>
-          <div class="project-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7" />
-              <polyline points="7 7 17 7 17 17" />
-            </svg></div>
-        </a>
+      <a href="https://tiendaropadesign.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-row" style="display:grid;grid-template-columns:56px 1fr 180px 150px 44px;gap:24px;align-items:center;padding:30px 14px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:background .25s ease,padding-left .25s ease;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);">04</span>
+        <span style="font-size:clamp(20px,2.4vw,28px);font-weight:600;letter-spacing:-0.02em;color:var(--ink);">Tienda de Ropa</span>
+        <span style="font-size:14px;color:var(--ink-2);">2025 · Moda y retail</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--accent);">E-commerce · Web</span>
+        <span class="arrow-circle" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--ink);transition:background .25s,color .25s,border-color .25s;justify-self:end;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+      </a>
 
-        <a href="https://sibpanama.com/" target="_blank" rel="noopener noreferrer" class="project-row reveal">
-          <div class="project-num">05</div>
-          <div class="project-name">Sistema <span class="serif">SIB</span> Panamá</div>
-          <div class="project-meta">2025 · Transporte público</div>
-          <div class="project-type">Web · App</div>
-          <div class="project-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7" />
-              <polyline points="7 7 17 7 17 17" />
-            </svg></div>
-        </a>
-      </div>
+      <a href="https://sibpanama.com/" target="_blank" rel="noopener noreferrer" class="project-row" style="display:grid;grid-template-columns:56px 1fr 180px 150px 44px;gap:24px;align-items:center;padding:30px 14px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:background .25s ease,padding-left .25s ease;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);">05</span>
+        <span style="font-size:clamp(20px,2.4vw,28px);font-weight:600;letter-spacing:-0.02em;color:var(--ink);">Sistema SIB Panamá</span>
+        <span style="font-size:14px;color:var(--ink-2);">2025 · Transporte público</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--accent);">Web · App</span>
+        <span class="arrow-circle" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--ink);transition:background .25s,color .25s,border-color .25s;justify-self:end;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+      </a>
     </div>
   </section>
 
   <!-- STACK -->
-  <section id="stack">
-    <div class="wrap">
-      <div class="reveal">
-        <div class="eyebrow">Tecnología</div>
-        <h2 class="section-title">El <span class="serif">stack</span> que usamos todos los días.</h2>
-        <p class="section-lead">Herramientas probadas en producción para construir rápido, escalar sin romperse y dejar
-          IA bien integrada.</p>
+  <section id="stack" data-screen-label="Stack" style="max-width:1200px;margin:0 auto;padding:120px 40px 0;">
+    <div data-reveal="1" style="max-width:720px;">
+      <div style="display:inline-flex;align-items:center;gap:13px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);font-weight:500;"><span style="color:var(--accent);">03</span><span style="width:26px;height:1px;background:var(--line-2);"></span>Stack</div>
+      <h2 style="font-size:clamp(30px,4.4vw,56px);line-height:1.04;letter-spacing:-0.028em;font-weight:600;margin:20px 0 0;color:var(--ink);">El stack con el que trabajamos cada día.</h2>
+      <p style="font-size:18px;line-height:1.6;color:var(--ink-2);margin:22px 0 0;max-width:60ch;">Herramientas probadas en producción para construir rápido, escalar sin romper nada y dejar la IA bien integrada.</p>
+    </div>
+
+    <div data-reveal="1" style="background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:48px;margin-top:52px;">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:40px;">
+        <div>
+          <h4 style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.16em;color:var(--muted);margin:0 0 18px;padding-bottom:13px;border-bottom:1px solid var(--line);font-weight:500;">Frontend</h4>
+          <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px;">
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>React</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Next.js</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>TypeScript</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Tailwind</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Framer Motion</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.16em;color:var(--muted);margin:0 0 18px;padding-bottom:13px;border-bottom:1px solid var(--line);font-weight:500;">Backend</h4>
+          <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px;">
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Node.js</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Python</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>FastAPI</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>PostgreSQL</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Redis</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.16em;color:var(--muted);margin:0 0 18px;padding-bottom:13px;border-bottom:1px solid var(--line);font-weight:500;">IA & ML</h4>
+          <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px;">
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>OpenAI</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Anthropic</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>LangChain</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Pinecone</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Hugging Face</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.16em;color:var(--muted);margin:0 0 18px;padding-bottom:13px;border-bottom:1px solid var(--line);font-weight:500;">Infra & Cloud</h4>
+          <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px;">
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>AWS</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Vercel</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Docker</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Supabase</li>
+            <li style="font-size:16px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:11px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>Cloudflare</li>
+          </ul>
+        </div>
       </div>
 
-      <div class="stack-wrap reveal">
-        <div class="stack-categories">
-          <div class="stack-cat">
-            <h4>Frontend</h4>
-            <ul class="stack-items">
-              <li>React</li>
-              <li>Next.js</li>
-              <li>TypeScript</li>
-              <li>Tailwind</li>
-              <li>Framer Motion</li>
-            </ul>
-          </div>
-          <div class="stack-cat">
-            <h4>Backend</h4>
-            <ul class="stack-items">
-              <li>Node.js</li>
-              <li>Python</li>
-              <li>FastAPI</li>
-              <li>PostgreSQL</li>
-              <li>Redis</li>
-            </ul>
-          </div>
-          <div class="stack-cat">
-            <h4>IA & ML</h4>
-            <ul class="stack-items">
-              <li>OpenAI</li>
-              <li>Anthropic</li>
-              <li>LangChain</li>
-              <li>Pinecone</li>
-              <li>Hugging Face</li>
-            </ul>
-          </div>
-          <div class="stack-cat">
-            <h4>Infra & Cloud</h4>
-            <ul class="stack-items">
-              <li>AWS</li>
-              <li>Vercel</li>
-              <li>Docker</li>
-              <li>Supabase</li>
-              <li>Cloudflare</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="stack-marquee">
-          <div class="marquee-track">
-            <span class="marquee-item">React</span><span class="marquee-dot"></span>
-            <span class="marquee-item">Next.js</span><span class="marquee-dot"></span>
-            <span class="marquee-item">TypeScript</span><span class="marquee-dot"></span>
-            <span class="marquee-item">Python</span><span class="marquee-dot"></span>
-            <span class="marquee-item">OpenAI</span><span class="marquee-dot"></span>
-            <span class="marquee-item">LangChain</span><span class="marquee-dot"></span>
-            <span class="marquee-item">PostgreSQL</span><span class="marquee-dot"></span>
-            <span class="marquee-item">AWS</span><span class="marquee-dot"></span>
-            <span class="marquee-item">Vercel</span><span class="marquee-dot"></span>
-            <span class="marquee-item">Docker</span><span class="marquee-dot"></span>
-            <!-- duplicate for loop -->
-            <span class="marquee-item">React</span><span class="marquee-dot"></span>
-            <span class="marquee-item">Next.js</span><span class="marquee-dot"></span>
-            <span class="marquee-item">TypeScript</span><span class="marquee-dot"></span>
-            <span class="marquee-item">Python</span><span class="marquee-dot"></span>
-            <span class="marquee-item">OpenAI</span><span class="marquee-dot"></span>
-            <span class="marquee-item">LangChain</span><span class="marquee-dot"></span>
-            <span class="marquee-item">PostgreSQL</span><span class="marquee-dot"></span>
-            <span class="marquee-item">AWS</span><span class="marquee-dot"></span>
-            <span class="marquee-item">Vercel</span><span class="marquee-dot"></span>
-            <span class="marquee-item">Docker</span><span class="marquee-dot"></span>
-          </div>
+      <div style="margin-top:48px;padding-top:30px;border-top:1px solid var(--line);overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);">
+        <div style="display:flex;gap:48px;width:max-content;animation:marquee 38s linear infinite;white-space:nowrap;">
+          <span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">React</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">Next.js</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">TypeScript</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">Python</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">OpenAI</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">LangChain</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">PostgreSQL</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">AWS</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">Vercel</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">Docker</span>
+          <span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">React</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">Next.js</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">TypeScript</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">Python</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">OpenAI</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">LangChain</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">PostgreSQL</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">AWS</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">Vercel</span><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:var(--ink-2);opacity:0.5;">Docker</span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- CONTACTO -->
-  <section id="contacto">
-    <div class="wrap">
-      <div class="reveal">
-        <div class="eyebrow">Contacto</div>
-        <h2 class="section-title"><span class="serif">Hablemos</span> de tu próximo proyecto.</h2>
-        <p class="section-lead">Cuéntame qué quieres construir. Respondo en menos de 24 horas, normalmente mucho antes.
-        </p>
+  <section id="contacto" data-screen-label="Contacto" style="background:var(--dark);margin-top:120px;padding:110px 0;color:#fff;">
+    <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
+      <div data-reveal="1" style="max-width:720px;">
+        <div style="display:inline-flex;align-items:center;gap:13px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.5);font-weight:500;"><span style="color:var(--accent);">04</span><span style="width:26px;height:1px;background:rgba(255,255,255,0.22);"></span>Contacto</div>
+        <h2 style="font-size:clamp(30px,4.4vw,56px);line-height:1.04;letter-spacing:-0.028em;font-weight:600;margin:20px 0 0;color:#fff;">Hablemos de tu próximo proyecto.</h2>
+        <p style="font-size:18px;line-height:1.6;color:rgba(255,255,255,0.66);margin:22px 0 0;max-width:58ch;">Cuéntame qué quieres construir. Respondo en menos de 24 horas — casi siempre mucho antes.</p>
       </div>
 
-      <div class="contact-grid">
-        <!-- Dev card -->
-        <div class="contact-card primary reveal">
-          <div class="dev-profile">
-            <div class="avatar">Js</div>
+      <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:28px;margin-top:54px;">
+        <!-- founder card -->
+        <div data-reveal="1" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.10);border-radius:22px;padding:38px;">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:30px;">
+            <div style="width:58px;height:58px;border-radius:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);display:grid;place-items:center;flex-shrink:0;padding:9px;">
+              <img src="assets/logo-mark.png" alt="JStudio_IA" style="width:100%;height:100%;object-fit:contain;filter:invert(1);" onerror="this.style.display='none'" />
+            </div>
             <div>
-              <div class="dev-name">Johan Samudio</div>
-              <div class="dev-role">Fundador · Desarrollador</div>
+              <div style="font-size:21px;font-weight:600;letter-spacing:-0.01em;">Johan Samudio</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.13em;color:rgba(255,255,255,0.5);margin-top:5px;">Fundador · Desarrollador</div>
             </div>
           </div>
 
-          <a class="contact-item" href="mailto:2002samudiojohan@gmail.com">
-            <div class="ci-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                <polyline points="22,6 12,13 2,6" />
-              </svg></div>
-            <div>
-              <div class="ci-label">Email personal</div>
-              <div class="ci-value">2002samudiojohan@gmail.com</div>
-            </div>
+          <a href="mailto:2002samudiojohan@gmail.com" class="contact-link" style="display:flex;align-items:center;gap:14px;padding:15px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;transition:background .25s ease,transform .25s ease;">
+            <span style="width:40px;height:40px;border-radius:11px;background:var(--accent);display:grid;place-items:center;flex-shrink:0;color:#fff;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            <span><span style="display:block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(255,255,255,0.5);">Email personal</span><span style="display:block;font-size:14.5px;font-weight:500;margin-top:3px;word-break:break-all;">2002samudiojohan@gmail.com</span></span>
           </a>
 
-          <a class="contact-item" href="mailto:johan.samudiotrabajo@gmail.com">
-            <div class="ci-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="4" width="20" height="16" rx="2" />
-                <path d="M2 7l10 6 10-6" />
-              </svg></div>
-            <div>
-              <div class="ci-label">Email de trabajo</div>
-              <div class="ci-value">johan.samudiotrabajo@gmail.com</div>
-            </div>
+          <a href="mailto:johan.samudiotrabajo@gmail.com" class="contact-link" style="display:flex;align-items:center;gap:14px;padding:15px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;transition:background .25s ease,transform .25s ease;">
+            <span style="width:40px;height:40px;border-radius:11px;background:var(--accent);display:grid;place-items:center;flex-shrink:0;color:#fff;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg></span>
+            <span><span style="display:block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(255,255,255,0.5);">Email de trabajo</span><span style="display:block;font-size:14.5px;font-weight:500;margin-top:3px;word-break:break-all;">johan.samudiotrabajo@gmail.com</span></span>
           </a>
 
-          <a class="contact-item" href="tel:+50765247842">
-            <div class="ci-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path
-                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-              </svg></div>
-            <div>
-              <div class="ci-label">Teléfono principal</div>
-              <div class="ci-value">+507 6524-7842</div>
-            </div>
+          <a href="tel:+50765247842" class="contact-link" style="display:flex;align-items:center;gap:14px;padding:15px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:14px;margin-bottom:10px;text-decoration:none;color:inherit;transition:background .25s ease,transform .25s ease;">
+            <span style="width:40px;height:40px;border-radius:11px;background:var(--accent);display:grid;place-items:center;flex-shrink:0;color:#fff;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            <span><span style="display:block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(255,255,255,0.5);">Teléfono principal</span><span style="display:block;font-size:14.5px;font-weight:500;margin-top:3px;">+507 6524-7842</span></span>
           </a>
 
-          <a class="contact-item" href="tel:+50768094813">
-            <div class="ci-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="5" y="2" width="14" height="20" rx="2" />
-                <line x1="12" y1="18" x2="12" y2="18" />
-              </svg></div>
-            <div>
-              <div class="ci-label">Teléfono alterno</div>
-              <div class="ci-value">+507 6809-4813</div>
-            </div>
+          <a href="tel:+50768094813" class="contact-link" style="display:flex;align-items:center;gap:14px;padding:15px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:14px;text-decoration:none;color:inherit;transition:background .25s ease,transform .25s ease;">
+            <span style="width:40px;height:40px;border-radius:11px;background:var(--accent);display:grid;place-items:center;flex-shrink:0;color:#fff;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg></span>
+            <span><span style="display:block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(255,255,255,0.5);">Teléfono alterno</span><span style="display:block;font-size:14.5px;font-weight:500;margin-top:3px;">+507 6809-4813</span></span>
           </a>
         </div>
 
-        <!-- Form -->
-        <div class="contact-card reveal">
-          <div class="form-title">Cuéntame tu <span class="serif">idea.</span></div>
-          <div class="form-sub">Responde unas preguntas rápidas y prepararé una propuesta.</div>
+        <!-- form -->
+        <div data-reveal="1" style="background:var(--surface);border-radius:22px;padding:40px;color:var(--ink);">
+          <div style="font-size:25px;font-weight:600;letter-spacing:-0.02em;line-height:1.15;">Cuéntame tu idea.</div>
+          <div style="color:var(--ink-2);margin:8px 0 26px;font-size:15px;">Responde unas preguntas rápidas y prepararé una propuesta.</div>
 
-          <div class="chip-row" id="chipRow">
-            <button class="chip active" data-type="software">Software a medida</button>
-            <button class="chip" data-type="ia">Integración IA</button>
-            <button class="chip" data-type="web">Web / E-commerce</button>
-            <button class="chip" data-type="bot">Chatbot</button>
-            <button class="chip" data-type="auto">Automatización</button>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;">
+            <button data-chip="1" type="button" style="padding:8px 14px;background:var(--ink);color:#fff;border:1px solid var(--ink);border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s ease;">Software a medida</button>
+            <button data-chip="1" type="button" style="padding:8px 14px;background:transparent;color:var(--ink-2);border:1px solid var(--line-2);border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s ease;">Integración IA</button>
+            <button data-chip="1" type="button" style="padding:8px 14px;background:transparent;color:var(--ink-2);border:1px solid var(--line-2);border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s ease;">Web / E-commerce</button>
+            <button data-chip="1" type="button" style="padding:8px 14px;background:transparent;color:var(--ink-2);border:1px solid var(--line-2);border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s ease;">Chatbot</button>
+            <button data-chip="1" type="button" style="padding:8px 14px;background:transparent;color:var(--ink-2);border:1px solid var(--line-2);border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s ease;">Automatización</button>
           </div>
 
-          <form id="contactForm" onsubmit="handleSubmit(event)">
-            <div class="form-row">
-              <div class="field">
-                <input type="text" id="name" required placeholder=" ">
-                <label for="name">Nombre</label>
-              </div>
-              <div class="field">
-                <input type="email" id="email" required placeholder=" ">
-                <label for="email">Email</label>
-              </div>
+          <form data-form="1" action="https://formsubmit.co/johan.samudiotrabajo@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="Nuevo proyecto desde JStudio_IA">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="">
+            <input type="hidden" name="_template" value="table">
+            <input type="text" name="_honey" style="display:none">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px;">
+              <input type="text" name="nombre" required placeholder="Nombre" class="form-input" style="width:100%;padding:14px 15px;background:var(--paper);border:1px solid var(--line);border-radius:11px;font-family:inherit;font-size:14.5px;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s;" />
+              <input type="email" name="email" required placeholder="Email" class="form-input" style="width:100%;padding:14px 15px;background:var(--paper);border:1px solid var(--line);border-radius:11px;font-family:inherit;font-size:14.5px;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s;" />
             </div>
-            <div class="form-row">
-              <div class="field">
-                <input type="text" id="company" placeholder=" ">
-                <label for="company">Empresa (opcional)</label>
-              </div>
-              <div class="field">
-                <select id="budget" required>
-                  <option value="" disabled selected></option>
-                  <option>$1k – $5k</option>
-                  <option>$5k – $15k</option>
-                  <option>$15k – $40k</option>
-                  <option>$40k+</option>
-                </select>
-                <label for="budget">Presupuesto</label>
-              </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px;">
+              <input type="text" name="empresa" placeholder="Empresa (opcional)" class="form-input" style="width:100%;padding:14px 15px;background:var(--paper);border:1px solid var(--line);border-radius:11px;font-family:inherit;font-size:14.5px;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s;" />
+              <select name="presupuesto" required class="form-input" style="width:100%;padding:14px 15px;background:var(--paper);border:1px solid var(--line);border-radius:11px;font-family:inherit;font-size:14.5px;color:var(--ink-2);outline:none;transition:border-color .2s,box-shadow .2s;">
+                <option value="" disabled selected>Presupuesto</option>
+                <option>$1k – $5k</option>
+                <option>$5k – $15k</option>
+                <option>$15k – $40k</option>
+                <option>$40k+</option>
+              </select>
             </div>
-            <div class="form-row">
-              <div class="field full">
-                <textarea id="message" required placeholder=" "></textarea>
-                <label for="message">Describe tu proyecto</label>
-              </div>
-            </div>
-            <button type="submit" class="form-submit">
+            <textarea name="mensaje" required placeholder="Describe tu proyecto" class="form-input" style="width:100%;min-height:112px;padding:14px 15px;background:var(--paper);border:1px solid var(--line);border-radius:11px;font-family:inherit;font-size:14.5px;color:var(--ink);outline:none;resize:vertical;margin-bottom:18px;transition:border-color .2s,box-shadow .2s;"></textarea>
+            <button data-submit="1" type="submit" class="btn-submit" style="width:100%;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;transition:transform .2s ease,background .25s ease;">
               Enviar mensaje
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13" />
-                <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" />
-              </svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor"/></svg>
             </button>
           </form>
         </div>
@@ -1985,159 +409,295 @@
   </section>
 
   <!-- FOOTER -->
-  <footer>
-    <div class="wrap">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-            <div class="logo-mark" style="width:40px;height:40px;border-radius:12px;font-size:18px">J</div>
-            <span class="logo-name" style="font-size:22px;font-weight:700">JStudio<span class="underscore">_</span><span
-                class="ia">IA</span></span>
-          </div>
-          <p class="footer-tag">Estudio de desarrollo de software con inteligencia artificial integrada.</p>
+  <footer style="max-width:1200px;margin:0 auto;padding:72px 40px 36px;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:44px;margin-bottom:40px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:14px;">
+          <img src="assets/logo-mark.png" alt="JStudio_IA" style="width:32px;height:32px;object-fit:contain;display:block;" onerror="this.style.display='none'" />
+          <span style="font-size:19px;font-weight:700;letter-spacing:-0.01em;">JStudio<span style="color:var(--accent);font-weight:600;">_</span>IA</span>
         </div>
-        <div class="footer-col">
-          <h5>Servicios</h5>
-          <ul>
-            <li><a href="#servicios">Software a medida</a></li>
-            <li><a href="#servicios">Integración IA</a></li>
-            <li><a href="#servicios">Sitios & E-commerce</a></li>
-            <li><a href="#servicios">Chatbots</a></li>
-            <li><a href="#servicios">Automatización</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h5>Estudio</h5>
-          <ul>
-            <li><a href="#proyectos">Proyectos</a></li>
-            <li><a href="#stack">Stack</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h5>Contacto directo</h5>
-          <ul>
-            <li><a href="mailto:2002samudiojohan@gmail.com">2002samudiojohan@gmail.com</a></li>
-            <li><a href="tel:+50765247842">+507 6524-7842</a></li>
-            <li><a href="tel:+50768094813">+507 6809-4813</a></li>
-          </ul>
-        </div>
+        <p style="font-family:'Newsreader',serif;font-style:italic;font-size:19px;color:var(--ink-2);max-width:34ch;line-height:1.45;margin:0;">Estudio de ingeniería de software con inteligencia artificial integrada.</p>
       </div>
-
-      <div class="footer-giant">JStudio_IA</div>
-
-      <div class="footer-meta">
-        <span>© 2026 JStudio_IA · Panamá</span>
-        <span>Built with ❤ & AI</span>
+      <div>
+        <h5 style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--muted);margin:0 0 18px;font-weight:500;">Servicios</h5>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;">
+          <li><a href="#servicios" class="footer-link" style="color:var(--ink-2);text-decoration:none;font-size:14px;transition:color .2s;">Software a medida</a></li>
+          <li><a href="#servicios" class="footer-link" style="color:var(--ink-2);text-decoration:none;font-size:14px;transition:color .2s;">Integración IA</a></li>
+          <li><a href="#servicios" class="footer-link" style="color:var(--ink-2);text-decoration:none;font-size:14px;transition:color .2s;">Sitios & E-commerce</a></li>
+          <li><a href="#servicios" class="footer-link" style="color:var(--ink-2);text-decoration:none;font-size:14px;transition:color .2s;">Chatbots</a></li>
+          <li><a href="#servicios" class="footer-link" style="color:var(--ink-2);text-decoration:none;font-size:14px;transition:color .2s;">Automatización</a></li>
+        </ul>
       </div>
+      <div>
+        <h5 style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--muted);margin:0 0 18px;font-weight:500;">Estudio</h5>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;">
+          <li><a href="#proyectos" class="footer-link" style="color:var(--ink-2);text-decoration:none;font-size:14px;transition:color .2s;">Proyectos</a></li>
+          <li><a href="#stack" class="footer-link" style="color:var(--ink-2);text-decoration:none;font-size:14px;transition:color .2s;">Stack</a></li>
+          <li><a href="#contacto" class="footer-link" style="color:var(--ink-2);text-decoration:none;font-size:14px;transition:color .2s;">Contacto</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--muted);margin:0 0 18px;font-weight:500;">Contacto directo</h5>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;">
+          <li><a href="mailto:2002samudiojohan@gmail.com" class="footer-link" style="color:var(--ink-2);text-decoration:none;font-size:14px;transition:color .2s;word-break:break-all;">2002samudiojohan@gmail.com</a></li>
+          <li><a href="tel:+50765247842" class="footer-link" style="color:var(--ink-2);text-decoration:none;font-size:14px;transition:color .2s;">+507 6524-7842</a></li>
+          <li><a href="tel:+50768094813" class="footer-link" style="color:var(--ink-2);text-decoration:none;font-size:14px;transition:color .2s;">+507 6809-4813</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:8px 0 0;user-select:none;">
+      <div style="font-size:clamp(64px,17vw,232px);font-weight:700;line-height:0.9;letter-spacing:-0.05em;color:transparent;-webkit-text-stroke:1.5px var(--line-2);">JStudio_IA</div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;padding-top:28px;border-top:1px solid var(--line);margin-top:24px;">
+      <span>© 2026 JStudio_IA · Panamá</span>
+      <span>Construido con criterio &amp; IA</span>
     </div>
   </footer>
 
-  <!-- Tweaks panel -->
-  <div class="tweaks-panel" id="tweaksPanel">
-    <h3>// Tweaks</h3>
-    <div class="tweak-row">
-      <label>Modo oscuro</label>
-      <button class="switch" id="darkSwitch" aria-label="Toggle dark mode"></button>
-    </div>
-  </div>
+</div>
 
-  <script>
-    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-      "dark": true
-    }/*EDITMODE-END*/;
+<style>
+  /* Hover states */
+  .nav-link:hover { background: rgba(20,22,29,0.05); color: var(--ink); }
+  .btn-pill:hover { transform: translateY(-1px); opacity: 0.92; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -16px rgba(20,22,29,0.55); }
+  .btn-outline:hover { background: var(--surface); border-color: var(--ink); }
+  .service-card:hover { transform: translateY(-5px); border-color: var(--line-2); box-shadow: 0 30px 60px -34px rgba(20,22,29,0.4); }
+  .service-card-dark:hover { transform: translateY(-5px); box-shadow: 0 30px 60px -30px rgba(20,22,29,0.6); }
+  .project-row:hover { background: var(--surface); padding-left: 24px; }
+  .project-row:hover .arrow-circle { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .contact-link:hover { background: rgba(255,255,255,0.09); transform: translateX(3px); }
+  .btn-submit:hover { transform: translateY(-2px); }
+  .footer-link:hover { color: var(--accent); }
+  .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,70,229,0.14); }
 
-    const state = { ...TWEAK_DEFAULTS };
+  /* Responsive: tablet */
+  @media (max-width: 1024px) {
+    [data-nav] > div { padding: 0 24px; }
+    [data-nav] ul { gap: 2px; }
+    [data-nav] .nav-link { padding: 8px 10px; font-size: 13px; }
+    #top > div,
+    #servicios,
+    #proyectos,
+    #stack,
+    #contacto > div,
+    footer { padding-left: 24px !important; padding-right: 24px !important; }
+  }
 
-    // Theme
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const darkSwitch = document.getElementById('darkSwitch');
+  /* Responsive: mobile */
+  @media (max-width: 768px) {
+    [data-nav] > div { padding: 0 18px; height: 60px; }
+    [data-nav] ul { display: none; }
+    .btn-pill { padding: 9px 15px !important; font-size: 13px !important; }
 
-    function applyTheme(dark) {
-      document.body.setAttribute('data-theme', dark ? 'dark' : 'light');
-      themeIcon.innerHTML = dark
-        ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
-        : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>';
-      state.dark = dark;
+    #top > div { padding: 48px 18px 0 !important; }
+    #top h1 { font-size: clamp(32px, 9vw, 48px) !important; }
+
+    /* Hero grid: stack */
+    #top [style*="grid-template-columns:1.15fr"] {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 32px !important;
     }
 
-    // restore from localStorage
-    const storedDark = localStorage.getItem('jstudio-dark');
-    if (storedDark !== null) applyTheme(storedDark === 'true');
+    /* Stats: 2x2 */
+    #top [style*="repeat(4,1fr)"] {
+      grid-template-columns: 1fr 1fr !important;
+      margin-top: 48px !important;
+    }
+    #top [style*="repeat(4,1fr)"] > div:nth-child(2) { border-right: none !important; }
+    #top [style*="repeat(4,1fr)"] > div:nth-child(3),
+    #top [style*="repeat(4,1fr)"] > div:nth-child(4) { padding-top: 24px; border-top: 1px solid var(--line); }
 
-    themeToggle.addEventListener('click', () => {
-      const next = document.body.getAttribute('data-theme') !== 'dark';
-      applyTheme(next);
-      localStorage.setItem('jstudio-dark', next);
-      postKeys({ dark: next });
+    /* Sections padding */
+    #servicios, #proyectos, #stack { padding: 72px 18px 0 !important; }
+
+    /* Services grid: single column */
+    #servicios [style*="repeat(6,1fr)"] {
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+    }
+    #servicios [style*="span 3"],
+    #servicios [style*="span 2"] {
+      grid-column: span 1 !important;
+      min-height: 0 !important;
+    }
+
+    /* Projects: simplified */
+    .project-row {
+      grid-template-columns: 1fr 36px !important;
+      gap: 12px !important;
+      padding: 20px 8px !important;
+    }
+    .project-row > span:nth-child(1),
+    .project-row > span:nth-child(3),
+    .project-row > span:nth-child(4) { display: none !important; }
+    .project-row > span:nth-child(2) { font-size: clamp(17px, 4vw, 22px) !important; }
+
+    /* Stack grid: 2 columns */
+    #stack [style*="repeat(4,1fr)"] {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 28px 24px !important;
+    }
+    #stack [style*="padding:48px"] { padding: 28px !important; }
+
+    /* Contact */
+    #contacto { padding: 72px 0 !important; }
+    #contacto > div { padding: 0 18px !important; }
+    #contacto [style*="grid-template-columns:1fr 1.1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    #contacto [style*="border-radius:22px;padding:40px"] { padding: 26px !important; }
+    #contacto [style*="border-radius:22px;padding:38px"] { padding: 26px !important; }
+    #contacto [style*="grid-template-columns:1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* Footer */
+    footer { padding: 48px 18px 28px !important; }
+    footer > div:first-child {
+      grid-template-columns: 1fr !important;
+      gap: 32px !important;
+    }
+    footer [style*="clamp(64px"] { font-size: clamp(40px, 14vw, 100px) !important; }
+    footer > div:last-child { flex-direction: column; align-items: center; text-align: center; }
+  }
+
+  /* Responsive: small mobile */
+  @media (max-width: 480px) {
+    #top h1 { font-size: 28px !important; }
+    #top [style*="repeat(4,1fr)"] { grid-template-columns: 1fr !important; }
+    #top [style*="repeat(4,1fr)"] > div { border-right: none !important; padding: 20px 0 !important; }
+    #stack [style*="repeat(4,1fr)"] { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+<script>
+(function () {
+  const root = document.getElementById('root');
+  if (!root) return;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Scroll reveals
+  const els = Array.from(root.querySelectorAll('[data-reveal]'));
+  if (!reduce) {
+    const show = (el, delay) => {
+      el.style.transitionDelay = (delay || 0) + 'ms';
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    };
+    els.forEach((el) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(22px)';
+      el.style.transition = 'opacity .75s cubic-bezier(.2,.7,.2,1), transform .75s cubic-bezier(.2,.7,.2,1)';
+      el.style.willChange = 'opacity, transform';
     });
-    darkSwitch.addEventListener('click', () => {
-      const next = document.body.getAttribute('data-theme') !== 'dark';
-      applyTheme(next);
-      localStorage.setItem('jstudio-dark', next);
-      postKeys({ dark: next });
+    const io = ('IntersectionObserver' in window)
+      ? new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              show(e.target, e.target.getAttribute('data-reveal-delay'));
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' })
+      : null;
+    els.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.92) {
+        setTimeout(() => show(el, 0), 60 + parseInt(el.getAttribute('data-reveal-delay') || 0));
+      } else if (io) {
+        io.observe(el);
+      } else {
+        show(el, 0);
+      }
     });
+  }
 
-    // Reveal on scroll
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in');
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  // Nav shadow on scroll
+  const nav = root.querySelector('[data-nav]');
+  if (nav) {
+    const onScroll = () => {
+      if (window.scrollY > 8) {
+        nav.style.boxShadow = '0 10px 30px -18px rgba(20,22,29,0.25)';
+        nav.style.background = 'rgba(244,245,247,0.92)';
+      } else {
+        nav.style.boxShadow = 'none';
+        nav.style.background = 'rgba(244,245,247,0.82)';
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
 
-    // Chip selector
-    document.querySelectorAll('.chip').forEach((c) => {
-      c.addEventListener('click', (e) => {
-        e.preventDefault();
-        document.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
-        c.classList.add('active');
-      });
+  // Chip selector
+  const chips = Array.from(root.querySelectorAll('[data-chip]'));
+  chips.forEach((c) => c.addEventListener('click', () => {
+    chips.forEach((x) => {
+      if (x === c) {
+        x.style.background = 'var(--ink)';
+        x.style.color = '#fff';
+        x.style.borderColor = 'var(--ink)';
+      } else {
+        x.style.background = 'transparent';
+        x.style.color = 'var(--ink-2)';
+        x.style.borderColor = 'var(--line-2)';
+      }
     });
+  }));
 
-    // Form
-    function handleSubmit(e) {
+  // Contact form — submits to FormSubmit.co
+  const form = root.querySelector('[data-form]');
+  if (form) {
+    form.addEventListener('submit', function (e) {
       e.preventDefault();
-      const btn = e.target.querySelector('.form-submit');
-      const original = btn.innerHTML;
+      var btn = form.querySelector('[data-submit]');
+      if (!btn || btn.dataset.busy) return;
+      btn.dataset.busy = '1';
+      var original = btn.innerHTML;
       btn.innerHTML = 'Enviando…';
-      setTimeout(() => {
-        btn.innerHTML = '✓ ¡Mensaje recibido!';
-        btn.style.background = '#10B981';
-        setTimeout(() => {
+      btn.style.opacity = '0.8';
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      }).then(function (res) {
+        if (res.ok) {
+          btn.innerHTML = '✓ ¡Mensaje recibido!';
+          btn.style.background = '#0E9F6E';
+          btn.style.opacity = '1';
+          setTimeout(function () {
+            btn.innerHTML = original;
+            btn.style.background = 'var(--accent)';
+            form.reset();
+            delete btn.dataset.busy;
+          }, 2400);
+        } else {
+          btn.innerHTML = 'Error — intenta de nuevo';
+          btn.style.background = '#DC2626';
+          btn.style.opacity = '1';
+          setTimeout(function () {
+            btn.innerHTML = original;
+            btn.style.background = 'var(--accent)';
+            delete btn.dataset.busy;
+          }, 2400);
+        }
+      }).catch(function () {
+        btn.innerHTML = 'Error de red — intenta de nuevo';
+        btn.style.background = '#DC2626';
+        btn.style.opacity = '1';
+        setTimeout(function () {
           btn.innerHTML = original;
-          btn.style.background = '';
-          e.target.reset();
-        }, 2200);
-      }, 900);
-    }
-
-    // Parallax orbs on scroll
-    const orbs = document.querySelectorAll('.orb');
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      orbs.forEach((o, i) => {
-        o.style.transform = `translateY(${y * (0.05 + i * 0.03)}px)`;
+          btn.style.background = 'var(--accent)';
+          delete btn.dataset.busy;
+        }, 2400);
       });
-    }, { passive: true });
-
-    // ---- Tweaks protocol ----
-    function postKeys(edits) {
-      try { window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*'); } catch (e) { }
-    }
-    const tweaksPanel = document.getElementById('tweaksPanel');
-    window.addEventListener('message', (ev) => {
-      if (!ev.data || typeof ev.data !== 'object') return;
-      if (ev.data.type === '__activate_edit_mode') tweaksPanel.classList.add('show');
-      if (ev.data.type === '__deactivate_edit_mode') tweaksPanel.classList.remove('show');
     });
-    try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch (e) { }
-  </script>
+  }
+})();
+</script>
 
 </body>
-
 </html>

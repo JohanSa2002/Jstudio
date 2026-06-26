@@ -4,7 +4,9 @@
       "Read(//c/Users/2002s/Documents/skills/ui-ux-pro-max/**)",
       "Bash(python3 scripts/search.py \"AI agency tech studio automation dark modern\" --design-system -p \"Jstudio_AI\" -f markdown)",
       "Read(//c/Users/2002s/Documents/**)",
-      "Bash(npx create-next-app@latest pagweb --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --no-eslint)"
+      "Bash(npx create-next-app@latest pagweb --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --no-eslint)",
+      "mcp__Claude_in_Chrome__switch_browser",
+      "mcp__Claude_Preview__preview_start"
     ]
   }
 }

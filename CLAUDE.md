@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Single-page marketing landing page for **Jstudio_AI** — a Spanish-language site showcasing serverless cloud architecture, AI agents, and automation services. Deployed to Hostinger.
+Single-page marketing landing page for **JStudio_IA** — a Spanish-language site showcasing software development, AI integration, automation, and chatbot services. Deployed to Hostinger.
 
 ## Running the Project
 
@@ -12,44 +12,48 @@ No build step required. Open `index.html` directly in a browser or deploy the fi
 
 ## Architecture
 
-The entire site lives in a single file: `index.html` (~877 lines). It is structured as:
+The entire site lives in a single file: `index.html`. It is structured as:
 
-- **Tailwind CSS via CDN** — configured inline in `<head>` with a custom theme
-- **Google Fonts** — Syne (display), DM Sans (body), DM Mono (mono)
+- **CSS custom properties** — defined inline on `#root` for theming (no Tailwind)
+- **Inline styles** — all styling is done via inline `style` attributes
+- **Responsive media queries** — in a `<style>` block at the bottom (breakpoints: 1024px, 768px, 480px)
+- **Google Fonts** — Schibsted Grotesk (headings/body), Newsreader (serif accents), JetBrains Mono (code/labels)
 - **Vanilla JavaScript** — at the bottom of `<body>`, handles:
-  - Ticker/carousel cloning for seamless scroll
   - Scroll reveal via `IntersectionObserver`
-  - Navbar opacity change on scroll
-  - Reading progress bar
-  - Counter animation with easing for stats numbers
+  - Navbar shadow on scroll
+  - Chip selector toggle (contact form service type)
+  - Contact form submission via FormSubmit.co (fetch API)
 
-## Design Tokens (Tailwind custom theme)
+## Design Tokens (CSS custom properties on `#root`)
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `ink` | `#08080F` | Main dark background |
-| `surface` | `#0D0D16` | Secondary dark background |
-| `jade` | `#1DB954` | Primary green accent |
-| `mauve` | `#9B8FFF` | Purple accent |
-| `snow` | `#EEF2FF` | Light text |
-
-Font families: `font-display` (Syne), `font-body` (DM Sans), `font-mono` (DM Mono).
+| `--paper` | `#F4F5F7` | Main light background |
+| `--surface` | `#FFFFFF` | Card/section background |
+| `--ink` | `#14161D` | Primary text color |
+| `--ink-2` | `#3A3F4C` | Secondary text color |
+| `--muted` | `#767C8A` | Muted/label text |
+| `--line` | `rgba(20,22,29,0.10)` | Light borders |
+| `--line-2` | `rgba(20,22,29,0.17)` | Stronger borders |
+| `--accent` | `#4F46E5` | Primary accent (indigo) |
+| `--accent-2` | `#3730A3` | Darker accent |
+| `--dark` | `#101218` | Dark section background |
 
 ## Page Sections (in order)
 
-1. Navbar — fixed, logo + CTA button
-2. Hero — main value prop + animated stats counters
-3. Ticker — auto-scrolling keyword carousel
-4. Problem/Solution — two-column pain points vs. answers
-5. Methodology — 3-step process (Audit → Integration → Deployment)
-6. Evidence/Showcase — service cards grid
-7. FAQ — expandable accordion
-8. Contact — CTA + email (`johan.samudiotrabajo@gmail.com`)
-9. Footer
+1. Navbar — sticky, logo + nav links + CTA button (links hidden on mobile)
+2. Hero — value prop headline + code snippet card + stats band (24+, 5, <24h, 100%)
+3. Servicios — 5 service cards in a grid (software, IA, web, automation, chatbots)
+4. Proyectos — list of recent projects with external links
+5. Stack — 4-column tech stack (Frontend, Backend, IA & ML, Infra & Cloud) + marquee
+6. Contacto — founder info card + contact form (FormSubmit.co)
+7. Footer — links grid + large brand text + copyright
 
 ## Key Conventions
 
 - All content is in **Spanish**.
-- Styles use Tailwind utility classes; avoid adding `<style>` blocks for things Tailwind handles.
+- Styles are **inline** — avoid adding external CSS files. Keep responsive overrides in the `<style>` block.
 - JS is written without any framework — keep it vanilla.
-- The Tailwind CDN version is used for simplicity; do not introduce a build pipeline unless the project specifically migrates to one.
+- No build pipeline — no bundler, no npm, no Tailwind. Pure HTML/CSS/JS.
+- Contact form submits to FormSubmit.co (`johan.samudiotrabajo@gmail.com`).
+- Logo references `assets/logo-mark.png` with `onerror` fallback — create the assets directory and add the logo to display it.
