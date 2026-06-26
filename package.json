@@ -1,0 +1,24 @@
+{
+  "name": "jstudio",
+  "version": "1.0.0",
+  "description": "JStudio_IA — Software con Inteligencia Artificial",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohanSa2002/Jstudio.git"
+  },
+  "author": "Johan Samudio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JohanSa2002/Jstudio/issues"
+  },
+  "homepage": "https://github.com/JohanSa2002/Jstudio#readme",
+  "dependencies": {
+    "astro": "^7.0.3"
+  }
+}

@@ -1,0 +1,174 @@
+---
+const categories = [
+  { name: 'Frontend', items: ['React', 'Next.js', 'TypeScript', 'Tailwind', 'Framer Motion'] },
+  { name: 'Backend', items: ['Node.js', 'Python', 'FastAPI', 'PostgreSQL', 'Redis'] },
+  { name: 'IA & ML', items: ['OpenAI', 'Anthropic', 'LangChain', 'Pinecone', 'Hugging Face'] },
+  { name: 'Infra & Cloud', items: ['AWS', 'Vercel', 'Docker', 'Supabase', 'Cloudflare'] },
+];
+
+const marqueeItems = ['React', 'Next.js', 'TypeScript', 'Python', 'OpenAI', 'LangChain', 'PostgreSQL', 'AWS', 'Vercel', 'Docker'];
+---
+
+<section id="stack" class="stack-section">
+  <div class="section-header" data-reveal="1">
+    <div class="section-label"><span class="label-num">03</span><span class="label-line"></span>Stack</div>
+    <h2 class="section-title">El stack con el que trabajamos cada día.</h2>
+    <p class="section-desc">Herramientas probadas en producción para construir rápido, escalar sin romper nada y dejar la IA bien integrada.</p>
+  </div>
+
+  <div class="stack-card" data-reveal="1">
+    <div class="stack-grid">
+      {categories.map(cat => (
+        <div>
+          <h4 class="cat-title">{cat.name}</h4>
+          <ul class="cat-list">
+            {cat.items.map(item => (
+              <li class="cat-item"><span class="cat-dot"></span>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="marquee-wrap">
+      <div class="marquee-track">
+        {[...marqueeItems, ...marqueeItems].map(item => (
+          <span class="marquee-item">{item}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .stack-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 120px 40px 0;
+  }
+
+  .section-header { max-width: 720px; }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .label-num { color: var(--accent); }
+  .label-line { width: 26px; height: 1px; background: var(--line-2); }
+
+  .section-title {
+    font-size: clamp(30px, 4.4vw, 56px);
+    line-height: 1.04;
+    letter-spacing: -0.028em;
+    font-weight: 600;
+    margin: 20px 0 0;
+    color: var(--ink);
+  }
+
+  .section-desc {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    margin: 22px 0 0;
+    max-width: 60ch;
+  }
+
+  .stack-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 48px;
+    margin-top: 52px;
+  }
+
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+
+  .cat-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    margin: 0 0 18px;
+    padding-bottom: 13px;
+    border-bottom: 1px solid var(--line);
+    font-weight: 500;
+  }
+
+  .cat-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+  }
+
+  .cat-item {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+
+  .cat-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .marquee-wrap {
+    margin-top: 48px;
+    padding-top: 30px;
+    border-top: 1px solid var(--line);
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 48px;
+    width: max-content;
+    animation: marquee 38s linear infinite;
+    white-space: nowrap;
+  }
+
+  .marquee-item {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-size: 30px;
+    color: var(--ink-2);
+    opacity: 0.5;
+  }
+
+  @media (max-width: 1024px) {
+    .stack-section { padding-left: 24px; padding-right: 24px; }
+  }
+
+  @media (max-width: 768px) {
+    .stack-section { padding: 72px 18px 0; }
+    .stack-card { padding: 28px; }
+    .stack-grid { grid-template-columns: 1fr 1fr; gap: 28px 24px; }
+  }
+
+  @media (max-width: 480px) {
+    .stack-grid { grid-template-columns: 1fr; }
+  }
+</style>

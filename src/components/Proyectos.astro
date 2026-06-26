@@ -1,0 +1,156 @@
+---
+const projects = [
+  { num: '01', name: 'Estudio Fotográfico Ruddy', meta: '2025 · Estudio fotográfico', type: 'Landing · Web', url: 'https://fotografia-ruddy.vercel.app/' },
+  { num: '02', name: 'Landing Constructora', meta: '2025 · Empresa constructora', type: 'Landing · Web', url: 'https://constructora-gules.vercel.app/' },
+  { num: '03', name: 'Salón de Belleza', meta: '2025 · Salón de belleza', type: 'Landing · Web', url: 'https://beautysalondesign.vercel.app/' },
+  { num: '04', name: 'Tienda de Ropa', meta: '2025 · Moda y retail', type: 'E-commerce · Web', url: 'https://tiendaropadesign.vercel.app/' },
+  { num: '05', name: 'Sistema SIB Panamá', meta: '2025 · Transporte público', type: 'Web · App', url: 'https://sibpanama.com/' },
+];
+---
+
+<section id="proyectos" class="proyectos">
+  <div class="section-header" data-reveal="1">
+    <div class="section-label"><span class="label-num">02</span><span class="label-line"></span>Proyectos</div>
+    <h2 class="section-title">Trabajo reciente que hizo clic.</h2>
+    <p class="section-desc">Una selección de proyectos donde combinamos desarrollo, diseño e IA para resolver problemas concretos.</p>
+  </div>
+
+  <div class="project-list" data-reveal="1">
+    {projects.map(p => (
+      <a href={p.url} target="_blank" rel="noopener noreferrer" class="project-row">
+        <span class="project-num">{p.num}</span>
+        <span class="project-name">{p.name}</span>
+        <span class="project-meta">{p.meta}</span>
+        <span class="project-type">{p.type}</span>
+        <span class="arrow-circle">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .proyectos {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 120px 40px 0;
+  }
+
+  .section-header { max-width: 720px; }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .label-num { color: var(--accent); }
+  .label-line { width: 26px; height: 1px; background: var(--line-2); }
+
+  .section-title {
+    font-size: clamp(30px, 4.4vw, 56px);
+    line-height: 1.04;
+    letter-spacing: -0.028em;
+    font-weight: 600;
+    margin: 20px 0 0;
+    color: var(--ink);
+  }
+
+  .section-desc {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    margin: 22px 0 0;
+    max-width: 60ch;
+  }
+
+  .project-list {
+    margin-top: 48px;
+    border-top: 1px solid var(--line);
+  }
+
+  .project-row {
+    display: grid;
+    grid-template-columns: 56px 1fr 180px 150px 44px;
+    gap: 24px;
+    align-items: center;
+    padding: 30px 14px;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    color: inherit;
+    transition: background .25s ease, padding-left .25s ease;
+  }
+
+  .project-row:hover {
+    background: var(--surface);
+    padding-left: 24px;
+  }
+
+  .project-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .project-name {
+    font-size: clamp(20px, 2.4vw, 28px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .project-meta {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+
+  .project-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+  }
+
+  .arrow-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line-2);
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    transition: background .25s, color .25s, border-color .25s;
+    justify-self: end;
+  }
+
+  .project-row:hover .arrow-circle {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 1024px) {
+    .proyectos { padding-left: 24px; padding-right: 24px; }
+  }
+
+  @media (max-width: 768px) {
+    .proyectos { padding: 72px 18px 0; }
+    .project-row {
+      grid-template-columns: 1fr 36px;
+      gap: 12px;
+      padding: 20px 8px;
+    }
+    .project-num,
+    .project-meta,
+    .project-type { display: none; }
+    .project-name { font-size: clamp(17px, 4vw, 22px); }
+  }
+</style>

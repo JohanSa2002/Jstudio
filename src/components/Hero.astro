@@ -1,0 +1,301 @@
+---
+const stats = [
+  { value: '24', suffix: '+', label: 'Proyectos entregados' },
+  { value: '5', suffix: '', label: 'Áreas de especialización' },
+  { value: '<24', suffix: ' h', label: 'Tiempo de respuesta', isMuted: true },
+  { value: '100', suffix: '%', label: 'Código a medida' },
+];
+---
+
+<section id="top" class="hero">
+  <div class="hero-inner">
+    <div class="hero-top" data-reveal="1">
+      <span class="hero-label">Estudio de software · Panamá · Est. 2025</span>
+      <span class="hero-badge">
+        <span class="pulse-dot"></span>
+        Disponible para nuevos proyectos
+      </span>
+    </div>
+
+    <h1 class="hero-title" data-reveal="1" data-reveal-delay="60">
+      Construimos software que <span class="hero-italic">piensa</span>, no que solo funciona.
+    </h1>
+
+    <div class="hero-grid">
+      <div class="hero-content" data-reveal="1" data-reveal-delay="120">
+        <p class="hero-desc">
+          Somos un estudio de ingeniería que integra inteligencia artificial en cada capa del producto. Diseñamos, construimos y automatizamos sistemas que generan resultados medibles para empresas, startups y PYMEs.
+        </p>
+        <div class="hero-buttons">
+          <a href="#contacto" class="btn-primary">
+            Iniciar un proyecto
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="#proyectos" class="btn-outline">Ver proyectos</a>
+        </div>
+      </div>
+
+      <div class="hero-code-card" data-reveal="1" data-reveal-delay="180">
+        <div class="code-card">
+          <div class="code-dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="code-filename">jstudio.config.ts</span>
+          </div>
+          <pre class="code-block"><span class="c-kw">const</span> studio = {
+  <span class="c-key">enfoque</span>: <span class="c-str">"IA aplicada"</span>,
+  <span class="c-key">stack</span>: [<span class="c-str">"React"</span>, <span class="c-str">"Node"</span>, <span class="c-str">"Python"</span>],
+  <span class="c-key">velocidad</span>: <span class="c-str">"10x"</span>,
+  <span class="c-key">entrega</span>: () <span class="c-kw">=&gt;</span> <span class="c-str">"a producción"</span>,
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-band">
+      {stats.map((stat, i) => (
+        <div class="stat" data-reveal="1" data-reveal-delay={String(i * 80)}>
+          <div class="stat-value">
+            {stat.value}<span class={stat.isMuted ? 'stat-suffix-muted' : 'stat-suffix'}>{stat.suffix}</span>
+          </div>
+          <div class="stat-label">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 84px 40px 0;
+  }
+
+  .hero-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #0E9F6E;
+    animation: pdot 2.4s ease-in-out infinite;
+  }
+
+  .hero-title {
+    font-size: clamp(44px, 7vw, 96px);
+    line-height: 0.99;
+    letter-spacing: -0.035em;
+    font-weight: 700;
+    margin: 38px 0 0;
+    max-width: 15ch;
+    color: var(--ink);
+  }
+
+  .hero-italic {
+    font-family: 'Newsreader', serif;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px;
+    align-items: end;
+    margin-top: 48px;
+  }
+
+  .hero-desc {
+    font-size: clamp(17px, 1.5vw, 20px);
+    line-height: 1.6;
+    color: var(--ink-2);
+    max-width: 46ch;
+    margin: 0;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 34px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 26px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: transform .2s ease, box-shadow .25s ease;
+    box-shadow: 0 12px 30px -14px rgba(20,22,29,0.5);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 40px -16px rgba(20,22,29,0.55);
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 24px;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    transition: background .2s ease, border-color .2s ease;
+  }
+
+  .btn-outline:hover {
+    background: var(--surface);
+    border-color: var(--ink);
+  }
+
+  .code-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px 24px;
+    box-shadow: 0 24px 50px -32px rgba(20,22,29,0.35);
+  }
+
+  .code-dots {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 18px;
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--line-2);
+  }
+
+  .code-filename {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+
+  .code-block {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--ink);
+    white-space: pre-wrap;
+  }
+
+  .c-kw { color: var(--muted); }
+  .c-key { color: var(--ink-2); }
+  .c-str { color: var(--accent); }
+
+  .stat-band {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 72px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stat {
+    padding: 30px 28px;
+    border-right: 1px solid var(--line);
+  }
+
+  .stat:first-child { padding-left: 0; }
+  .stat:last-child { border-right: none; padding-right: 0; padding-left: 28px; }
+
+  .stat-value {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(40px, 4.6vw, 58px);
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .stat-suffix { color: var(--accent); }
+  .stat-suffix-muted { font-size: 0.5em; color: var(--muted); }
+
+  .stat-label {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  @media (max-width: 1024px) {
+    .hero-inner { padding-left: 24px; padding-right: 24px; }
+  }
+
+  @media (max-width: 768px) {
+    .hero-inner { padding: 48px 18px 0; }
+    .hero-title { font-size: clamp(32px, 9vw, 48px); }
+    .hero-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .stat-band {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 48px;
+    }
+    .stat:nth-child(2) { border-right: none; }
+    .stat:nth-child(3),
+    .stat:nth-child(4) { padding-top: 24px; border-top: 1px solid var(--line); }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title { font-size: 28px; }
+    .stat-band { grid-template-columns: 1fr; }
+    .stat { border-right: none; padding: 20px 0; }
+  }
+</style>

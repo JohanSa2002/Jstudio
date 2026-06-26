@@ -4,27 +4,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Single-page marketing landing page for **JStudio_IA** — a Spanish-language site showcasing software development, AI integration, automation, and chatbot services. Deployed to Hostinger.
+Single-page marketing landing page for **JStudio_IA** — a Spanish-language site showcasing software development, AI integration, automation, and chatbot services. Built with **Astro** and deployed to Hostinger as a static site.
 
 ## Running the Project
 
-No build step required. Open `index.html` directly in a browser or deploy the file to a static host. There is no `package.json`, bundler, or dev server.
+```bash
+npm run dev      # Start dev server on http://localhost:4321
+npm run build    # Build static site to dist/
+npm run preview  # Preview the built site locally
+```
 
 ## Architecture
 
-The entire site lives in a single file: `index.html`. It is structured as:
+Built with **Astro** (static output). The project is structured as:
 
-- **CSS custom properties** — defined inline on `#root` for theming (no Tailwind)
-- **Inline styles** — all styling is done via inline `style` attributes
-- **Responsive media queries** — in a `<style>` block at the bottom (breakpoints: 1024px, 768px, 480px)
-- **Google Fonts** — Schibsted Grotesk (headings/body), Newsreader (serif accents), JetBrains Mono (code/labels)
-- **Vanilla JavaScript** — at the bottom of `<body>`, handles:
-  - Scroll reveal via `IntersectionObserver`
-  - Navbar shadow on scroll
-  - Chip selector toggle (contact form service type)
-  - Contact form submission via FormSubmit.co (fetch API)
+- `src/pages/index.astro` — Single page that composes all section components
+- `src/layouts/Layout.astro` — Base HTML layout with head, fonts, and global styles
+- `src/components/` — One component per section:
+  - `Navbar.astro` — Sticky nav with logo, links, CTA
+  - `Hero.astro` — Value prop headline, code card, stats band
+  - `Servicios.astro` — 5 service cards in grid
+  - `Proyectos.astro` — Project list with external links
+  - `Stack.astro` — 4-column tech stack + marquee
+  - `Contacto.astro` — Founder card + contact form
+  - `Footer.astro` — Links grid + brand text + copyright
+  - `ScrollReveal.astro` — IntersectionObserver scroll animations
+- `src/styles/global.css` — CSS reset, keyframes, and CSS custom properties
+- `public/assets/` — Static assets (logo, images)
+- `astro.config.mjs` — Astro configuration (static output)
 
-## Design Tokens (CSS custom properties on `#root`)
+## Design Tokens (CSS custom properties in `src/styles/global.css`)
 
 | Token | Value | Usage |
 |-------|-------|-------|
@@ -52,8 +61,10 @@ The entire site lives in a single file: `index.html`. It is structured as:
 ## Key Conventions
 
 - All content is in **Spanish**.
-- Styles are **inline** — avoid adding external CSS files. Keep responsive overrides in the `<style>` block.
-- JS is written without any framework — keep it vanilla.
-- No build pipeline — no bundler, no npm, no Tailwind. Pure HTML/CSS/JS.
+- Each component uses **Astro scoped `<style>`** — no inline styles.
+- JS is vanilla, placed in `<script>` tags inside Astro components.
+- Responsive breakpoints: 1024px, 768px, 480px.
+- Google Fonts: Schibsted Grotesk (body), Newsreader (serif accents), JetBrains Mono (code/labels).
 - Contact form submits to FormSubmit.co (`johan.samudiotrabajo@gmail.com`).
-- Logo references `assets/logo-mark.png` with `onerror` fallback — create the assets directory and add the logo to display it.
+- Logo references `/assets/logo-mark.png` with `onerror` fallback.
+- The old `index.html` is kept as reference; the Astro build outputs to `dist/`.

@@ -1,0 +1,49 @@
+---
+---
+
+<script>
+  const root = document.getElementById('root');
+  if (root) {
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const els = Array.from(root.querySelectorAll('[data-reveal]'));
+
+    if (!reduce) {
+      const show = (el: HTMLElement, delay?: string | null) => {
+        el.style.transitionDelay = (delay || '0') + 'ms';
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      };
+
+      els.forEach((el) => {
+        const htmlEl = el as HTMLElement;
+        htmlEl.style.opacity = '0';
+        htmlEl.style.transform = 'translateY(22px)';
+        htmlEl.style.transition = 'opacity .75s cubic-bezier(.2,.7,.2,1), transform .75s cubic-bezier(.2,.7,.2,1)';
+        htmlEl.style.willChange = 'opacity, transform';
+      });
+
+      const io = ('IntersectionObserver' in window)
+        ? new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                show(e.target as HTMLElement, (e.target as HTMLElement).getAttribute('data-reveal-delay'));
+                io!.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' })
+        : null;
+
+      els.forEach((el) => {
+        const htmlEl = el as HTMLElement;
+        const r = htmlEl.getBoundingClientRect();
+        if (r.top < window.innerHeight * 0.92) {
+          setTimeout(() => show(htmlEl, '0'), 60 + parseInt(htmlEl.getAttribute('data-reveal-delay') || '0'));
+        } else if (io) {
+          io.observe(htmlEl);
+        } else {
+          show(htmlEl, '0');
+        }
+      });
+    }
+  }
+</script>

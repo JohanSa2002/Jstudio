@@ -1,0 +1,28 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+::selection { background: #4F46E5; color: #fff; }
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes pdot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(14,159,110,0.55); }
+  50% { box-shadow: 0 0 0 6px rgba(14,159,110,0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+:root {
+  --paper: #F4F5F7;
+  --surface: #FFFFFF;
+  --ink: #14161D;
+  --ink-2: #3A3F4C;
+  --muted: #767C8A;
+  --line: rgba(20,22,29,0.10);
+  --line-2: rgba(20,22,29,0.17);
+  --accent: #4F46E5;
+  --accent-2: #3730A3;
+  --dark: #101218;
+}
