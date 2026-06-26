@@ -1,7 +1,7 @@
 {
-  "name": "jstudio",
+  "name": "jsdev",
   "version": "1.0.0",
-  "description": "JStudio_IA — Software con Inteligencia Artificial",
+  "description": "JSDev — Software con Inteligencia Artificial",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
