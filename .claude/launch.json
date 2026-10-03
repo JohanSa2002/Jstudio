@@ -6,6 +6,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "-l", "3456", "."],
       "port": 3456
+    },
+    {
+      "name": "livingboquete-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "C:/Users/2002s/Documents/proyectos/livingboquete", "run", "dev"],
+      "port": 4321
     }
   ]
 }

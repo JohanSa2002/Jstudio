@@ -1,6 +1,5 @@
-# Astro
+# Build
 dist/
-.astro/
 node_modules/
 
 # Carpeta de entorno de VS Code

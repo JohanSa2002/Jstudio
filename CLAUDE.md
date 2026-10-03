@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Single-page marketing landing page for **JStudio_IA** — a Spanish-language site showcasing software development, AI integration, automation, and chatbot services. Built with **Astro** and deployed to Hostinger as a static site.
+Single-page marketing landing page for **JStudio_IA** — a Spanish-language site showcasing software development, AI integration, automation, and chatbot services. Built with **React + Vite + Tailwind CSS v4** and deployed to Hostinger as a static site.
 
 ## Running the Project
 
@@ -16,55 +16,36 @@ npm run preview  # Preview the built site locally
 
 ## Architecture
 
-Built with **Astro** (static output). The project is structured as:
+- `index.html` — Vite entry: head, meta, Google Fonts, `#root`
+- `src/main.jsx` — Mounts `<App />`
+- `src/App.jsx` — Composes all sections and the background light orbs
+- `src/index.css` — Tailwind import, `@theme` design tokens, `shell`/`core`/`glass-input` utilities, reveal animation, marquee keyframes
+- `src/components/`:
+  - `ui.jsx` — Shared pieces: `Reveal` (IntersectionObserver), `Eyebrow`, `SectionHeader`, `Accent`, `Button`, `ArrowIcon`
+  - `Navbar.jsx` — Floating glass pill nav + fullscreen mobile menu
+  - `Hero.jsx` — Headline, code card, stats
+  - `Servicios.jsx` — 5 service cards in an asymmetric bento grid
+  - `Proyectos.jsx` — Project list with external links
+  - `Stack.jsx` — 4 tech categories + marquee
+  - `Contacto.jsx` — Founder card + contact form (FormSubmit.co)
+  - `Footer.jsx` — Links grid + giant brand text + copyright
+- `public/assets/` — Static assets (logo)
+- `vite.config.js` — React + Tailwind plugins, dev port 4321
 
-- `src/pages/index.astro` — Single page that composes all section components
-- `src/layouts/Layout.astro` — Base HTML layout with head, fonts, and global styles
-- `src/components/` — One component per section:
-  - `Navbar.astro` — Sticky nav with logo, links, CTA
-  - `Hero.astro` — Value prop headline, code card, stats band
-  - `Servicios.astro` — 5 service cards in grid
-  - `Proyectos.astro` — Project list with external links
-  - `Stack.astro` — 4-column tech stack + marquee
-  - `Contacto.astro` — Founder card + contact form
-  - `Footer.astro` — Links grid + brand text + copyright
-  - `ScrollReveal.astro` — IntersectionObserver scroll animations
-- `src/styles/global.css` — CSS reset, keyframes, and CSS custom properties
-- `public/assets/` — Static assets (logo, images)
-- `astro.config.mjs` — Astro configuration (static output)
+## Design: Glassmorphism ("Glass-Bento Premium")
 
-## Design Tokens (CSS custom properties in `src/styles/global.css`)
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--paper` | `#F4F5F7` | Main light background |
-| `--surface` | `#FFFFFF` | Card/section background |
-| `--ink` | `#14161D` | Primary text color |
-| `--ink-2` | `#3A3F4C` | Secondary text color |
-| `--muted` | `#767C8A` | Muted/label text |
-| `--line` | `rgba(20,22,29,0.10)` | Light borders |
-| `--line-2` | `rgba(20,22,29,0.17)` | Stronger borders |
-| `--accent` | `#4F46E5` | Primary accent (indigo) |
-| `--accent-2` | `#3730A3` | Darker accent |
-| `--dark` | `#101218` | Dark section background |
-
-## Page Sections (in order)
-
-1. Navbar — sticky, logo + nav links + CTA button (links hidden on mobile)
-2. Hero — value prop headline + code snippet card + stats band (24+, 5, <24h, 100%)
-3. Servicios — 5 service cards in a grid (software, IA, web, automation, chatbots)
-4. Proyectos — list of recent projects with external links
-5. Stack — 4-column tech stack (Frontend, Backend, IA & ML, Infra & Cloud) + marquee
-6. Contacto — founder info card + contact form (FormSubmit.co)
-7. Footer — links grid + large brand text + copyright
+- Dark base (`--color-base` `#07080C`) with blurred light orbs behind the content.
+- Double-bezel cards: `.shell` (translucent outer frame) wrapping `.core` (frosted glass, inner highlight).
+- Tokens in `@theme`: `base`, `ink`, `accent` (`#9EA0FF`), `accent-2`, `cyan`, `violet`, `--ease-spring`.
+- Fonts: Bricolage Grotesque (body/headings), Instrument Serif italic (accent words), JetBrains Mono (labels/code).
+- Buttons are pills with the arrow nested in its own circle (`Button` in `ui.jsx`).
+- Motion uses `cubic-bezier(0.32, 0.72, 0, 1)`; animate only `transform`/`opacity`; respect `prefers-reduced-motion`.
 
 ## Key Conventions
 
 - All content is in **Spanish**.
-- Each component uses **Astro scoped `<style>`** — no inline styles.
-- JS is vanilla, placed in `<script>` tags inside Astro components.
-- Responsive breakpoints: 1024px, 768px, 480px.
-- Google Fonts: Schibsted Grotesk (body), Newsreader (serif accents), JetBrains Mono (code/labels).
-- Contact form submits to FormSubmit.co (`johan.samudiotrabajo@gmail.com`).
-- Logo references `/assets/logo-mark.png` with `onerror` fallback.
-- The old `index.html` is kept as reference; the Astro build outputs to `dist/`.
+- Style with **Tailwind utility classes**; shared patterns live in `src/index.css` utilities, not inline styles.
+- Components are plain function components in `.jsx`; section data lives in arrays at the top of each file.
+- Responsive: mobile-first, Tailwind breakpoints `sm` (640), `md` (768), `lg` (1024).
+- Contact form posts to FormSubmit.co (`johan.samudiotrabajo@gmail.com`).
+- Backdrop blur is used on glass cards and the nav; avoid adding it to large scrolling containers.

@@ -6,7 +6,8 @@
       "Read(//c/Users/2002s/Documents/**)",
       "Bash(npx create-next-app@latest pagweb --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --no-eslint)",
       "mcp__Claude_in_Chrome__switch_browser",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npx vercel *)"
     ]
   }
 }
