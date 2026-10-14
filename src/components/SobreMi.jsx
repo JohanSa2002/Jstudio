@@ -5,7 +5,7 @@ import { Accent, ArrowIcon, Reveal, SectionHeader } from './ui.jsx';
 const photo = '/assets/johan-samudio.jpg';
 
 const links = [
-  { label: 'GitHub', href: 'https://github.com/TU_USUARIO' },
+  { label: 'GitHub', href: 'https://github.com/JohanSa2002' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/TU_USUARIO' },
   { label: 'Descargar CV', href: '/assets/cv-johan-samudio.pdf', download: true },
 ];
