@@ -1,5 +1,6 @@
 import Navbar from './components/Navbar.jsx';
 import Hero from './components/Hero.jsx';
+import SobreMi from './components/SobreMi.jsx';
 import Servicios from './components/Servicios.jsx';
 import Proyectos from './components/Proyectos.jsx';
 import Stack from './components/Stack.jsx';
@@ -32,6 +33,7 @@ export default function App() {
         <Navbar />
         <main>
           <Hero />
+          <SobreMi />
           <Servicios />
           <Proyectos />
           <Stack />

@@ -1,6 +1,7 @@
 const serviceLinks = ['Software a medida', 'Integración IA', 'Sitios & E-commerce', 'Chatbots', 'Automatización'];
 
 const studioLinks = [
+  { label: 'Sobre mí', href: '#sobre-mi' },
   { label: 'Proyectos', href: '#proyectos' },
   { label: 'Stack', href: '#stack' },
   { label: 'Contacto', href: '#contacto' },
@@ -14,7 +15,7 @@ export default function Footer() {
     <footer className="overflow-hidden">
       <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-10 border-t border-white/8 px-4 pt-14 text-[0.9375rem] text-ink/66 sm:grid-cols-2 sm:px-8 lg:grid-cols-4">
         <div>
-          <p className="max-w-[280px] leading-relaxed">Estudio de ingeniería de software con inteligencia artificial integrada. Panamá, para el mundo.</p>
+          <p className="max-w-[280px] leading-relaxed">Estudio de software e IA de Johan Samudio, desarrollador full-stack. Panamá, para el mundo.</p>
         </div>
         <div>
           <h2 className={heading}>Servicios</h2>
