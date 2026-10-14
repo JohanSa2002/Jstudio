@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowIcon } from './ui.jsx';
 
 const links = [
+  { href: '#sobre-mi', label: 'Sobre mí' },
   { href: '#servicios', label: 'Servicios' },
   { href: '#proyectos', label: 'Proyectos' },
   { href: '#stack', label: 'Stack' },

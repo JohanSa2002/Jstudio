@@ -18,7 +18,7 @@ export default function Contacto() {
   return (
     <section id="contacto" className="mx-auto max-w-[1200px] px-4 py-28 sm:px-8">
       <SectionHeader
-        label="04 · Contacto"
+        label="05 · Contacto"
         description="Cuéntame qué quieres construir. Respondo en menos de 24 horas — casi siempre mucho antes."
       >
         Hablemos de tu <Accent>próximo proyecto.</Accent>
