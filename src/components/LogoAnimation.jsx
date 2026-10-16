@@ -1,0 +1,247 @@
+import { useEffect, useRef, useState } from 'react';
+
+/* Logo animado (cerebro + navegador), portado desde "Logo animation preview" de Claude Design.
+   Todo el movimiento se deriva de un único tiempo T (segundos) mediante tweens puros. */
+
+const Easing = {
+  linear: (t) => t,
+  easeOutSine: (t) => Math.sin((t * Math.PI) / 2),
+  easeOutCubic: (t) => (t - 1) ** 3 + 1,
+  easeInOutCubic: (t) => (t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1),
+  easeOutBack: (t) => 1 + 2.70158 * (t - 1) ** 3 + 1.70158 * (t - 1) ** 2,
+};
+
+const MOTION = { enter: Easing.easeOutCubic, draw: Easing.easeInOutCubic, pop: Easing.easeOutBack };
+
+const tw = (T, start, end, ease, from = 0, to = 1) => {
+  if (T <= start) return from;
+  if (T >= end) return to;
+  return from + (to - from) * ease((T - start) / (end - start));
+};
+const around = (cx, cy, s) => `translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})`;
+
+/* Escenas en orden; CUES[nombre] = segundo en que empieza */
+const SCENES = [
+  ['Window', 1.4],
+  ['Brain', 1.8],
+  ['Circuits', 1.8],
+  ['Type', 1.6],
+  ['Click', 2.2],
+  ['Hold', 1.4],
+  ['Outro', 0.6],
+];
+const CUES = {};
+let acc = 0;
+for (const [name, dur] of SCENES) {
+  CUES[name] = Math.round(acc * 1000) / 1000;
+  acc += dur;
+}
+const TOTAL = Math.round(acc * 1000) / 1000;
+
+const LOBES = [
+  // [cx, cy, r, delayIndex]
+  [1010, 760, 250, 0],
+  [700, 960, 125, 1], [655, 815, 100, 2], [725, 690, 100, 3], [830, 590, 105, 4], [925, 535, 88, 5],
+  [1330, 960, 115, 1], [1362, 815, 98, 2], [1300, 690, 95, 3], [1195, 600, 105, 4], [1090, 535, 88, 5],
+];
+const FOLDS = [
+  'M716 598 Q720 625 728 642',
+  'M748 772 Q712 716 640 712',
+  'M630 935 Q600 925 582 905',
+  'M1158 486 Q1100 510 1090 580 Q1088 600 1100 615 L1145 640',
+  'M1265 773 Q1290 715 1345 718',
+  'M1390 935 Q1420 925 1438 912',
+  'M835 525 Q832 505 845 490',
+];
+const TRACES = [
+  { d: 'M772 585 H825 L870 545 Q890 532 905 560', nodes: [[772, 585]] },
+  { d: 'M938 500 L965 525 V600 H885 L825 662 H758', nodes: [[938, 500], [758, 662]] },
+  { d: 'M958 672 H905 L850 718 H760', nodes: [[958, 672]] },
+  { d: 'M958 745 H915 L878 772', nodes: [[958, 745], [876, 772]] },
+  { d: 'M640 790 H722', nodes: [[640, 790]] },
+  { d: 'M630 868 H690 Q712 868 715 840 L720 800 Q725 778 750 778 H805 V830 L905 862 L945 815 H1050 Q1075 815 1078 795', nodes: [[630, 868]] },
+  { d: 'M772 855 L800 868 Q830 885 830 915', nodes: [[772, 855]] },
+  { d: 'M1228 568 H1180 L1170 576 L1180 612 L1145 637 L1160 665 Q1150 682 1125 676 L1085 715 H1020', nodes: [[1228, 568]] },
+  { d: 'M1212 728 V670 L1245 635 L1280 648 Q1300 640 1302 600', nodes: [[1212, 728]] },
+  { d: 'M1085 715 L1100 760 Q1110 772 1140 772 L1180 810 H1300 L1328 845 L1380 800', nodes: [[1380, 800]] },
+  { d: 'M1190 812 V915', nodes: [] },
+  { d: 'M1240 840 V915', nodes: [] },
+  { d: 'M1130 858 H1115 Q1095 860 1095 885 V915', nodes: [[1130, 858]] },
+  { d: 'M1380 885 H1340 Q1315 885 1298 912', nodes: [[1380, 885]] },
+];
+
+const DEFAULT_COLORS = {
+  paper: '#fbfcfa', // fondo y trazos claros
+  ink: '#050608', // relleno oscuro
+  accent: '#1659c7', // centro del degradado, cursor y destello del buscador
+  signal: '#7fb4ff', // pulso del clic
+  muted: '#7a7a7a', // lupa
+};
+
+function Brain({ T, c, pulse, id }) {
+  const b0 = CUES.Brain, c0 = CUES.Circuits, k0 = CUES.Click;
+  const glow = tw(T, k0 + 0.8, k0 + 1.1, MOTION.enter) - tw(T, k0 + 1.1, k0 + 2.2, MOTION.draw);
+  return (
+    <g>
+      <defs>
+        <radialGradient id={`${id}-brain`} gradientUnits="userSpaceOnUse" cx="1010" cy="720" r={320 + 140 * glow}>
+          <stop offset="0" stopColor={c.accent} />
+          <stop offset="1" stopColor={c.ink} />
+        </radialGradient>
+      </defs>
+      {LOBES.map(([cx, cy, r, i], n) => {
+        const s = tw(T, b0 + i * 0.22, b0 + i * 0.22 + 0.7, MOTION.pop);
+        return <circle key={n} cx={cx} cy={cy} r={r} fill={`url(#${id}-brain)`} transform={around(cx, cy, s)} />;
+      })}
+      <g opacity={tw(T, b0 + 0.9, b0 + 1.6, MOTION.enter)}>
+        <path d="M1008 440 V915" stroke={c.paper} strokeWidth="22" fill="none" />
+        {FOLDS.map((d, i) => (
+          <path key={i} d={d} stroke={c.paper} strokeWidth="14" fill="none" strokeLinecap="round" />
+        ))}
+      </g>
+      {TRACES.map((t, i) => {
+        const a = c0 + i * 0.07;
+        const p = tw(T, a, a + 0.75, MOTION.draw);
+        const pa = k0 + 0.75 + (i % 5) * 0.06;
+        const pp = tw(T, pa, pa + 1.1, MOTION.draw);
+        return (
+          <g key={i}>
+            <path d={t.d} pathLength="1" stroke={c.paper} strokeWidth="14" fill="none" strokeLinecap="round" strokeLinejoin="round"
+              strokeDasharray="1 1" strokeDashoffset={1 - p} />
+            {pulse && pp > 0 && pp < 1 && (
+              <path d={t.d} pathLength="1" stroke={c.signal} strokeWidth="15" fill="none" strokeLinecap="round" strokeLinejoin="round"
+                strokeDasharray="0.18 1.4" strokeDashoffset={0.18 - pp * 1.2} />
+            )}
+            {t.nodes.map(([x, y], j) => {
+              const s = tw(T, a + 0.55 + j * 0.1, a + 0.95 + j * 0.1, MOTION.pop);
+              return <circle key={j} cx={x} cy={y} r="14" fill={c.ink} stroke={c.paper} strokeWidth="9" transform={around(x, y, s)} />;
+            })}
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+function BrowserWindow({ T, c, word }) {
+  const w0 = CUES.Window, t0 = CUES.Type, k0 = CUES.Click;
+  const e = tw(T, w0, w0 + 1.0, MOTION.enter);
+  const s = tw(T, w0, w0 + 1.0, MOTION.pop, 0.85, 1);
+  const typed = Math.round(tw(T, t0 + 0.35, t0 + 1.2, Easing.linear, 0, word.length));
+  const caretOn = T < t0 + 1.4 ? Math.floor(T * 2.6) % 2 === 0 : true;
+  const boxFlash = tw(T, k0 + 0.75, k0 + 0.9, MOTION.enter) - tw(T, k0 + 0.9, k0 + 1.6, MOTION.draw);
+  const mag = tw(T, t0, t0 + 0.45, MOTION.pop);
+  const searchIn = tw(T, w0 + 0.6, w0 + 1.2, MOTION.enter);
+  return (
+    <g opacity={e} transform={`translate(0 ${(1 - e) * 140}) ${around(1005, 1100, s)}`}>
+      <rect x="652" y="908" width="706" height="390" rx="40" fill={c.ink} stroke={c.paper} strokeWidth="16" />
+      <rect x="652" y="1008" width="706" height="12" fill={c.paper} />
+      {[715, 762, 808].map((x, i) => (
+        <circle key={x} cx={x} cy="963" r="13" fill={c.paper}
+          transform={around(x, 963, tw(T, w0 + 0.5 + i * 0.12, w0 + 0.85 + i * 0.12, MOTION.pop))} />
+      ))}
+      <path d="M682 1032 H1335 V1258 Q1335 1278 1315 1278 H1085 L1080 1282 H702 Q682 1282 682 1262 Z" fill={c.paper} />
+      <g opacity={searchIn} transform={`translate(0 ${(1 - searchIn) * 20})`}>
+        <rect x="703" y="1063" width="618" height="150" rx="30" fill={c.paper} stroke={c.ink} strokeWidth="10" />
+        <rect x="703" y="1063" width="618" height="150" rx="30" fill="none" stroke={c.accent} strokeWidth="10" opacity={boxFlash} />
+        <g transform={around(780, 1135, mag)}>
+          <circle cx="775" cy="1128" r="27" stroke={c.muted} strokeWidth="9" fill="none" />
+          <path d="M796 1150 L820 1177" stroke={c.muted} strokeWidth="11" strokeLinecap="round" />
+        </g>
+        <rect x="857" y="1085" width="9" height="105" rx="4" fill={c.ink} opacity={caretOn ? 1 : 0} />
+        <text x="884" y="1180" fontFamily="Montserrat, sans-serif" fontWeight="700" fontSize="104" fill={c.ink} letterSpacing="2">
+          {word.slice(0, typed)}
+        </text>
+      </g>
+    </g>
+  );
+}
+
+function Pointer({ T, c, id }) {
+  const k0 = CUES.Click;
+  const fly = tw(T, k0, k0 + 0.65, MOTION.enter);
+  const press = tw(T, k0 + 0.62, k0 + 0.75, MOTION.enter) - tw(T, k0 + 0.75, k0 + 0.95, MOTION.pop);
+  const ripple = tw(T, k0 + 0.72, k0 + 1.4, MOTION.enter);
+  const dx = (1 - fly) * 520, dy = (1 - fly) * 300;
+  return (
+    <g>
+      <defs>
+        <linearGradient id={`${id}-cursor`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#0b1b3a" />
+          <stop offset="0.6" stopColor={c.accent} />
+          <stop offset="1" stopColor="#0b1b3a" />
+        </linearGradient>
+      </defs>
+      {ripple > 0 && ripple < 1 && (
+        <circle cx="1072" cy="1188" r={20 + ripple * 110} fill="none" stroke={c.signal} strokeWidth={12 * (1 - ripple)} opacity={1 - ripple} />
+      )}
+      <g opacity={tw(T, k0, k0 + 0.25, MOTION.enter)} transform={`translate(${dx} ${dy}) ${around(1072, 1188, 1 - 0.14 * press)}`}>
+        <path d="M1070 1185 L1225 1246 L1162 1262 L1192 1312 L1168 1332 L1136 1278 L1100 1320 Z"
+          fill={`url(#${id}-cursor)`} stroke={c.paper} strokeWidth="9" strokeLinejoin="round" />
+      </g>
+    </g>
+  );
+}
+
+/* Reproduce la animación al entrar en pantalla.
+   loop=false: se detiene en el logo terminado (inicio de "Outro").
+   Con prefers-reduced-motion se muestra directamente el logo terminado. */
+export default function LogoAnimation({ word = 'JS_Dev', loop = false, pulse = true, colors, className = '', title = 'Logo JS_Dev' }) {
+  const c = { ...DEFAULT_COLORS, ...colors };
+  const id = useRef(`logo-${Math.random().toString(36).slice(2, 8)}`).current;
+  const ref = useRef(null);
+  const end = loop ? TOTAL : CUES.Outro;
+  const [T, setT] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setT(CUES.Outro);
+      return;
+    }
+    let raf = 0;
+    let start = 0;
+    const tick = (now) => {
+      if (!start) start = now;
+      let t = (now - start) / 1000;
+      if (loop) t %= TOTAL;
+      else if (t >= end) {
+        setT(end);
+        return;
+      }
+      setT(t);
+      raf = requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          raf = requestAnimationFrame(tick);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [loop, end]);
+
+  const out = tw(T, CUES.Outro, TOTAL, MOTION.draw);
+  const cam = tw(T, 0, CUES.Outro, Easing.easeOutSine, 0.93, 1.0) + out * 0.04;
+  const rise = (1 - tw(T, CUES.Brain, CUES.Brain + 1.6, MOTION.enter)) * 60;
+
+  return (
+    <svg ref={ref} viewBox="-48 294 2112 1188" role="img" aria-label={title} className={`block h-auto w-full ${className}`}>
+      <g opacity={1 - out} transform={around(1008, 888, cam)}>
+        <g transform={`translate(0 ${rise})`}>
+          <Brain T={T} c={c} pulse={pulse} id={id} />
+        </g>
+        <BrowserWindow T={T} c={c} word={word} />
+        <Pointer T={T} c={c} id={id} />
+      </g>
+    </svg>
+  );
+}
