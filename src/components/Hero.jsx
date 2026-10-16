@@ -1,3 +1,4 @@
+import LogoAnimation from './LogoAnimation.jsx';
 import { Accent, Button, Eyebrow, Reveal } from './ui.jsx';
 
 const stats = [
@@ -6,8 +7,6 @@ const stats = [
   { value: '<24', suffix: ' h', label: 'Tiempo de respuesta', small: true },
   { value: '100', suffix: '%', label: 'Código a medida' },
 ];
-
-const str = 'text-cyan/90';
 
 export default function Hero() {
   return (
@@ -37,22 +36,10 @@ export default function Hero() {
 
         <Reveal delay={240} className="min-w-[300px] flex-[0_1_440px]">
           <div className="shell">
-            <div className="core overflow-hidden">
-              <div className="flex items-center gap-[7px] border-b border-white/8 px-5 py-4">
-                <span className="size-2.5 rounded-full bg-white/22" />
-                <span className="size-2.5 rounded-full bg-white/22" />
-                <span className="size-2.5 rounded-full bg-white/22" />
-                <span className="ml-2.5 font-mono text-xs text-ink/60">jstudio.config.ts</span>
+            <div className="core p-2">
+              <div className="rounded-[1.25rem] bg-[#0b0c12] p-6 sm:p-8">
+                <LogoAnimation />
               </div>
-              <pre className="m-0 overflow-x-auto p-6 pb-7 font-mono text-sm leading-[1.8] whitespace-pre-wrap text-ink/85">
-                <span className="text-violet-300">const</span> studio = {'{'}
-                {'\n  '}enfoque: <span className={str}>"IA aplicada"</span>,
-                {'\n  '}stack: [<span className={str}>"React"</span>, <span className={str}>"Node"</span>,{' '}
-                <span className={str}>"Python"</span>],
-                {'\n  '}velocidad: <span className={str}>"10x"</span>,
-                {'\n  '}entrega: () =&gt; <span className={str}>"a producción"</span>,{'\n'}
-                {'}'}
-              </pre>
             </div>
           </div>
         </Reveal>

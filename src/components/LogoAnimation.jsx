@@ -70,12 +70,15 @@ const TRACES = [
   { d: 'M1380 885 H1340 Q1315 885 1298 912', nodes: [[1380, 885]] },
 ];
 
+/* paper: fondo y "cortes" entre formas (debe coincidir con el fondo detrás del SVG)
+   ink: relleno de las formas · accent: centro del cerebro y destello · signal: pulso del clic */
 const DEFAULT_COLORS = {
-  paper: '#fbfcfa', // fondo y trazos claros
-  ink: '#050608', // relleno oscuro
-  accent: '#1659c7', // centro del degradado, cursor y destello del buscador
-  signal: '#7fb4ff', // pulso del clic
-  muted: '#7a7a7a', // lupa
+  paper: '#0b0c12',
+  ink: '#f4f5f7',
+  accent: '#9ea0ff',
+  signal: '#22d3ee',
+  muted: '#8b8da0',
+  cursorEdge: '#22d3ee',
 };
 
 function Brain({ T, c, pulse, id }) {
@@ -132,6 +135,8 @@ function BrowserWindow({ T, c, word }) {
   const boxFlash = tw(T, k0 + 0.75, k0 + 0.9, MOTION.enter) - tw(T, k0 + 0.9, k0 + 1.6, MOTION.draw);
   const mag = tw(T, t0, t0 + 0.45, MOTION.pop);
   const searchIn = tw(T, w0 + 0.6, w0 + 1.2, MOTION.enter);
+  /* Reduce el texto para que palabras largas quepan en el buscador */
+  const fontSize = 104 * Math.min(1, 6.2 / word.length);
   return (
     <g opacity={e} transform={`translate(0 ${(1 - e) * 140}) ${around(1005, 1100, s)}`}>
       <rect x="652" y="908" width="706" height="390" rx="40" fill={c.ink} stroke={c.paper} strokeWidth="16" />
@@ -149,7 +154,8 @@ function BrowserWindow({ T, c, word }) {
           <path d="M796 1150 L820 1177" stroke={c.muted} strokeWidth="11" strokeLinecap="round" />
         </g>
         <rect x="857" y="1085" width="9" height="105" rx="4" fill={c.ink} opacity={caretOn ? 1 : 0} />
-        <text x="884" y="1180" fontFamily="Montserrat, sans-serif" fontWeight="700" fontSize="104" fill={c.ink} letterSpacing="2">
+        <text x="884" y={1143 + fontSize * 0.36} fontFamily="'Bricolage Grotesque', system-ui, sans-serif" fontWeight="800"
+          fontSize={fontSize} fill={c.ink} letterSpacing="-1">
           {word.slice(0, typed)}
         </text>
       </g>
@@ -167,9 +173,9 @@ function Pointer({ T, c, id }) {
     <g>
       <defs>
         <linearGradient id={`${id}-cursor`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#0b1b3a" />
+          <stop offset="0" stopColor={c.cursorEdge} />
           <stop offset="0.6" stopColor={c.accent} />
-          <stop offset="1" stopColor="#0b1b3a" />
+          <stop offset="1" stopColor={c.cursorEdge} />
         </linearGradient>
       </defs>
       {ripple > 0 && ripple < 1 && (
@@ -186,7 +192,7 @@ function Pointer({ T, c, id }) {
 /* Reproduce la animación al entrar en pantalla.
    loop=false: se detiene en el logo terminado (inicio de "Outro").
    Con prefers-reduced-motion se muestra directamente el logo terminado. */
-export default function LogoAnimation({ word = 'JS_Dev', loop = false, pulse = true, colors, className = '', title = 'Logo JS_Dev' }) {
+export default function LogoAnimation({ word = 'JStudio_IA', loop = false, pulse = true, colors, className = '', title = 'Logo de JStudio_IA' }) {
   const c = { ...DEFAULT_COLORS, ...colors };
   const id = useRef(`logo-${Math.random().toString(36).slice(2, 8)}`).current;
   const ref = useRef(null);
@@ -234,7 +240,7 @@ export default function LogoAnimation({ word = 'JS_Dev', loop = false, pulse = t
   const rise = (1 - tw(T, CUES.Brain, CUES.Brain + 1.6, MOTION.enter)) * 60;
 
   return (
-    <svg ref={ref} viewBox="-48 294 2112 1188" role="img" aria-label={title} className={`block h-auto w-full ${className}`}>
+    <svg ref={ref} viewBox="470 400 1080 990" role="img" aria-label={title} className={`block h-auto w-full ${className}`}>
       <g opacity={1 - out} transform={around(1008, 888, cam)}>
         <g transform={`translate(0 ${rise})`}>
           <Brain T={T} c={c} pulse={pulse} id={id} />
