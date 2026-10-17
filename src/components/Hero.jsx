@@ -23,8 +23,8 @@ export default function Hero() {
       <div className="mt-16 flex flex-wrap items-end justify-between gap-14">
         <Reveal delay={160} className="max-w-[540px] flex-[1_1_440px]">
           <p className="text-[1.1875rem] leading-relaxed text-ink/70">
-            Somos un estudio de ingeniería que integra inteligencia artificial en cada capa del producto. Diseñamos,
-            construimos y automatizamos sistemas con resultados medibles para empresas, startups y PYMEs.
+            Soy Johan, desarrollador full-stack, y JStudio_IA es mi estudio: integro inteligencia artificial en cada capa del producto. Diseño,
+            construyo y automatizo sistemas con resultados medibles para empresas, startups y PYMEs.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-3.5">
             <Button href="#contacto">Iniciar un proyecto</Button>
