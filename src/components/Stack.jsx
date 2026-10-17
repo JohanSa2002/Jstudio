@@ -13,10 +13,10 @@ export default function Stack() {
   return (
     <section id="stack" className="mx-auto max-w-[1200px] px-4 py-28 sm:px-8">
       <SectionHeader
-        label="03 · Stack"
+        label="04 · Stack"
         description="Herramientas probadas en producción para construir rápido, escalar sin romper nada y dejar la IA bien integrada."
       >
-        El stack con el que trabajamos <Accent>cada día.</Accent>
+        El stack con el que trabajo <Accent>cada día.</Accent>
       </SectionHeader>
 
       <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

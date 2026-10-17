@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Single-page marketing landing page for **JStudio_IA** — a Spanish-language site showcasing software development, AI integration, automation, and chatbot services. Built with **React + Vite + Tailwind CSS v4** and deployed to Hostinger as a static site.
+Single-page marketing landing page for **JS_Dev** — a Spanish-language site showcasing software development, AI integration, automation, and chatbot services. Built with **React + Vite + Tailwind CSS v4** and deployed to Hostinger as a static site.
 
 ## Running the Project
 

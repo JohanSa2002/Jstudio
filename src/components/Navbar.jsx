@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowIcon } from './ui.jsx';
 
 const links = [
+  { href: '#sobre-mi', label: 'Sobre mí' },
   { href: '#servicios', label: 'Servicios' },
   { href: '#proyectos', label: 'Proyectos' },
   { href: '#stack', label: 'Stack' },
@@ -19,7 +20,7 @@ export default function Navbar() {
           <span className="flex size-[26px] items-center justify-center rounded-lg bg-gradient-to-br from-accent to-cyan font-mono text-[11px] font-medium text-base">
             JS
           </span>
-          JStudio_IA
+          JS_Dev
         </a>
 
         <nav className="hidden gap-7 text-sm text-ink/70 md:flex" aria-label="Principal">

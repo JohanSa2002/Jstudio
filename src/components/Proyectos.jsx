@@ -12,8 +12,8 @@ export default function Proyectos() {
   return (
     <section id="proyectos" className="mx-auto max-w-[1200px] px-4 py-28 sm:px-8">
       <SectionHeader
-        label="02 · Proyectos"
-        description="Una selección de proyectos donde combinamos desarrollo, diseño e IA para resolver problemas concretos."
+        label="03 · Proyectos"
+        description="Una selección de proyectos donde combiné desarrollo, diseño e IA para resolver problemas concretos."
       >
         Trabajo reciente que <Accent>hizo clic.</Accent>
       </SectionHeader>

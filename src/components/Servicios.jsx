@@ -46,7 +46,7 @@ const services = [
   {
     num: '02',
     title: 'Integración de IA en el negocio',
-    desc: 'Incorporamos modelos de lenguaje, visión por computadora y sistemas predictivos directamente en tus flujos de trabajo — no como un añadido, sino como parte del producto.',
+    desc: 'Incorporo modelos de lenguaje, visión por computadora y sistemas predictivos directamente en tus flujos de trabajo — no como un añadido, sino como parte del producto.',
     tags: ['OpenAI', 'LangChain', 'Embeddings'],
     icon: 'ai',
     size: 'large',
@@ -62,7 +62,7 @@ const services = [
   {
     num: '04',
     title: 'Automatización de procesos',
-    desc: 'Eliminamos el trabajo repetitivo: conectamos tus herramientas, procesamos documentos y automatizamos decisiones con reglas e IA.',
+    desc: 'Elimino el trabajo repetitivo: conecto tus herramientas, proceso documentos y automatizo decisiones con reglas e IA.',
     tags: ['n8n', 'Zapier', 'RPA'],
     icon: 'auto',
   },
@@ -127,8 +127,8 @@ export default function Servicios() {
   return (
     <section id="servicios" className="mx-auto max-w-[1200px] px-4 py-28 sm:px-8">
       <SectionHeader
-        label="01 · Servicios"
-        description="Acompañamos a empresas, startups y PYMEs a crecer con tecnología bien construida y bien pensada."
+        label="02 · Servicios"
+        description="Acompaño a empresas, startups y PYMEs a crecer con tecnología bien construida y bien pensada."
       >
         Cinco disciplinas, una sola obsesión: <Accent>resolver el problema correcto.</Accent>
       </SectionHeader>
