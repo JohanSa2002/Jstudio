@@ -1,6 +1,7 @@
 const serviceLinks = ['Software a medida', 'Integración IA', 'Sitios & E-commerce', 'Chatbots', 'Automatización'];
 
 const studioLinks = [
+  { label: 'Sobre mí', href: '#sobre-mi' },
   { label: 'Proyectos', href: '#proyectos' },
   { label: 'Stack', href: '#stack' },
   { label: 'Contacto', href: '#contacto' },
@@ -14,7 +15,7 @@ export default function Footer() {
     <footer className="overflow-hidden">
       <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-10 border-t border-white/8 px-4 pt-14 text-[0.9375rem] text-ink/66 sm:grid-cols-2 sm:px-8 lg:grid-cols-4">
         <div>
-          <p className="max-w-[280px] leading-relaxed">Estudio de ingeniería de software con inteligencia artificial integrada. Panamá, para el mundo.</p>
+          <p className="max-w-[280px] leading-relaxed">Estudio de software e IA de Johan Samudio, desarrollador full-stack. Panamá, para el mundo.</p>
         </div>
         <div>
           <h2 className={heading}>Servicios</h2>
@@ -66,11 +67,11 @@ export default function Footer() {
         aria-hidden="true"
         className="mx-auto max-w-[1200px] bg-gradient-to-b from-ink/95 to-ink/5 bg-clip-text px-4 pt-12 text-[clamp(4rem,15.5vw,14rem)] leading-[0.82] font-extrabold tracking-[-0.06em] whitespace-nowrap text-transparent sm:px-8"
       >
-        JStudio_IA
+        JS_Dev
       </div>
 
       <div className="mx-auto flex max-w-[1200px] flex-wrap justify-between gap-2 px-4 py-8 font-mono text-xs text-ink/50 sm:px-8">
-        <span>&copy; 2026 JStudio_IA · Panamá</span>
+        <span>&copy; 2026 JS_Dev · Panamá</span>
         <span>Construido con criterio &amp; IA</span>
       </div>
     </footer>
