@@ -20,7 +20,7 @@ const facts = [
 const timeline = [
   {
     year: '2025',
-    title: 'Fundo JStudio_IA',
+    title: 'Fundo JS_Dev',
     desc: 'Mi estudio para llevar desarrollo a medida e IA aplicada a empresas, startups y PYMEs.',
   },
   {
@@ -47,7 +47,7 @@ function Photo() {
   return (
     <img
       src={photo}
-      alt="Johan Samudio, fundador de JStudio_IA"
+      alt="Johan Samudio, fundador de JS_Dev"
       onError={() => setFailed(true)}
       className="aspect-[4/5] w-full rounded-[1.5rem] object-cover"
       loading="lazy"
@@ -60,7 +60,7 @@ export default function SobreMi() {
     <section id="sobre-mi" className="mx-auto max-w-[1200px] px-4 py-28 sm:px-8">
       <SectionHeader
         label="01 · Sobre mí"
-        description="Detrás de JStudio_IA hay una persona: yo. Tú hablas directamente con quien diseña y escribe el código."
+        description="Detrás de JS_Dev hay una persona: yo. Tú hablas directamente con quien diseña y escribe el código."
       >
         Hola, soy Johan. <Accent>Construyo software con criterio.</Accent>
       </SectionHeader>
@@ -87,7 +87,7 @@ export default function SobreMi() {
             <div className="shell">
               <div className="core p-8 sm:p-9">
                 <p className="text-[1.1875rem] leading-relaxed text-ink/80">
-                  Soy desarrollador full-stack en Panamá y fundador de JStudio_IA. Me gusta tomar un problema de negocio
+                  Soy desarrollador full-stack en Panamá y fundador de JS_Dev. Me gusta tomar un problema de negocio
                   real y convertirlo en un producto que funcione: desde la interfaz hasta la base de datos, con IA donde
                   de verdad aporta.
                 </p>

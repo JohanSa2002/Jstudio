@@ -70,10 +70,10 @@ const TRACES = [
   { d: 'M1380 885 H1340 Q1315 885 1298 912', nodes: [[1380, 885]] },
 ];
 
-/* paper: fondo y "cortes" entre formas (debe coincidir con el fondo detrás del SVG)
+/* Los "cortes" entre formas (pliegues, circuitos, borde de la ventana, contorno del cursor)
+   son máscaras transparentes, así el logo funciona sobre cualquier fondo sin marco.
    ink: relleno de las formas · accent: centro del cerebro y destello · signal: pulso del clic */
 const DEFAULT_COLORS = {
-  paper: '#0b0c12',
   ink: '#f4f5f7',
   accent: '#9ea0ff',
   signal: '#22d3ee',
@@ -81,9 +81,61 @@ const DEFAULT_COLORS = {
   cursorEdge: '#22d3ee',
 };
 
-function Brain({ T, c, pulse, id }) {
+const CURSOR = 'M1070 1185 L1225 1246 L1162 1262 L1192 1312 L1168 1332 L1136 1278 L1100 1320 Z';
+const FRAME = { x: 652, y: 908, width: 706, height: 390, rx: 40 };
+const INTERIOR = 'M682 1032 H1335 V1258 Q1335 1278 1315 1278 H1085 L1080 1282 H702 Q682 1282 682 1262 Z';
+
+/* Máscara: blanco = visible, negro = recortado */
+function Mask({ id, children }) {
+  return (
+    <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="2100" height="1800">
+      <rect x="0" y="0" width="2100" height="1800" fill="white" />
+      {children}
+    </mask>
+  );
+}
+
+function windowState(T) {
+  const w0 = CUES.Window;
+  const e = tw(T, w0, w0 + 1.0, MOTION.enter);
+  const s = tw(T, w0, w0 + 1.0, MOTION.pop, 0.85, 1);
+  return { e, transform: `translate(0 ${(1 - e) * 140}) ${around(1005, 1100, s)}` };
+}
+
+function pointerState(T) {
+  const k0 = CUES.Click;
+  const fly = tw(T, k0, k0 + 0.65, MOTION.enter);
+  const press = tw(T, k0 + 0.62, k0 + 0.75, MOTION.enter) - tw(T, k0 + 0.75, k0 + 0.95, MOTION.pop);
+  return {
+    opacity: tw(T, k0, k0 + 0.25, MOTION.enter),
+    transform: `translate(${(1 - fly) * 520} ${(1 - fly) * 300}) ${around(1072, 1188, 1 - 0.14 * press)}`,
+  };
+}
+
+/* Silueta del cursor con su borde, para recortar lo que tiene debajo */
+function CursorCut({ T }) {
+  const p = pointerState(T);
+  return (
+    <path d={CURSOR} fill="black" stroke="black" strokeWidth="18" strokeLinejoin="round" opacity={p.opacity} transform={p.transform} />
+  );
+}
+
+function Brain({ T, c, pulse, id, rise }) {
   const b0 = CUES.Brain, c0 = CUES.Circuits, k0 = CUES.Click;
   const glow = tw(T, k0 + 0.8, k0 + 1.1, MOTION.enter) - tw(T, k0 + 1.1, k0 + 2.2, MOTION.draw);
+  const folds = tw(T, b0 + 0.9, b0 + 1.6, MOTION.enter);
+  const win = windowState(T);
+  const lift = `translate(0 ${rise})`;
+  const traces = TRACES.map((t, i) => {
+    const a = c0 + i * 0.07;
+    const pa = k0 + 0.75 + (i % 5) * 0.06;
+    return {
+      ...t,
+      p: tw(T, a, a + 0.75, MOTION.draw),
+      pp: tw(T, pa, pa + 1.1, MOTION.draw),
+      nodeScale: t.nodes.map((_, j) => tw(T, a + 0.55 + j * 0.1, a + 0.95 + j * 0.1, MOTION.pop)),
+    };
+  });
   return (
     <g>
       <defs>
@@ -91,45 +143,56 @@ function Brain({ T, c, pulse, id }) {
           <stop offset="0" stopColor={c.accent} />
           <stop offset="1" stopColor={c.ink} />
         </radialGradient>
+        <Mask id={`${id}-brain-cut`}>
+          <g transform={lift}>
+            <g opacity={folds}>
+              <path d="M1008 440 V915" stroke="black" strokeWidth="22" fill="none" />
+              {FOLDS.map((d, i) => (
+                <path key={i} d={d} stroke="black" strokeWidth="14" fill="none" strokeLinecap="round" />
+              ))}
+            </g>
+            {traces.map((t, i) => (
+              <g key={i}>
+                <path d={t.d} pathLength="1" stroke="black" strokeWidth="14" fill="none" strokeLinecap="round" strokeLinejoin="round"
+                  strokeDasharray="1 1" strokeDashoffset={1 - t.p} />
+                {t.nodes.map(([x, y], j) => (
+                  <circle key={j} cx={x} cy={y} r="18.5" fill="black" transform={around(x, y, t.nodeScale[j])} />
+                ))}
+              </g>
+            ))}
+          </g>
+          <rect {...FRAME} fill="black" stroke="black" strokeWidth="32" opacity={win.e} transform={win.transform} />
+          <CursorCut T={T} />
+        </Mask>
       </defs>
-      {LOBES.map(([cx, cy, r, i], n) => {
-        const s = tw(T, b0 + i * 0.22, b0 + i * 0.22 + 0.7, MOTION.pop);
-        return <circle key={n} cx={cx} cy={cy} r={r} fill={`url(#${id}-brain)`} transform={around(cx, cy, s)} />;
-      })}
-      <g opacity={tw(T, b0 + 0.9, b0 + 1.6, MOTION.enter)}>
-        <path d="M1008 440 V915" stroke={c.paper} strokeWidth="22" fill="none" />
-        {FOLDS.map((d, i) => (
-          <path key={i} d={d} stroke={c.paper} strokeWidth="14" fill="none" strokeLinecap="round" />
+      <g mask={`url(#${id}-brain-cut)`}>
+        <g transform={lift}>
+          {LOBES.map(([cx, cy, r, i], n) => {
+            const s = tw(T, b0 + i * 0.22, b0 + i * 0.22 + 0.7, MOTION.pop);
+            return <circle key={n} cx={cx} cy={cy} r={r} fill={`url(#${id}-brain)`} transform={around(cx, cy, s)} />;
+          })}
+        </g>
+      </g>
+      <g transform={lift}>
+        {traces.map((t, i) => (
+          <g key={i}>
+            {pulse && t.pp > 0 && t.pp < 1 && (
+              <path d={t.d} pathLength="1" stroke={c.signal} strokeWidth="15" fill="none" strokeLinecap="round" strokeLinejoin="round"
+                strokeDasharray="0.18 1.4" strokeDashoffset={0.18 - t.pp * 1.2} />
+            )}
+            {t.nodes.map(([x, y], j) => (
+              <circle key={j} cx={x} cy={y} r="9.5" fill={c.ink} transform={around(x, y, t.nodeScale[j])} />
+            ))}
+          </g>
         ))}
       </g>
-      {TRACES.map((t, i) => {
-        const a = c0 + i * 0.07;
-        const p = tw(T, a, a + 0.75, MOTION.draw);
-        const pa = k0 + 0.75 + (i % 5) * 0.06;
-        const pp = tw(T, pa, pa + 1.1, MOTION.draw);
-        return (
-          <g key={i}>
-            <path d={t.d} pathLength="1" stroke={c.paper} strokeWidth="14" fill="none" strokeLinecap="round" strokeLinejoin="round"
-              strokeDasharray="1 1" strokeDashoffset={1 - p} />
-            {pulse && pp > 0 && pp < 1 && (
-              <path d={t.d} pathLength="1" stroke={c.signal} strokeWidth="15" fill="none" strokeLinecap="round" strokeLinejoin="round"
-                strokeDasharray="0.18 1.4" strokeDashoffset={0.18 - pp * 1.2} />
-            )}
-            {t.nodes.map(([x, y], j) => {
-              const s = tw(T, a + 0.55 + j * 0.1, a + 0.95 + j * 0.1, MOTION.pop);
-              return <circle key={j} cx={x} cy={y} r="14" fill={c.ink} stroke={c.paper} strokeWidth="9" transform={around(x, y, s)} />;
-            })}
-          </g>
-        );
-      })}
     </g>
   );
 }
 
-function BrowserWindow({ T, c, word }) {
+function BrowserWindow({ T, c, word, id }) {
   const w0 = CUES.Window, t0 = CUES.Type, k0 = CUES.Click;
-  const e = tw(T, w0, w0 + 1.0, MOTION.enter);
-  const s = tw(T, w0, w0 + 1.0, MOTION.pop, 0.85, 1);
+  const win = windowState(T);
   const typed = Math.round(tw(T, t0 + 0.35, t0 + 1.2, Easing.linear, 0, word.length));
   const caretOn = T < t0 + 1.4 ? Math.floor(T * 2.6) % 2 === 0 : true;
   const boxFlash = tw(T, k0 + 0.75, k0 + 0.9, MOTION.enter) - tw(T, k0 + 0.9, k0 + 1.6, MOTION.draw);
@@ -138,26 +201,37 @@ function BrowserWindow({ T, c, word }) {
   /* Reduce el texto para que palabras largas quepan en el buscador */
   const fontSize = 104 * Math.min(1, 6.2 / word.length);
   return (
-    <g opacity={e} transform={`translate(0 ${(1 - e) * 140}) ${around(1005, 1100, s)}`}>
-      <rect x="652" y="908" width="706" height="390" rx="40" fill={c.ink} stroke={c.paper} strokeWidth="16" />
-      <rect x="652" y="1008" width="706" height="12" fill={c.paper} />
-      {[715, 762, 808].map((x, i) => (
-        <circle key={x} cx={x} cy="963" r="13" fill={c.paper}
-          transform={around(x, 963, tw(T, w0 + 0.5 + i * 0.12, w0 + 0.85 + i * 0.12, MOTION.pop))} />
-      ))}
-      <path d="M682 1032 H1335 V1258 Q1335 1278 1315 1278 H1085 L1080 1282 H702 Q682 1282 682 1262 Z" fill={c.paper} />
-      <g opacity={searchIn} transform={`translate(0 ${(1 - searchIn) * 20})`}>
-        <rect x="703" y="1063" width="618" height="150" rx="30" fill={c.paper} stroke={c.ink} strokeWidth="10" />
-        <rect x="703" y="1063" width="618" height="150" rx="30" fill="none" stroke={c.accent} strokeWidth="10" opacity={boxFlash} />
-        <g transform={around(780, 1135, mag)}>
-          <circle cx="775" cy="1128" r="27" stroke={c.muted} strokeWidth="9" fill="none" />
-          <path d="M796 1150 L820 1177" stroke={c.muted} strokeWidth="11" strokeLinecap="round" />
+    <g>
+      <defs>
+        <Mask id={`${id}-frame-cut`}>
+          <rect x="652" y="1008" width="706" height="12" fill="black" />
+          {[715, 762, 808].map((x, i) => (
+            <circle key={x} cx={x} cy="963" r="13" fill="black"
+              transform={around(x, 963, tw(T, w0 + 0.5 + i * 0.12, w0 + 0.85 + i * 0.12, MOTION.pop))} />
+          ))}
+          <path d={INTERIOR} fill="black" />
+        </Mask>
+        <Mask id={`${id}-cursor-cut`}>
+          <CursorCut T={T} />
+        </Mask>
+      </defs>
+      <g mask={`url(#${id}-cursor-cut)`}>
+        <g opacity={win.e} transform={win.transform}>
+          <rect {...FRAME} fill={c.ink} mask={`url(#${id}-frame-cut)`} />
+          <g opacity={searchIn} transform={`translate(0 ${(1 - searchIn) * 20})`}>
+            <rect x="703" y="1063" width="618" height="150" rx="30" fill="none" stroke={c.ink} strokeWidth="10" />
+            <rect x="703" y="1063" width="618" height="150" rx="30" fill="none" stroke={c.accent} strokeWidth="10" opacity={boxFlash} />
+            <g transform={around(780, 1135, mag)}>
+              <circle cx="775" cy="1128" r="27" stroke={c.muted} strokeWidth="9" fill="none" />
+              <path d="M796 1150 L820 1177" stroke={c.muted} strokeWidth="11" strokeLinecap="round" />
+            </g>
+            <rect x="857" y="1085" width="9" height="105" rx="4" fill={c.ink} opacity={caretOn ? 1 : 0} />
+            <text x="884" y={1143 + fontSize * 0.36} fontFamily="'Bricolage Grotesque', system-ui, sans-serif" fontWeight="800"
+              fontSize={fontSize} fill={c.ink} letterSpacing="-1">
+              {word.slice(0, typed)}
+            </text>
+          </g>
         </g>
-        <rect x="857" y="1085" width="9" height="105" rx="4" fill={c.ink} opacity={caretOn ? 1 : 0} />
-        <text x="884" y={1143 + fontSize * 0.36} fontFamily="'Bricolage Grotesque', system-ui, sans-serif" fontWeight="800"
-          fontSize={fontSize} fill={c.ink} letterSpacing="-1">
-          {word.slice(0, typed)}
-        </text>
       </g>
     </g>
   );
@@ -165,10 +239,8 @@ function BrowserWindow({ T, c, word }) {
 
 function Pointer({ T, c, id }) {
   const k0 = CUES.Click;
-  const fly = tw(T, k0, k0 + 0.65, MOTION.enter);
-  const press = tw(T, k0 + 0.62, k0 + 0.75, MOTION.enter) - tw(T, k0 + 0.75, k0 + 0.95, MOTION.pop);
+  const p = pointerState(T);
   const ripple = tw(T, k0 + 0.72, k0 + 1.4, MOTION.enter);
-  const dx = (1 - fly) * 520, dy = (1 - fly) * 300;
   return (
     <g>
       <defs>
@@ -181,10 +253,7 @@ function Pointer({ T, c, id }) {
       {ripple > 0 && ripple < 1 && (
         <circle cx="1072" cy="1188" r={20 + ripple * 110} fill="none" stroke={c.signal} strokeWidth={12 * (1 - ripple)} opacity={1 - ripple} />
       )}
-      <g opacity={tw(T, k0, k0 + 0.25, MOTION.enter)} transform={`translate(${dx} ${dy}) ${around(1072, 1188, 1 - 0.14 * press)}`}>
-        <path d="M1070 1185 L1225 1246 L1162 1262 L1192 1312 L1168 1332 L1136 1278 L1100 1320 Z"
-          fill={`url(#${id}-cursor)`} stroke={c.paper} strokeWidth="9" strokeLinejoin="round" />
-      </g>
+      <path d={CURSOR} fill={`url(#${id}-cursor)`} opacity={p.opacity} transform={p.transform} />
     </g>
   );
 }
@@ -192,7 +261,7 @@ function Pointer({ T, c, id }) {
 /* Reproduce la animación al entrar en pantalla.
    loop=false: se detiene en el logo terminado (inicio de "Outro").
    Con prefers-reduced-motion se muestra directamente el logo terminado. */
-export default function LogoAnimation({ word = 'JStudio_IA', loop = false, pulse = true, colors, className = '', title = 'Logo de JStudio_IA' }) {
+export default function LogoAnimation({ word = 'JS_Dev', loop = false, pulse = true, colors, className = '', title = 'Logo de JS_Dev' }) {
   const c = { ...DEFAULT_COLORS, ...colors };
   const id = useRef(`logo-${Math.random().toString(36).slice(2, 8)}`).current;
   const ref = useRef(null);
@@ -242,10 +311,8 @@ export default function LogoAnimation({ word = 'JStudio_IA', loop = false, pulse
   return (
     <svg ref={ref} viewBox="470 400 1080 990" role="img" aria-label={title} className={`block h-auto w-full ${className}`}>
       <g opacity={1 - out} transform={around(1008, 888, cam)}>
-        <g transform={`translate(0 ${rise})`}>
-          <Brain T={T} c={c} pulse={pulse} id={id} />
-        </g>
-        <BrowserWindow T={T} c={c} word={word} />
+        <Brain T={T} c={c} pulse={pulse} id={id} rise={rise} />
+        <BrowserWindow T={T} c={c} word={word} id={id} />
         <Pointer T={T} c={c} id={id} />
       </g>
     </svg>

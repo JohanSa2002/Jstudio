@@ -54,7 +54,7 @@ export default function Contacto() {
               action="https://formsubmit.co/johan.samudiotrabajo@gmail.com"
               method="POST"
             >
-              <input type="hidden" name="_subject" value="Nuevo proyecto desde JStudio_IA" />
+              <input type="hidden" name="_subject" value="Nuevo proyecto desde JS_Dev" />
               <input type="hidden" name="_captcha" value="false" />
               <input type="hidden" name="_template" value="table" />
               <input type="hidden" name="servicio" value={chip} />

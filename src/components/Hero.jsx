@@ -23,7 +23,7 @@ export default function Hero() {
       <div className="mt-16 flex flex-wrap items-end justify-between gap-14">
         <Reveal delay={160} className="max-w-[540px] flex-[1_1_440px]">
           <p className="text-[1.1875rem] leading-relaxed text-ink/70">
-            Soy Johan, desarrollador full-stack, y JStudio_IA es mi estudio: integro inteligencia artificial en cada capa del producto. Diseño,
+            Soy Johan, desarrollador full-stack, y JS_Dev es mi estudio: integro inteligencia artificial en cada capa del producto. Diseño,
             construyo y automatizo sistemas con resultados medibles para empresas, startups y PYMEs.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-3.5">
@@ -35,13 +35,7 @@ export default function Hero() {
         </Reveal>
 
         <Reveal delay={240} className="min-w-[300px] flex-[0_1_440px]">
-          <div className="shell">
-            <div className="core p-2">
-              <div className="rounded-[1.25rem] bg-[#0b0c12] p-6 sm:p-8">
-                <LogoAnimation />
-              </div>
-            </div>
-          </div>
+          <LogoAnimation />
         </Reveal>
       </div>
 
